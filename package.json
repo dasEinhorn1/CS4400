@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "serve": "node index.js",
+    "serve": "node -r esm index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,6 +19,7 @@
   "homepage": "https://github.com/dasEinhorn1/CS4400#readme",
   "dependencies": {
     "ejs": "^2.6.1",
+    "esm": "^3.2.22",
     "express": "^4.16.4"
   }
 }
