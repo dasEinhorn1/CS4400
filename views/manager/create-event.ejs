@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <% include ../../partials/head %>
+  </head>
+  <body>
+    <%# Screen 27 %>
+    <h1>Create Event</h1>
+    <form class="" action="/manager/events/create" method="post">
+      <div class="">
+        <label for="name">Name</label>
+        <input type="text" name="name" value=""/>
+      </div>
+      <div class="">
+        <label for="price">Price</label>
+        <input type="text" name="price" value=""/>
+      </div>
+      <div class="">
+        <label for="capacity">Capacity</label>
+        <input type="text" name="capacity" value=""/>
+      </div>
+      <div class="">
+        <label for="minstaff">Minimum Staff Requirement</label>
+        <input type="text" name="minstaff" value=""/>
+      </div>
+      <div class="">
+        <label for="startDate">Start Date</label>
+        <input type="text" name="startDate" value=""/>
+      </div>
+      <div class="">
+        <label for="endDate">End Date</label>
+        <input type="text" name="endDate" value=""/>
+      </div>
+      <div class="">
+        <label for="description">Description</label>
+        <input type="text" name="description" value=""/>
+      </div>
+      <div class="">
+        <label for="assignStaff">Assign Staff</label>
+        <select name="assignStaff" multiple>
+          <option value="1">Filler Staff 1</option>
+          <option value="2">Filler Staff 2</option>
+        </select>
+      </div>
+      <div class="buttons">
+        <div class="">
+          <button type="button" name="back">Back</button>
+        </div>
+        <div class="">
+          <button type="submit" name="submit">Create</button>
+        </div>
+      </div>
+    </form>
+  </body>
+</html>
