@@ -30,3 +30,5 @@ router.get('/site/events', (req, res, next) => {
 router.get('/site/events/:id', (req, res, next) => {
   res.render('visit/event-detail')
 })
+
+export default router;

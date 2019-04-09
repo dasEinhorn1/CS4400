@@ -73,3 +73,5 @@ router.get('/transits/history', (req, res, next) => {
 router.get('/profile', (req, res, next) => {
   res.render('profile')
 })
+
+export default router;
