@@ -8,27 +8,27 @@ router.get('/history', (req, res, next) => {
 })
 
 // Screen 35
-router.get('/site', (req, res, next) => {
+router.get('/sites', (req, res, next) => {
   res.render('visit/sites')
 })
 // Screen 36
-router.get('/site/:id/transits', (req, res, next) => {
+router.get('/sites/:id/transits', (req, res, next) => {
   res.render('visit/site-transit')
 })
 
 // Screen 37
-router.get('/site/:id', (req, res, next) => {
+router.get('/sites/:id', (req, res, next) => {
   res.render('visit/site')
 })
 
 // Screen 33
-router.get('/site/events', (req, res, next) => {
+router.get('/events', (req, res, next) => {
   // get all site names
   res.render('visit/events')
 })
 
 // Screen 34
-router.get('/site/events/:id', (req, res, next) => {
+router.get('/events/:id', (req, res, next) => {
   res.render('visit/event-detail')
 })
 
