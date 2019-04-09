@@ -25,7 +25,7 @@ router.post('/register/user', (req, res, next) => {
 
 // Screen 4
 router.get('/register/visitor', (req, res, next) => {
-  res.send('register visitor')
+  res.render('register-visitor');
 })
 router.post('/register/visitor', (req, res, next) => {
   res.send('registered visitor')
@@ -39,7 +39,7 @@ router.post('/register/employee', (req, res, next) => {
 })
 // Screen 6
 router.get('/register/employee-visitor', (req, res, next) => {
-  res.send('register employee-visitor')
+  res.render('register-employee-visitor')
 })
 router.post('/register/employee-visitor', (req, res, next) => {
   res.send('registered employee-visitor')
