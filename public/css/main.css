@@ -66,6 +66,17 @@ input.--little {
   text-align: center;
 }
 
+/* a {
+  text-decoration: none;
+} */
+
+.btn.--centered {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  min-width: 250px;
+}
+
 .btn {
   background-color: #409AE8;
   border: none;
