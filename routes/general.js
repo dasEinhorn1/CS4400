@@ -1,6 +1,10 @@
 import express from 'express';
 const router = express.Router();
 
+router.get('/', (req, res, next) => {
+  res.redirect('/dashboard')
+})
+
 // Screen 1
 router.get('/login', (req, res, next) => {
   res.render('login')
@@ -51,7 +55,7 @@ router.post('/register/employee-visitor', (req, res, next) => {
 // Screen 7-14 (CHECK AUTH; Minimum=user)
 router.get('/dashboard', (req, res, next) => {
   // TODO: check user auth, render correct page
-  res.render('dashboard')
+  res.render('dashboard', { type: "A", isVisitor: false })
 })
 
 // Screen 15 (CHECK AUTH; Minimum=user)

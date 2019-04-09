@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <% include ../partials/head %>
+    <title>Dashboard</title>
+  </head>
+  <body>
+    <h1 class="title --centered">Dashboard</h1>
+    <div class="two-column">
+      <% if (type !== 'U') { %>
+        <a href="/profile">
+          <button class="btn">Manage profile</button>
+        </a>
+      <% } %>
+      <% if (type === 'S') { %>
+        <a href="/schedule">
+          <button class="btn">View Schedule</button>
+        </a>
+      <% } %>
+      <% if (type === 'M') { %>
+        <a href="/manager/events">
+        <button class="btn">Manage Event</button>
+        </a>
+        <a href="/manager/events/staff">
+          <button class="btn">View Staff</button>
+        </a>
+        <a href="/manager/site">
+          <button class="btn">View Site Report</button>
+        </a>
+
+      <% } %>
+      <% if (type === 'A') { %>
+        <a href="/admin/users">
+          <button class="btn">Manage User</button>
+        </a>
+        <a href="/admin/transits">
+          <button class="btn">Manage Transit</button>
+        </a>
+        <a href="/admin/sites">
+          <button class="btn">Manage Site</button>
+        </a>
+      <% } %>
+      <% if (isVisitor) { %>
+        <a href="/visit/events">
+          <button class="btn">Explore Event</button>
+        </a>
+        <a href="/visit/sites">
+          <button class="btn">Explore Site</button>
+        </a>
+        <a href="/visit/history">
+          <button class="btn">View Visit History</button>
+        </a>
+      <% } %>
+      <a href="/transits">
+        <button class="btn">Take Transit</button>
+      </a>
+      <a href="/transits/history">
+        <button class="btn">View Transit History</button>
+      </a>
+      <a href="/">
+        <button class="btn">Back</button>
+      </a>
+    </div>
+  </body>
+</html>
+
+<style media="screen">
+  .two-column {
+    width: 100%;
+  }
+  .two-column > * {
+    float: left;
+    display: block;
+    width: 44%;
+    margin-left: 5%;
+    margin-bottom: 30px;
+  }
+</style>
