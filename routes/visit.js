@@ -23,6 +23,7 @@ router.get('/site/:id', (req, res, next) => {
 
 // Screen 33
 router.get('/site/events', (req, res, next) => {
+  // get all site names
   res.render('visit/events')
 })
 
