@@ -11,3 +11,5 @@ router.get('/', (req, resp, next) => {
 router.get('/detail', (req, resp, next) => {
   req.render('staff/detail')
 })
+
+export default router;
