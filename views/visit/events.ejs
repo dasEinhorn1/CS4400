@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-    <meta charset="utf-8">
-    <title></title>
+    <% include ../../partials/head %>
+    <title>Explore Events</title>
   </head>
   <body>
     <h1>Explore Event</h1>
@@ -14,6 +14,7 @@
         </div>
         <div class="labelled-input">
           <label for="keyword">Description Keyword</label>
+          <input type="text" name="keyword" value=""/>
         </div>
       </div>
       <div class="input-row">
@@ -38,18 +39,22 @@
       <div class="input-row">
         <div class="labelled-input">
           <label for="visitRange">Total Visits Range</label>
-          <input type="text" name="lowerVisitTotal" value=""/>
-          &nbsp;&mdash;&nbsp;
-          <input type="text" name="upperVisitTotal" value=""/>
+          <div class="range-inputs">
+            <input class="--little" type="text" name="lowerVisitTotal" value=""/>
+            &nbsp;&mdash;&nbsp;
+            <input class="--little" type="text" name="upperVisitTotal" value=""/>
+          </div>
         </div>
         <div class="labelled-input">
           <label for="priceRange">Ticket Price Range</label>
-          <input type="text" name="lowerTicketPrice" value=""/>
-          &nbsp;&mdash;&nbsp;
-          <input type="text" name="upperTicketPrice" value=""/>
+          <div class="range-inputs">
+            <input class="--little" type="text" name="lowerTicketPrice" value=""/>
+            &nbsp;&mdash;&nbsp;
+            <input class="--little" type="text" name="upperTicketPrice" value=""/>
+          </div>
         </div>
       </div>
-      <div class="input-row">
+      <div class="input-row --centered">
         <div class="labelled-input">
           <input type="checkbox" name="includeVisited" checked='false'/>
           <label for="includeVisited">Include Visited</label>

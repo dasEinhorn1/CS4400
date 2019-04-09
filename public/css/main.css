@@ -1,0 +1,45 @@
+.input-row {
+  width: 100%;
+  display: flex;
+  margin-right: -100px;
+}
+
+.input-row.--centered {
+  justify-content: space-around;
+}
+.input-row.--centered .labelled-input {
+  flex: 0 0 auto;
+  margin-right: 0;
+}
+
+
+.labelled-input {
+  /* display: flex; */
+}
+
+.labelled-input input {
+  /* flex: 2; */
+  display: inline-block;
+
+}
+
+.labelled-input .range-inputs {
+  display: inline-block;
+}
+
+input.--little {
+  max-width: 40px;
+}
+
+
+.labelled-input label {
+  /* flex: 1; */
+  display: inline-block;
+  min-width: 150px;
+}
+
+.input-row .labelled-input {
+  flex: 1;
+  margin-right: 100px;
+  margin-bottom: 20px;
+}
