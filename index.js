@@ -1,6 +1,9 @@
 import express from 'express';
-import ManagerRoutes from './routes/manager'
 import AdminRoutes from './routes/admin';
+import GeneralRoutes from './routes/general';
+import ManagerRoutes from './routes/manager';
+import StaffRoutes from './routes/staff';
+import VisitRoutes from './routes/visit';
 
 
 const app = express();
@@ -8,11 +11,13 @@ const port = 3000;
 
 app.set('view engine', 'ejs');
 
-app.use(express.urlencoded())
-app.use(express.static('public'))
+app.use(express.urlencoded());
+app.use(express.static('public'));
 
-app.get('/', (req, res) => res.render('index', {title:"heyo"}));
-app.use('/manager', ManagerRoutes);
+app.use('/', GeneralRoutes);
 app.use('/admin', AdminRoutes);
+app.use('/manager', ManagerRoutes);
+app.use('/staff', StaffRoutes);
+app.use('/visit', VisitRoutes);
 
 app.listen(port, () => console.log(`CS 4400 app running on port ${port}.`));
