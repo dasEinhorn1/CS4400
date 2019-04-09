@@ -58,6 +58,14 @@ input.--little {
   margin-bottom: 20px;
 }
 
+.button-row {
+  margin-top: 10px;
+}
+
+.button-row.--centered {
+  text-align: center;
+}
+
 .btn {
   background-color: #409AE8;
   border: none;

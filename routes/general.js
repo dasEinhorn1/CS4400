@@ -16,12 +16,12 @@ router.post('/login', (req, res, next) => {
 
 // Screen 2
 router.get('/register', (req, res, next) => {
-  res.send('register menu')
+  res.render('register')
 })
 
 // Screen 3
 router.get('/register/user', (req, res, next) => {
-  res.send('register user')
+  res.render('register-user')
 })
 router.post('/register/user', (req, res, next) => {
   res.send('registered user')
@@ -36,7 +36,7 @@ router.post('/register/visitor', (req, res, next) => {
 })
 // Screen 5
 router.get('/register/employee', (req, res, next) => {
-  res.send('register employee')
+  res.render('register-employee')
 })
 router.post('/register/employee', (req, res, next) => {
   res.send('registered employee')
