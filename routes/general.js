@@ -12,7 +12,7 @@ router.post('/login', (req, res, next) => {
 
 // Screen 2
 router.get('/register', (req, res, next) => {
-  res.send('register menu')
+  res.render('register')
 })
 
 // Screen 3
