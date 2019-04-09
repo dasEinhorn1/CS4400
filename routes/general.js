@@ -46,7 +46,7 @@ router.get('/register/employee-visitor', (req, res, next) => {
   res.render('register-employee-visitor')
 })
 router.post('/register/employee-visitor', (req, res, next) => {
-  res.send('registered employee-visitor')
+  res.render('register-employee-visitor')
 })
 
 /*
