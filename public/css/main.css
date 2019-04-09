@@ -1,3 +1,16 @@
+body {
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.title {
+  font-family: sans-serif;
+}
+
+.title.--centered {
+  text-align: center;
+}
+
 .input-row {
   width: 100%;
   display: flex;
@@ -7,6 +20,7 @@
 .input-row.--centered {
   justify-content: space-around;
 }
+
 .input-row.--centered .labelled-input {
   flex: 0 0 auto;
   margin-right: 0;
@@ -42,4 +56,15 @@ input.--little {
   flex: 1;
   margin-right: 100px;
   margin-bottom: 20px;
+}
+
+.btn {
+  background-color: #409AE8;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 32px;
+  min-width: 60px;
+  cursor: pointer;
+  /* font-weight: bold; */
+  color: white;
 }
