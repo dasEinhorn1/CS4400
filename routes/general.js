@@ -6,6 +6,7 @@ router.get('/login', (req, res, next) => {
   res.render('login')
 })
 router.post('/login', (req, res, next) => {
+  // TODO: validate login
   res.redirect('/dashboard')
 })
 
@@ -50,7 +51,7 @@ router.post('/register/employee-visitor', (req, res, next) => {
 // Screen 7-14 (CHECK AUTH; Minimum=user)
 router.get('/dashboard', (req, res, next) => {
   // TODO: check user auth, render correct page
-  res.render('dashboard/user')
+  res.render('dashboard')
 })
 
 // Screen 15 (CHECK AUTH; Minimum=user)
