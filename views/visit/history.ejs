@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <!-- <meta charset="utf-8"> -->
+    <% include ../../partials/head %>
+    <title>Visit History</title>
+  </head>
+  <body>
+    <h1 class="title --centered">Visit History</h1>
+    <form class="" action="index.html" method="post">
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="event">Event</label>
+          <input type="text" name="event" value="">
+        </div>
+        <div class="labelled-input">
+          <label for="site">Site</label>
+          <select class="dropdown" name="site">
+            <%# for site in sites { %>
+            <option value="Inman Park<%#site.name%>">Inman Park<%# site.name%></option>
+            <%# } %>
+            <option value="all">&mdash; ALL &mdash;</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="startDate">Start Date</label>
+          <input type="text" name="startDate" value="">
+        </div>
+        <div class="labelled-input">
+          <label for="endDate">End Date</label>
+          <input type="text" name="endDate" value="">
+        </div>
+      </div>
+      <div class="button-row --centered">
+        <button class="btn" type="submit">Filter</button>
+      </div>
+    </form>
+    <table>
+      <thead>
+        <th>Date</th>
+        <th>Event</th>
+        <th>Site</th>
+        <th>Price</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="button-row --centered">
+      <a class="btn-link" href="/dashboard">
+        <button class="btn" type="button" name="back">Back</button>
+      </a>
+    </div>
+  </body>
+</html>
