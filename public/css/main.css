@@ -64,6 +64,7 @@ input.--little {
 
 .button-row {
   margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .button-row.--centered {

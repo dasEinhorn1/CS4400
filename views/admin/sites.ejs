@@ -1,11 +1,64 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="en" dir="ltr">
   <head>
-    <meta charset="utf-8" />
-    <title>Screen 19</title>
+    <% include ../../partials/head %>
   </head>
   <body>
-    <h1><%= title ? title : 'Default Title' %></h1>
+    <%# Screen 19 %>
+    <h1 class="title --centered">Manage Site</h1>
+    <form class="" action="/admin/sites" method="get">
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="username">Sites</label>
+          <select class="dropdown" name="userType">
+            <option value="all" selected>--All--</option>
+            <!-- TODO: insert  -->
+          </select>
+        </div>
+        <div class="labelled-input">
+          <label for="username">Manager</label>
+          <select class="dropdown" name="Status">
+            <option value="all" selected>--All--</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="">Open Everyday</label>
+          <select class="dropdown" name="everyday">
+            <option value="yes" selected>Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+      </div>
+    </form>
+    <div class="button-row">
+      <button class="btn" type="button" name="filter">Filter</button>
+    </div>
+    <div class="button-row">
+      <a href="/admin/sites/create">
+        <button class="btn" type="button" name="create">Create</button>
+      </a>
+      <button class="btn" type="button" name="edit">Edit</button>
+      <button class="btn" type="button" name="delete">Delete</button>
+    </div>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Manager</th>
+        <th>Open Everyday</th>
+      </tr>
+      <tr>
+        <td><input type="radio" selected />Atlanta Park</td>
+        <td>Jason</td>
+        <td>No</td>
+      </tr>
+    </table>
+
+    <div class="button-row">
+      <a href="/dashboard">
+        <button class="btn" type="button" name="back">Back</button>
+      </a>
+    </div>
   </body>
 </html>
