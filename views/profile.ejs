@@ -1,10 +1,75 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-    <meta charset="utf-8">
-    <title></title>
+    <% include ../partials/head %>
+    <title>My Profile</title>
   </head>
   <body>
-
+    <h1 class="title --centered">Employee Profile</h1>
+    <form class="" action="" method="">
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="firstName">First Name</label>
+          <input type="text" name="firstName" value=""/>
+        </div>
+        <div class="labelled-input">
+          <label for="lastName">Last Name</label>
+          <input type="text" name="lastName" value=""/>
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="username">Username</label>
+          <input type="text" name="username" value="" disabled/>
+        </div>
+        <div class="labelled-input">
+          <label for="siteName">Site Name</label>
+          <input type="text" name="siteName" value="" disabled/>
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="siteName">Employee ID</label>
+          <input type="text" name="employeeId" value="" disabled/>
+        </div>
+        <div class="labelled-input">
+          <label for="phone">Phone</label>
+          <input type="text" name="phone" value="" />
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="address">Address</label>
+          <input type="text" name="address" value="" disabled/>
+        </div>
+      </div>
+      <div class="input-row">
+        <ul>
+          <%# for email in emails%>
+          <li>
+            <p>cwilson@hotmail.com</p>
+            <button name="removeEmail" type="button">Remove</button>
+          </li>
+          <%# End loop%>
+          <li>
+            <input type="text" name="email" value=""/>
+            <button name="addEmail" type="button">Add</button>
+          </li>
+        </ul>
+      </div>
+      <div class="input-row --centered">
+        <input type="checkbox" name="isVisitor" value="">
+        <label for="isVisitor">Visitor Account</label>
+      </div>
+      <div class="button-row">
+        <button class="btn" type="submit" name="submit">Update</button>
+        <a href="/dashboard">
+          <button class="btn" type="button" name="back">Back</button>
+        </a>
+      </div>
+    </form>
   </body>
+  <script type="text/javascript">
+    const emails = <%# emails | []%>
+  </script>
 </html>
