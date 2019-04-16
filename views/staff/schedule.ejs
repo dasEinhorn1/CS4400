@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <% include ../../partials/head %>
+  </head>
+  <body>
+    <%# Screen 31 %>
+    <h1>View Schedule</h1>
+    <form class="" action="/staff/schedule" method="get">
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="Name">Event Name</label>
+          <input type="text" name="name" value="" />
+        </div>
+        <div class="labelled-input">
+          <label for="Name">Description Keyword</label>
+          <input type="text" name="keyword" value="" />
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="Name">Start Date</label>
+          <input type="text" name="startDate" value="" />
+        </div>
+        <div class="labelled-input">
+          <label for="Name">End Date</label>
+          <input type="text" name="endDate" value="" />
+        </div>
+      </div>
+    </form>
+    <div class="input-row">
+      <button class="btn" type="button" name="filter">Filter</button>
+      <button class="btn" type="button" name="edit">View Event</button>
+    </div>
+    <table>
+      <tr>
+        <th>Event Name</th>
+        <th>Site Name</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Staff Count</th>
+      </tr>
+      <tr>
+        <td>Tour</td>
+        <td>Park</td>
+        <td>2019-02-02</td>
+        <td>2019-02-01</td>
+        <td>1</td>
+      </tr>
+    </table>
+
+    <div class="button-row">
+      <a href="/dashboard">
+        <button class="btn" type="button" name="back">Back</button>
+      </a>
+    </div>
+  </body>
+</html>
