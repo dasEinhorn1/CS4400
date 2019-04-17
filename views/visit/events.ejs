@@ -18,13 +18,9 @@
         </div>
       </div>
       <div class="input-row">
-        <div class="labelled-input">
-          <label for="siteName">Site Name</label>
-          <select class="dropdown" name="siteName">
-            <option value="ALL" selected>-- ALL --</option>
-            <%# get all sites names and site ids here %>
-          </select>
-        </div>
+        <%- include('../../partials/site-selector', {
+          sites: (locals.sites || [])
+        })%>
       </div>
       <div class="input-row">
         <div class="labelled-input">
@@ -71,14 +67,28 @@
     </form>
     <div class="resultsTable">
       <table>
-        <tr>
-          <th>Event Name</th>
-          <th>Site Name</th>
-          <th>Ticket Price</th>
-          <th>Ticket Remaining</th>
-          <th>Total Visits</th>
-          <th>My Visits</th>
-        </tr>
+        <thead>
+          <tr>
+            <th>Event Name</th>
+            <th>Site Name</th>
+            <th>Ticket Price</th>
+            <th>Ticket Remaining</th>
+            <th>Total Visits</th>
+            <th>My Visits</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% events.forEach((evt) => { %>
+            <tr>
+              <td><%= evt.name %></td>
+              <td><%= evt.siteName %></td>
+              <td><%= evt.price %></td>
+              <td><%= evt.ticketsRemaining %></td>
+              <td><%= evt.totalVisits %></td>
+              <td><%= evt.personalVisits %></td>
+            </tr>
+          <% })%>
+        </tbody>
         <%# insert list of qualifying events here %>
       </table>
     </div>

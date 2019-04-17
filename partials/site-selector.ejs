@@ -3,13 +3,13 @@
   <select class="dropdown" name="site">
     <% if (locals.allowAll || true) {%>
       <option value="all"
-      <%= (selected !== 'all') ? "selected": "" %>>
+      <%= (locals.selected !== 'all') ? "selected": "" %>>
       &mdash; ALL &mdash;
     </option>
     <% } %>
     <% sites.forEach(function(site) { %>
     <option value="<%=site%>"
-      <%= (selected === site) ? "selected":"" %>>
+      <%= (locals.selected === site) ? "selected":"" %>>
       <%= site %>
     </option>
     <% }); %>

@@ -1,6 +1,8 @@
 import express from 'express';
-import visitsFixture from '../fixtures/visits'
-import sitesFixture from '../fixtures/sites'
+import visitsFixture from '../fixtures/visits';
+import sitesFixture from '../fixtures/sites';
+import eventsFixture from '../fixtures/events';
+
 // TODO: Add validations
 
 const router = express.Router();
@@ -32,8 +34,6 @@ router.get('/history', (req, res, next) => {
     if (!startDate) return true;
     const dateVal = new Date(startDate);
     if (dateVal === "Invalid Date") return true;
-    console.log("V date " + new Date(v.date));
-    console.log("earliest " + dateVal);
     return dateVal <= new Date(v.date);
   }).filter((v) => {
     if (!endDate) return true;
@@ -73,7 +73,12 @@ router.get('/sites/:id', (req, res, next) => {
 // Screen 33
 router.get('/events', (req, res, next) => {
   // get all site names
-  res.render('visit/events')
+  const events = eventsFixture;
+  const sites = sitesFixture;
+  res.render('visit/events', {
+    events,
+    sites
+  })
 })
 
 // Screen 34
