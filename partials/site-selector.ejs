@@ -1,5 +1,7 @@
 <div class="labelled-input">
-  <label for="site">Site</label>
+  <label for="site">
+    <%= (locals.label) ? locals.label : 'Site'%>
+  </label>
   <select class="dropdown" name="site">
     <% if (locals.allowAll || true) {%>
       <option value="all"
