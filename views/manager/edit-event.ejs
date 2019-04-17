@@ -1,11 +1,101 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-    <meta charset="utf-8">
-    <title></title>
+    <% include ../../partials/head %>
   </head>
   <body>
     <%# Screen 26 %>
-    <h1>View/Edit Event</h1>
+    <h1 class="title --centered">View/Edit Event</h1>
+    <form class="" action="/manager/events/create" method="post">
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="name">Name</label>
+          <input type="text" name="name" value="" disabled/>
+        </div>
+        <div class="labelled-input">
+          <label for="price">Price ($)</label>
+          <input type="text" name="price" value="" disabled/>
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="startDate">Start Date</label>
+          <input type="text" name="startDate" value="" disabled/>
+        </div>
+        <div class="labelled-input">
+          <label for="endDate">End Date</label>
+          <input type="text" name="endDate" value="" disabled/>
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="capacity">Capacity</label>
+          <input type="text" name="capacity" value="" disabled/>
+        </div>
+        <div class="labelled-input">
+          <label for="minstaff">Minimum Staff Requirement</label>
+          <input type="text" name="minstaff" value="" disabled/>
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="assignStaff">Staff Assigned</label>
+          <select name="assignStaff" multiple>
+            <option value="1">Filler Staff 1</option>
+            <option value="2">Filler Staff 2</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="description">Description</label>
+          <textarea type="text" name="description" value=""></textarea>
+        </div>
+      </div>
+      <div class="button-row">
+        <button class="btn" type="submit">Update</button>
+      </div>
+    </form>
+    <br>
+    <form class="" action="" method="">
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="dailyVisitsRange">Daily Visits Range</label>
+          <input class="--little" type="text" name="lowerDailyVisits" value=""/>
+          &nbsp;&mdash;&nbsp;
+          <input class="--little" type="text" name="upperDailyVisits" value=""/>
+        </div>
+        <div class="labelled-input">
+          <label for="revenueRange">Daily Revenue Range</label>
+          <input class="--little" type="text" name="lowerRevenue" value=""/>
+          &nbsp;&mdash;&nbsp;
+          <input class="--little" type="text" name="upperRevenue" value=""/>
+        </div>
+      </div>
+      <div class="button-row">
+        <button type="button">Filter</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Daily Visits</th>
+            <th>Daily Revenue</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+    <div class="button-row --centered">
+      <a class="btn-link" href="/manager/events">
+        <button class="btn" type="button" name="back">Back</button>
+      </a>
+    </div>
   </body>
 </html>

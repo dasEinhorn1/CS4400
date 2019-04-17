@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <% include ../../partials/head %>
+    <meta charset="utf-8">
+    <title>Transit Detail</title>
+  </head>
+  <body>
+    <h1 class="title --centered">Take Transit</h1>
+    <form class="" action="" method="">
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="site">Site</label>
+          <input type="text" name="site" value="" disabled/>
+        </div>
+        <div class="labelled-input">
+          <label for="transportType">Transport Type</label>
+          <select class="dropdown" name="transportType">
+            <option value="MARTA">MARTA</option>
+            <option value="Bus">Bus</option>
+            <option value="Bike">Bike</option>
+            <option value="all">&ndash; All &ndash;</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-row">
+        <button class="btn" type="submit">Filter</button>
+      </div>
+    </form>
+    <form class="" action="index.html" method="post">
+      <table>
+        <thead>
+          <tr>
+            <th>Route</th>
+            <th>Transport Type</th>
+            <th>Price</th>
+            <th># Connected Sites</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%# for transit in transits {%>
+          <tr>
+            <td>816<%# transit.route %></td>
+            <td>Bus<%# transit.type %></td>
+            <td>2.5<%# transit.price %></td>
+            <td>4<%# transit.siteCount %></td>
+          </tr>
+          <%# }%>
+        </tbody>
+      </table>
+      <br>
+      <div class="input-row">
+        <a class="btn-link" href="/visit/sites">
+          <button class="btn" type="button" name="back">Back</button>
+        </a>
+        <div class="labelled-input">
+          <label for="transitDate">Transit Date</label>
+          <input type="text" name="transitDate" value=""/>
+        </div>
+        <button class="btn" type="submit">Log Transit</button>
+      </div>
+    </form>
+  </body>
+</html>

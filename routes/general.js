@@ -55,7 +55,7 @@ router.post('/register/employee-visitor', (req, res, next) => {
 // Screen 7-14 (CHECK AUTH; Minimum=user)
 router.get('/dashboard', (req, res, next) => {
   // TODO: check user auth, render correct page
-  res.render('dashboard', { type: "A", isVisitor: true })
+  res.render('dashboard', { type: "M", isVisitor: true })
 })
 
 // Screen 15 (CHECK AUTH; Minimum=user)

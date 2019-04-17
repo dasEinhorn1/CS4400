@@ -2,10 +2,86 @@
 <html lang="en" dir="ltr">
   <%# Screen 29 %>
   <head>
-    <meta charset="utf-8">
-    <title></title>
+    <% include ../../partials/head %>
+    <title>Site Report</title>
   </head>
   <body>
-    <h1>My Site Report</h1>
+    <h1 class="title --centered">Site Report</h1>
+    <form class="" action="" method="">
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="Name">Start Date</label>
+          <input type="text" name="startDate" value=""/>
+        </div>
+        <div class="labelled-input">
+          <label for="Name">End Date</label>
+          <input type="text" name="endDate" value=""/>
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="eventCountRange">Daily Visits Range</label>
+          <input class="--little" type="text" name="lowerEventCount" value=""/>
+          &nbsp;&mdash;&nbsp;
+          <input class="--little" type="text" name="upperEventCount" value=""/>
+        </div>
+        <div class="labelled-input">
+          <label for="staffCountRange">Daily Revenue Range</label>
+          <input class="--little" type="text" name="lowerStaffCount" value=""/>
+          &nbsp;&mdash;&nbsp;
+          <input class="--little" type="text" name="upperStaffCount" value=""/>
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="visitRange">Total Visits Range</label>
+          <input class="--little" type="text" name="lowerVisits" value=""/>
+          &nbsp;&mdash;&nbsp;
+          <input class="--little" type="text" name="upperVisits" value=""/>
+        </div>
+        <div class="labelled-input">
+          <label for="revenueRange">Total Revenue Range</label>
+          <input class="--little" type="text" name="lowerRevenue" value=""/>
+          &nbsp;&mdash;&nbsp;
+          <input class="--little" type="text" name="upperRevenue" value=""/>
+        </div>
+      </div>
+      <div class="button-row --centered">
+        <button class="btn" type="submit">Filter</button>
+      </div>
+    </form>
+    <br>
+    <form class="" action="" method="">
+      <div class="button-row">
+        <button type="submit" class="btn">Daily Detail</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Event Count</th>
+            <th>Staff Count</th>
+            <th>Total Visits</th>
+            <th>Total Revenue ($)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%# for day in report { %>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          <%# }%>
+        </tbody>
+      </table>
+    </form>
+    <div class="button-row --centered">
+      <a class="btn-link" href="/dashboard">
+        <button class="btn" type="button" name="back">Back</button>
+      </a>
+    </div>
   </body>
 </html>

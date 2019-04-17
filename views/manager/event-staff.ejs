@@ -1,11 +1,67 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-    <meta charset="utf-8">
-    <title></title>
+    <% include ../../partials/head %>
+    <title>Manage Staff</title>
   </head>
   <body>
     <%# Screen 28 %>
-    <h1>Manage Staff</h1>
+    <h1 class="title --centered">Manage Staff</h1>
+    <form class="" action="" method="">
+      <div class="input-row --centered">
+        <div class="labelled-input">
+          <label for="site">Site</label>
+          <select class="dropdown" name="site">
+            <%# for site in sites { %>
+              <option value="<%# site.name%>Filler">Filler<%# site.name %></option>
+              <%# } %>
+            </select>
+          </div>
+      </div>
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="firstName">First Name</label>
+          <input type="text" name="firstName" value=""/>
+        </div>
+        <div class="labelled-input">
+          <label for="lastName">Last Name</label>
+          <input type="text" name="lastName" value=""/>
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="startDate">Start Date</label>
+          <input type="text" name="startDate" value=""/>
+        </div>
+        <div class="labelled-input">
+          <label for="endDate">End Date</label>
+          <input type="text" name="endDate" value=""/>
+        </div>
+      </div>
+      <div class="button-row  --centered">
+        <button class="btn" type="submit">Filter</button>
+      </div>
+    </form>
+    <table>
+      <thead>
+        <tr>
+          <th>Staff Name</th>
+          <th># Event Shifts</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%# for staff in staff {%>
+        <tr>
+          <td><%# staff.name %></td>
+          <td><%# staff.eventShifts %></td>
+        </tr>
+        <%# } %>
+      </tbody>
+    </table>
+    <div class="button-row --centered">
+      <a class="btn-link" href="/dashboard">
+        <button class="btn" type="button" name="back">Back</button>
+      </a>
+    </div>
   </body>
 </html>

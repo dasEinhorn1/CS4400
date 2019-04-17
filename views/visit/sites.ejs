@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <% include ../../partials/head %>
+    <title>Explore Events</title>
+  </head>
+  <body>
+    <h1 class="title --centered">Explore Site</h1>
+    <form class="" action="" method="">
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="name">Site</label>
+          <select class="dropdown" name="site">
+            <%# for site in sites { %>
+            <option value="Inman Park<%#site.name%>">Inman Park<%# site.name%></option>
+            <%# } %>
+            <option value="all">&mdash; ALL &mdash;</option>
+          </select>
+        </div>
+        <div class="labelled-input">
+          <label for="openEveryday">Open Everyday</label>
+          <select class="dropdown" name="openEveryday">
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+            <option value="all" selected>&mdash; ALL &mdash;</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="startDate">Start Date</label>
+          <input type="text" name="startDate" value=""/>
+        </div>
+        <div class="labelled-input">
+          <label for="endDate">End Date</label>
+          <input type="text" name="endDate" value=""/>
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="visitRange">Total Visits Range</label>
+          <div class="range-inputs">
+            <input class="--little" type="text" name="lowerVisitTotal" value=""/>
+            &nbsp;&mdash;&nbsp;
+            <input class="--little" type="text" name="upperVisitTotal" value=""/>
+          </div>
+        </div>
+        <div class="labelled-input">
+          <label for="priceRange">Event Count Range</label>
+          <div class="range-inputs">
+            <input class="--little" type="text" name="lowerEventCount" value=""/>
+            &nbsp;&mdash;&nbsp;
+            <input class="--little" type="text" name="upperEventCount" value=""/>
+          </div>
+        </div>
+      </div>
+      <div class="input-row --centered">
+        <div class="labelled-input">
+          <input type="checkbox" name="includeVisited" checked='false'/>
+          <label for="includeVisited">Include Visited</label>
+        </div>
+        <button class="btn" type="submit">Filter</button>
+      </div>
+    </form>
+    <div class="button-row --right">
+      <button class="btn" type="button">Site Detail</button>
+      <button class="btn" type="button">Event Detail</button>
+    </div>
+    <div class="resultsTable">
+      <table>
+        <tr>
+          <th>Site Name</th>
+          <th>Event Count</th>
+          <th>Total Visits</th>
+          <th>My Visits</th>
+        </tr>
+        <%# insert list of qualifying events here %>
+      </table>
+    </div>
+    <div class="button-row">
+      <a class="btn-link" href="/dashboard">
+        <button class="btn" type="button" name="back">Back</button>
+      </a>
+    </div>
+  </body>
+</html>
