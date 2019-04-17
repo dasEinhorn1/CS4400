@@ -1,0 +1,21 @@
+<div class="labelled-input">
+  <label for="transportType">Transport Type</label>
+  <select class="dropdown" name="transportType">
+    <option value="all"
+      <%= (locals.selected !== 'all') ? "selected": "" %>>
+      &mdash; All &mdash;
+    </option>
+    <option value="MARTA"
+      <%= (locals.selected === 'MARTA') ? "selected": "" %>>
+      MARTA
+    </option>
+    <option value="BUS"
+      <%= (locals.selected === 'Bus') ? "selected": "" %>>
+      Bus
+    </option>
+    <option value="BIKE"
+      <%= (locals.selected === 'Bike') ? "selected": "" %>>
+      Bike
+    </option>
+  </select>
+</div>
