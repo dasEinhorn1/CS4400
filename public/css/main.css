@@ -64,6 +64,19 @@ input.--little {
 
 .button-row {
   margin-top: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.button-row-left {
+  flex: 1;
+}
+
+.button-row-right {
+  flex: 1;
+  display: flex;
+  justify-content: space-around;
 }
 
 .button-row.--centered {
@@ -98,6 +111,10 @@ input.--little {
   cursor: pointer;
   /* font-weight: bold; */
   color: white;
+}
+.resultsTable {
+  display: flex;
+  justify-content: center;
 }
 
 a.btn-link {
