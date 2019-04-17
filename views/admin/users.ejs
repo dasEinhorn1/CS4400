@@ -23,20 +23,24 @@
         </div>
         <div class="labelled-input">
           <label for="status">Status</label>
-        <select class="dropdown" name="Status">
-          <option value="manager" selected>--All--</option>
-          <option value="staff">Approved</option>
-          <option value="staff">Pending</option>
-          <option value="staff">Declined</option>
-        </select>
+          <select class="dropdown" name="Status">
+            <option value="manager" selected>--All--</option>
+            <option value="staff">Approved</option>
+            <option value="staff">Pending</option>
+            <option value="staff">Declined</option>
+          </select>
+        </div>
       </div>
+      <div class="button-row">
+        <div class="button-row-left">
+          <button class="btn" type="button" name="filter">Filter</button>
+        </div>
+        <div class="button-row-right">
+          <button class="btn" type="button" name="edit">Approve</button>
+          <button class="btn" type="button" name="edit">Decline</button>
+        </div>
       </div>
     </form>
-    <div class="button-row">
-      <button class="btn" type="button" name="filter">Filter</button>
-      <button class="btn" type="button" name="edit">Approve</button>
-      <button class="btn" type="button" name="edit">Decline</button>
-    </div>
     <table>
       <tr>
         <th>Username</th>

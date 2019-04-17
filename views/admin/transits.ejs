@@ -1,11 +1,76 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" dir="ltr">
   <head>
-    <meta charset="utf-8" />
-    <title>Atlanta Beltline</title>
+    <% include ../../partials/head %>
   </head>
   <body>
-    <h1><%= title ? title : 'Default Title' %></h1>
-    <p>Lorem ipsum blah blah blah</p>
+    <%# Screen 22 %>
+    <h1 class="title --centered">Manage Transit</h1>
+    <form class="" action="/admin/transits/create" method="get">
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="username">Transport Type</label>
+          <select class="dropdown" name="userType">
+            <option value="all" selected>--All--</option>
+            <!-- TODO: insert  -->
+          </select>
+        </div>
+        <div class="labelled-input">
+          <label for="route">Route</label>
+          <input type="text" name="route" value="" />
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="labelled-input">
+          <label for="">Contain Site</label>
+          <select class="dropdown" name="containSite">
+            <!-- TODO: insert data -->
+            <option value="SITE" selected>Inman Park</option>
+          </select>
+        </div>
+        <div class="labelled-input">
+          <label for="priceRange">Price Range</label>
+          <input type="text" name="priceMin" value="" />
+          --
+          <input type="text" name="priceMax" value="" />
+        </div>
+      </div>
+      <div class="button-row">
+        <div class="button-row-left">
+          <button class="btn" type="button" name="filter">Filter</button>
+        </div>
+        <div class="button-row-right">
+          <a href="/admin/transits/create">
+            <button class="btn" type="button" name="create">Create</button>
+          </a>
+          <button class="btn" type="button" name="edit">Edit</button>
+          <button class="btn" type="button" name="delete">Delete</button>
+        </div>
+      </div>
+    </form>
+    <div class="resultsTable">
+      <table>
+        <tr>
+          <th>Route</th>
+          <th>Transport Type</th>
+          <th>Price</th>
+          <th># Connected Sites</th>
+          <th># Transit Logged</th>
+        </tr>
+        <tr>
+          <td><input type="radio" selected />816</td>
+          <td>Bus</td>
+          <td>2.5</td>
+          <td>4</td>
+          <td>1</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="button-row">
+      <a href="/dashboard">
+        <button class="btn" type="button" name="back">Back</button>
+      </a>
+    </div>
   </body>
 </html>
