@@ -1,7 +1,9 @@
 import express from 'express';
+import Auth from '../middleware/Auth'
 
 const router = express.Router();
 
+router.use(Auth.admin)
 // router.get('/', (req, res) => {});
 
 // Screen 18

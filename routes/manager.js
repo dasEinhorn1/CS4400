@@ -1,6 +1,8 @@
 import express from 'express';
+import Auth from '../middleware/Auth';
 
 const router = express.Router();
+router.use(Auth.manager);
 
 // Screen 25
 router.get('/events', (req, res, next) => {

@@ -1,4 +1,5 @@
 import express from 'express';
+import Auth from '../middleware/Auth';
 import visitsFixture from '../fixtures/visits';
 import sitesFixture from '../fixtures/sites';
 import eventsFixture from '../fixtures/events';
@@ -6,6 +7,7 @@ import eventsFixture from '../fixtures/events';
 // TODO: Add validations
 
 const router = express.Router();
+router.use(Auth.visitor);
 
 // Screen 38
 router.get('/history', (req, res, next) => {

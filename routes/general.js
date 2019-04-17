@@ -1,56 +1,92 @@
 import express from 'express';
 import sitesFixture from '../fixtures/sites'
+import Auth from '../middleware/Auth';
+
 
 const router = express.Router();
 
-router.get('/', (req, res, next) => {
-  res.redirect('/dashboard')
-})
-
-// Screen 1
-router.get('/login', (req, res, next) => {
-  res.render('login')
-})
-router.post('/login', (req, res, next) => {
-  // TODO: validate login
+router.get('/', Auth.user, (req, res, next) => {
   res.redirect('/dashboard');
 })
 
+// Screen 1
+router.get('/login', Auth.unauthenticated, (req, res, next) => {
+  // if the user is logged in redirect to dashboard
+    // res.redirect('dashboard')
+  // else
+  res.render('login');
+})
+
+router.post('/login', Auth.unauthenticated, (req, res, next) => {
+  // TODO: validate login
+  const email = req.body.email;
+  const password = req.body.password;
+
+  // TODO: hash the password
+  const hashedPassword = password;
+
+  // check if a user exists with the given email
+  // call the database with email and hashed password
+  // if they don't, redirect to login with an error
+    // res.redirect('login')
+  // else
+    // set the user in the session, give the session to the cookie
+    res.redirect('dashboard');
+})
+
 // Screen 2
-router.get('/register', (req, res, next) => {
-  res.render('register')
+router.get('/register',
+  Auth.unauthenticated,
+  (req, res, next) => {
+  res.render('register');
 })
 
 // Screen 3
-router.get('/register/user', (req, res, next) => {
+router.get('/register/user',
+  Auth.unauthenticated,
+  (req, res, next) => {
   res.render('register-user')
 })
-router.post('/register/user', (req, res, next) => {
+router.post('/register/user',
+  Auth.unauthenticated,
+  (req, res, next) => {
   // res.send('registered user')
   res.redirect('/dashboard')
 })
 
 // Screen 4
-router.get('/register/visitor', (req, res, next) => {
+router.get('/register/visitor',
+  Auth.unauthenticated,
+  (req, res, next) => {
   res.render('register-visitor');
 })
-router.post('/register/visitor', (req, res, next) => {
+router.post('/register/visitor',
+  Auth.unauthenticated,
+  (req, res, next) => {
   // res.send('registered visitor')
   res.redirect('/dashboard')
 })
 // Screen 5
-router.get('/register/employee', (req, res, next) => {
+router.get('/register/employee',
+  Auth.unauthenticated,
+  (req, res, next) => {
   res.render('register-employee')
 })
-router.post('/register/employee', (req, res, next) => {
+router.post('/register/employee',
+  Auth.unauthenticated,
+  (req, res, next) => {
   // res.send('registered employee')
   res.redirect('/dashboard')
 })
 // Screen 6
-router.get('/register/employee-visitor', (req, res, next) => {
+router.get('/register/employee-visitor',
+  Auth.unauthenticated,
+  (req, res, next) => {
   res.render('register-employee-visitor')
 })
-router.post('/register/employee-visitor', (req, res, next) => {
+router.post('/register/employee-visitor',
+  Auth.unauthenticated,
+  (req, res, next) => {
   // res.render('register-employee-visitor')
   res.redirect('/dashboard')
 })
@@ -59,13 +95,21 @@ router.post('/register/employee-visitor', (req, res, next) => {
   BEGIN USER-ONLY ROUTES
 */
 // Screen 7-14 (CHECK AUTH; Minimum=user)
-router.get('/dashboard', (req, res, next) => {
+router.get('/dashboard', Auth.user, (req, res, next) => {
   // TODO: check user auth, render correct page
-  res.render('dashboard', { type: "M", isVisitor: true })
+  const currentUser = {
+    type: "M",
+    isVisitor: true
+  };
+
+  res.render('dashboard', {
+    type: currentUser.type,
+    isVisitor:currentUser.isVisitor
+  })
 })
 
 // Screen 15 (CHECK AUTH; Minimum=user)
-router.get('/transits', (req, res, next) => {
+router.get('/transits', Auth.user, (req, res, next) => {
   const siteName = req.query.site;
   const transportType = req.query.transportType;
   const lowerPrice = req.query.lowerPrice;
@@ -97,7 +141,7 @@ router.get('/transits', (req, res, next) => {
 });
 
 // log a new take transit for the user
-router.post('/transits', (req, res, next) => {
+router.post('/transits', Auth.user, (req, res, next) => {
   const transitRoute = req.body.route;
   const transitType = req.body.type;
   const transitDate = req.body.date;
@@ -107,7 +151,7 @@ router.post('/transits', (req, res, next) => {
 });
 
 // Screen 16 (CHECK AUTH; Minimum=user)
-router.get('/transits/history', (req, res, next) => {
+router.get('/transits/history', Auth.user, (req, res, next) => {
   const siteName = req.query.site;
   const transportType = req.query.transportType;
   const route = req.query.route;
@@ -151,8 +195,41 @@ router.get('/transits/history', (req, res, next) => {
   BEGIN EMPLOYEE-ONLY ROUTES
 */
 // Screen 17
-router.get('/profile', (req, res, next) => {
-  res.render('profile')
+router.get('/profile', Auth.employee, (req, res, next) => {
+  // get the current employee's profile
+  const employee = {
+    firstName: 'Adam',
+    lastName: 'Hayward',
+    username: 'ahayward3',
+    site: 'Inman Park',
+    id: '903247965',
+    address: '8 Sabra Circle, Derry NH, 03038',
+    phone: '(603)247-8988',
+    isVisitor: true,
+    emails: [
+      'achayward1@gmail.com',
+      'adam.hayward@gatech.edu'
+    ]
+  }
+  //
+  res.render('profile', {
+    employee
+  })
+})
+
+// update the employee profile
+router.post('/profile', Auth.employee, (req, res, next) => {
+  const firstName = req.body.firstName;
+  const lastName = req.body.lastName;
+  const phone = req.body.phone;
+  const isVisitor = req.body.isVisitor;
+  const emails = req.body.emails;
+
+  /* get the currently logged in employee and update
+   * these values for them
+   */
+
+  res.redirect('profile');
 })
 
 export default router;
