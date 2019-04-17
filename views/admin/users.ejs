@@ -5,57 +5,66 @@
   </head>
   <body>
     <%# Screen 18 %>
-    <h1>Manage User</h1>
+    <h1 class="title --centered">Manage User</h1>
     <form class="" action="/admin/users" method="get">
       <div class="input-row">
         <div class="labelled-input">
           <label for="Name">Username</label>
-          <input type="text" name="name" value="" />
+          <input type="text" name="username" value="" />
         </div>
         <div class="labelled-input">
           <label for="userType">User Type</label>
           <select class="dropdown" name="userType">
-            <option value="manager" selected>User</option>
-            <option value="staff">Visitor</option>
+            <option value="user" selected>User</option>
+            <option value="visitor">Visitor</option>
             <option value="staff">Staff</option>
-            <option value="staff">Manager</option>
+            <option value="manage">Manager</option>
           </select>
         </div>
         <div class="labelled-input">
           <label for="status">Status</label>
-          <select class="dropdown" name="Status">
-            <option value="manager" selected>--All--</option>
-            <option value="staff">Approved</option>
-            <option value="staff">Pending</option>
-            <option value="staff">Declined</option>
+          <select class="dropdown" name="status">
+            <option value="all" selected>--All--</option>
+            <option value="approved">Approved</option>
+            <option value="pending">Pending</option>
+            <option value="declined">Declined</option>
           </select>
         </div>
       </div>
       <div class="button-row">
-        <div class="button-row-left">
-          <button class="btn" type="button" name="filter">Filter</button>
-        </div>
-        <div class="button-row-right">
-          <button class="btn" type="button" name="edit">Approve</button>
-          <button class="btn" type="button" name="edit">Decline</button>
+        <div class="button-row">
+          <button class="btn" type="submit">Filter</button>
         </div>
       </div>
     </form>
-    <table>
-      <tr>
-        <th>Username</th>
-        <th>Email Count</th>
-        <th>User Type</th>
-        <th>Status</th>
-      </tr>
-      <tr>
-        <td><input type="radio" selected /> cwilson</td>
-        <td>3</td>
-        <td>Manager</td>
-        <td>Pending</td>
-      </tr>
-    </table>
-
+    <form class="" action="/admin/users" method="post">
+      <table>
+        <thead>
+          <th>Username</th>
+          <th>Email Count</th>
+          <th>User Type</th>
+          <th>Status</th>
+        </thead>
+        <tbody>
+          <% users.forEach(user => { %>
+          <tr>
+            <td><input type="radio" name="selectedUsername" value="<%= user.username %>"/> <%= user.username %></td>
+            <td><%= user.emails.length%></td>
+            <td><%= user.type %></td>
+            <td><%= user.status %></td>
+          </tr>
+          <% });%>
+        </tbody>
+      </table>
+      <div class="button-row">
+        <button class="btn" type="submit" name="confirmStatus" value="approve">
+          Approve
+        </button>
+        <button class="btn" type="submit" name="confirmStatus" value="decline">
+          Decline
+        </button>
+      </div>
+    </form>
     <div class="button-row">
       <a href="/dashboard">
         <button class="btn" type="button" name="back">Back</button>
