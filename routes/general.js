@@ -24,7 +24,8 @@ router.get('/register/user', (req, res, next) => {
   res.render('register-user')
 })
 router.post('/register/user', (req, res, next) => {
-  res.send('registered user')
+  // res.send('registered user')
+  res.redirect('/dashboard')
 })
 
 // Screen 4
@@ -32,21 +33,24 @@ router.get('/register/visitor', (req, res, next) => {
   res.render('register-visitor');
 })
 router.post('/register/visitor', (req, res, next) => {
-  res.send('registered visitor')
+  // res.send('registered visitor')
+  res.redirect('/dashboard')
 })
 // Screen 5
 router.get('/register/employee', (req, res, next) => {
   res.render('register-employee')
 })
 router.post('/register/employee', (req, res, next) => {
-  res.send('registered employee')
+  // res.send('registered employee')
+  res.redirect('/dashboard')
 })
 // Screen 6
 router.get('/register/employee-visitor', (req, res, next) => {
   res.render('register-employee-visitor')
 })
 router.post('/register/employee-visitor', (req, res, next) => {
-  res.render('register-employee-visitor')
+  // res.render('register-employee-visitor')
+  res.redirect('/dashboard')
 })
 
 /*
