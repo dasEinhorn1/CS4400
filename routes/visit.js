@@ -1,10 +1,59 @@
 import express from 'express';
+import visitsFixture from '../fixtures/visits'
+import sitesFixture from '../fixtures/sites'
+// TODO: Add validations
 
 const router = express.Router();
 
 // Screen 38
 router.get('/history', (req, res, next) => {
-  res.render('visit/history')
+  const eventName = req.query.event;
+  const siteName = req.query.site;
+  const startDate = req.query.startDate;
+  const endDate = req.query.endDate;
+  // query with the above parameters
+  // get queried visits from both sites or events
+  /* visit = {
+    *   date: '2019-01-01',
+    *   event: event.name
+    *   site: site.name
+    *   price: event.price
+    * }
+    */
+  const sites = sitesFixture;
+  const visits = visitsFixture;
+  const filteredVisits = visits.filter((v) => {
+    if (!eventName) return true;
+    return eventName === v.event;
+  }).filter((v) => {
+    if (!siteName || siteName.toLowerCase() === 'all') return true;
+    return siteName === v.site;
+  }).filter((v) => {
+    if (!startDate) return true;
+    const dateVal = new Date(startDate);
+    if (dateVal === "Invalid Date") return true;
+    console.log("V date " + new Date(v.date));
+    console.log("earliest " + dateVal);
+    return dateVal <= new Date(v.date);
+  }).filter((v) => {
+    if (!endDate) return true;
+    const dateVal = new Date(endDate);
+    if (dateVal === "Invalid Date") return true;
+    return dateVal >= new Date(v.date);
+  })
+  // get sites to populate site dropdown
+  // store user info in session?
+
+  res.render('visit/history', {
+    formValues: {
+      event: eventName,
+      site: siteName,
+      startDate: startDate,
+      endDate: endDate
+    },
+    visits: filteredVisits,
+    sites: sites
+  })
 })
 
 // Screen 35

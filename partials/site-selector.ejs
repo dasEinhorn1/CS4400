@@ -1,0 +1,17 @@
+<div class="labelled-input">
+  <label for="site">Site</label>
+  <select class="dropdown" name="site">
+    <% if (locals.allowAll || true) {%>
+      <option value="all"
+      <%= (selected !== 'all') ? "selected": "" %>>
+      &mdash; ALL &mdash;
+    </option>
+    <% } %>
+    <% sites.forEach(function(site) { %>
+    <option value="<%=site%>"
+      <%= (selected === site) ? "selected":"" %>>
+      <%= site %>
+    </option>
+    <% }); %>
+  </select>
+</div>

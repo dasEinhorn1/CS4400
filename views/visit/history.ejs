@@ -7,30 +7,26 @@
   </head>
   <body>
     <h1 class="title --centered">Visit History</h1>
-    <form class="" action="index.html" method="post">
+    <form class="" action="/visit/history" method="get">
       <div class="input-row">
         <div class="labelled-input">
           <label for="event">Event</label>
-          <input type="text" name="event" value="">
+          <input type="text" name="event"
+            value="<%= formValues.event %>">
         </div>
-        <div class="labelled-input">
-          <label for="site">Site</label>
-          <select class="dropdown" name="site">
-            <%# for site in sites { %>
-            <option value="Inman Park<%#site.name%>">Inman Park<%# site.name%></option>
-            <%# } %>
-            <option value="all">&mdash; ALL &mdash;</option>
-          </select>
-        </div>
+        <%- include('../../partials/site-selector',
+          { sites: sites, selected: formValues.site }) %>
       </div>
       <div class="input-row">
         <div class="labelled-input">
           <label for="startDate">Start Date</label>
-          <input type="text" name="startDate" value="">
+          <input type="text" name="startDate"
+            value="<%= formValues.startDate %>">
         </div>
         <div class="labelled-input">
           <label for="endDate">End Date</label>
-          <input type="text" name="endDate" value="">
+          <input type="text" name="endDate"
+            value="<%= formValues.endDate %>">
         </div>
       </div>
       <div class="button-row --centered">
@@ -45,12 +41,14 @@
         <th>Price</th>
       </thead>
       <tbody>
+        <% visits.forEach(function(visit) { %>
         <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td><%= visit.date %></td>
+          <td><%= visit.event %></td>
+          <td><%= visit.site %></td>
+          <td><%= visit.price %></td>
         </tr>
+        <% }); %>
       </tbody>
     </table>
     <div class="button-row --centered">
