@@ -119,6 +119,7 @@ input.--little {
 
 a.btn-link {
   display: block;
+  text-decoration: none;
 }
 
 a.btn-link > .btn {
