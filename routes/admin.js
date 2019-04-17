@@ -1,5 +1,7 @@
 import express from 'express';
 import Auth from '../middleware/Auth'
+import users from '../fixtures/users';
+import manages from '../fixtures/manages';
 
 const router = express.Router();
 
@@ -9,14 +11,37 @@ router.use(Auth.admin)
 // Screen 18
 router.get('/users', (req, res) => {
   // res.send('Screen 18');
-  res.render('admin/users', { title: 'Users'});
+
+  console.log(req.query);
+  res.render('admin/users', { title: 'Users', users: users});
 });
+
+router.post('/users', (req, res) => {
+
+  console.log(req.body);
+  res.redirect('/admin/users');
+})
 
 // Screen 19
 router.get('/sites', (req, res) => {
   // res.send('Screen 19');
-  res.render('admin/sites', { title: 'Sites' });
+
+  console.log(req.query);
+  res.render('admin/sites', { title: 'Sites' , manages: manages });
 });
+router.post('/sites', (req, res) => {
+
+  console.log(req.body);
+  const buttonType = req.body.buttonType;
+
+  if (buttonType == 'edit') {
+    // if 'Edit', retrieve its info and send it to 'edit'
+
+  } else if (buttonType == 'delete') {
+    // elif 'Delete', just delete it and return back
+
+  }
+})
 
 // Screen 21
 router.get('/sites/create', (req, res) => {

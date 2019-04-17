@@ -1,3 +1,4 @@
+// TODO: this user model may needs to change
 const User = (firstName, lastName, status, username, type, emails) => ({
   firstName,
   lastName,

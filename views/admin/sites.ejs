@@ -10,14 +10,14 @@
       <div class="input-row">
         <div class="labelled-input">
           <label for="username">Sites</label>
-          <select class="dropdown" name="userType">
+          <select class="dropdown" name="sites">
             <option value="all" selected>--All--</option>
             <!-- TODO: insert  -->
           </select>
         </div>
         <div class="labelled-input">
           <label for="username">Manager</label>
-          <select class="dropdown" name="Status">
+          <select class="dropdown" name="manager">
             <option value="all" selected>--All--</option>
           </select>
         </div>
@@ -25,38 +25,53 @@
       <div class="input-row">
         <div class="labelled-input">
           <label for="">Open Everyday</label>
-          <select class="dropdown" name="everyday">
-            <option value="yes" selected>Yes</option>
-            <option value="no">No</option>
+          <select class="dropdown" name="openEveryday">
+            <option value="true" selected>Yes</option>
+            <option value="false">No</option>
           </select>
         </div>
       </div>
       <div class="button-row">
-        <div class="button-row-left">
-          <button class="btn" type="button" name="filter">Filter</button>
-        </div>
-        <div class="button-row-right">
-          <a href="/admin/sites/create">
-            <button class="btn" type="button" name="create">Create</button>
-          </a>
-          <button class="btn" type="button" name="edit">Edit</button>
-          <button class="btn" type="button" name="delete">Delete</button>
-        </div>
+        <button class="btn" type="submit">Filter</button>
       </div>
     </form>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Manager</th>
-        <th>Open Everyday</th>
-      </tr>
-      <tr>
-        <td><input type="radio" selected />Atlanta Park</td>
-        <td>Jason</td>
-        <td>No</td>
-      </tr>
-    </table>
+    <form class="" action="/admin/sites" method="post">
+      <table>
+        <thead>
+          <th>Name</th>
+          <th>Manager</th>
+          <th>Open Everyday</th>
+        </thead>
+        <tbody>
+          <% manages.forEach(manage => { %>
+          <tr>
+            <td>
+              <input
+                type="radio"
+                name="selectedSiteName"
+                value="<%= manage.name %>"
+              />
+              <%= manage.name %>
+            </td>
+            <td><%= manage.manager%></td>
+            <td><%= manage.openEveryday%></td>
+          </tr>
+          <% });%>
+        </tbody>
+      </table>
 
+      <div class="button-row">
+        <a href="/admin/sites/create">
+          <button class="btn" type="button" name="create">Create</button>
+        </a>
+        <button class="btn" type="submit" name="buttonType" value="edit">
+          Edit
+        </button>
+        <button class="btn" type="submit" name="buttonType" value="delete">
+          Delete
+        </button>
+      </div>
+    </form>
     <div class="button-row">
       <a href="/dashboard">
         <button class="btn" type="button" name="back">Back</button>
