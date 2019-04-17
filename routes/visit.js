@@ -9,10 +9,10 @@ const router = express.Router();
 
 // Screen 38
 router.get('/history', (req, res, next) => {
-  const eventName = req.query.event;
-  const siteName = req.query.site;
-  const startDate = req.query.startDate;
-  const endDate = req.query.endDate;
+  const eventName = req.query.event || '';
+  const siteName = req.query.site || '';
+  const startDate = req.query.startDate || '';
+  const endDate = req.query.endDate || '';
   // query with the above parameters
   // get queried visits from both sites or events
   /* visit = {
