@@ -13,11 +13,11 @@
     <form class="" action="/admin/sites/create" method="post">
       <div class="input-row">
         <div class="labelled-input">
-          <label for="firstName">Name</label>
+          <label for="name">Name</label>
           <input type="text" name="name" />
         </div>
         <div class="labelled-input">
-          <label for="lastName">Zipcode</label>
+          <label for="zipcode">Zipcode</label>
           <input type="text" name="zipcode" />
         </div>
       </div>
@@ -31,7 +31,11 @@
         <div class="labelled-input">
           <label for="password">Manager</label>
           <select name="manage" id="">
-            <option value="clara" selected>Clara Wilson</option>
+            <% users.forEach(user => { %>
+            <option value='<%= user.firstName + " " + user.lastName %>' selected
+              ><%= user.firstName + ' ' + user.lastName %></option
+            >
+            <% }) %>
           </select>
         </div>
         <div class="labelled-input">
@@ -43,7 +47,7 @@
         <a href="/admin/sites">
           <button class="btn" type="button" name="back">Back</button>
         </a>
-        <button class="btn" type="submit" name="create">Create</button>
+        <button class="btn" type="submit">Create</button>
       </div>
     </form>
   </body>

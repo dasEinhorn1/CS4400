@@ -24,6 +24,9 @@ const users = [
   User('first-test3', 'last-test3', 'Pending', 'test3', 'Manager', [
     'test3@gmail.com',
     'test33@test.com'
+  ]),
+  User('first-test4', 'last-test4', 'approved', 'test3', 'Manager', [
+    'test4@gmail.com',
   ])
 ];
 
