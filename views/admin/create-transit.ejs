@@ -9,8 +9,8 @@
     <form class="" action="/admin/transits/create" method="post">
       <div class="input-row">
         <div class="labelled-input">
-          <label for="username">Transport Type</label>
-          <select class="dropdown" name="userType">
+          <label for="transportType">Transport Type</label>
+          <select class="dropdown" name="transportType">
             <option value="marta" selected>MARTA</option>
             <option value="bus">BUS</option>
             <option value="bike">BIKE</option>
@@ -22,20 +22,16 @@
         </div>
         <div class="labelled-input">
           <label for="route">Price ($)</label>
-          <input type="text" name="route" value="" />
+          <input type="text" name="price" value="" />
         </div>
       </div>
       <div class="input-row">
         <div class="labelled-input">
           <label for="connectedSites">Connected Sites</label>
-          <select name="" id="connectedSites" multiple>
-            <option value="">Atlanta Beltline Center</option>
-            <option value="">Atlanta Beltline Center</option>
-            <option value="">Atlanta Beltline Center</option>
-            <option value="">Atlanta Beltline Center</option>
-            <option value="">Atlanta Beltline Center</option>
-            <option value="">Atlanta Beltline Center</option>
-            <option value="">Atlanta Beltline Center</option>
+          <select name="connectedSites" multiple>
+            <% sites.forEach(site => { %>
+            <option value="<%= site %>"><%= site %> </option>
+            <% }) %>
           </select>
         </div>
       </div>
@@ -43,7 +39,7 @@
         <a href="/admin/transits">
           <button class="btn" type="button" name="back">Back</button>
         </a>
-        <button class="btn" type="submit" name="submit">Submit</button>
+        <button class="btn" type="submit">Submit</button>
       </div>
     </form>
   </body>

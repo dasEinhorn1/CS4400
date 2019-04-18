@@ -6,12 +6,15 @@
   <body>
     <%# Screen 22 %>
     <h1 class="title --centered">Manage Transit</h1>
-    <form class="" action="/admin/transits/create" method="get">
+    <form class="" action="/admin/transits" method="get">
       <div class="input-row">
         <div class="labelled-input">
-          <label for="username">Transport Type</label>
-          <select class="dropdown" name="userType">
+          <label for="transportType">Transport Type</label>
+          <select class="dropdown" name="transportType">
             <option value="all" selected>--All--</option>
+            <option value="MARTA">MARTA</option>
+            <option value="Bus">Bus</option>
+            <option value="Bike">Bike</option>
             <!-- TODO: insert  -->
           </select>
         </div>
@@ -25,7 +28,7 @@
           <label for="">Contain Site</label>
           <select class="dropdown" name="containSite">
             <!-- TODO: insert data -->
-            <option value="SITE" selected>Inman Park</option>
+            <option value="Inman Park" selected>Inman Park</option>
           </select>
         </div>
         <div class="labelled-input">
@@ -36,41 +39,65 @@
         </div>
       </div>
       <div class="button-row">
-        <div class="button-row-left">
-          <button class="btn" type="button" name="filter">Filter</button>
-        </div>
-        <div class="button-row-right">
-          <a href="/admin/transits/create">
-            <button class="btn" type="button" name="create">Create</button>
-          </a>
-          <button class="btn" type="button" name="edit">Edit</button>
-          <button class="btn" type="button" name="delete">Delete</button>
-        </div>
+        <button class="btn" type="submit">Filter</button>
       </div>
     </form>
-    <div class="resultsTable">
-      <table>
-        <tr>
-          <th>Route</th>
-          <th>Transport Type</th>
-          <th>Price</th>
-          <th># Connected Sites</th>
-          <th># Transit Logged</th>
-        </tr>
-        <tr>
-          <td><input type="radio" selected />816</td>
-          <td>Bus</td>
-          <td>2.5</td>
-          <td>4</td>
-          <td>1</td>
-        </tr>
-      </table>
-    </div>
-
+    <form class="" action="/admin/transits" method="post">
+      <div class="resultsTable">
+        <table>
+          <thead>
+            <th>Route</th>
+            <th>Transport Type</th>
+            <th>Price</th>
+            <th># Connected Sites</th>
+            <th># Transit Logged</th>
+          </thead>
+          <tbody>
+            <% transits.forEach(transit => { %>
+            <tr>
+              <td>
+                <input
+                  type="radio"
+                  name="route"
+                  onclick="chooseTransit(this)"
+                  data-type="<%= transit.type %>"
+                  value="<%= transit.route %>"
+                />
+                <%= transit.route %>
+              </td>
+              <td>
+                <%= transit.type %>
+              </td>
+              <td><%= transit.price %></td>
+              <td><%= transit.numSites %></td>
+              <td><%= transit.numLogs %></td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+      <div class="button-row">
+        <a href="/admin/transits/create">
+          <button class="btn" type="button">Create</button>
+        </a>
+        <button class="btn" type="submit" name="buttonType" value="edit">
+          Edit
+        </button>
+        <button class="btn" type="submit" name="buttonType" value="delete">
+          Delete
+        </button>
+      </div>
+      <input id="transport-type" type="hidden" name="type" value="" />
+    </form>
     <div class="button-row">
       <a href="/dashboard">
         <button class="btn" type="button" name="back">Back</button>
       </a>
     </div>
   </body>
+  <script type="text/javascript">
+    function chooseTransit(el) {
+      document.getElementById('transport-type').value = el.dataset.type;
+    }
+  </script>
 </html>

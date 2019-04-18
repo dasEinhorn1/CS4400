@@ -32,7 +32,16 @@
         </div>
       </div>
       <div class="button-row">
-        <button class="btn" type="submit">Filter</button>
+        <div class="button-row-left">
+          <button class="btn" type="submit" name="buttonType" value="filter">
+            Filter
+          </button>
+        </div>
+        <div class="button-row-right">
+          <a href="/admin/sites/create">
+            <button class="btn" type="button" name="create">Create</button>
+          </a>
+        </div>
       </div>
     </form>
     <form class="" action="/admin/sites" method="post">
@@ -48,6 +57,7 @@
             <td>
               <input
                 type="radio"
+                id="siteName"
                 name="selectedSiteName"
                 value="<%= manage.name %>"
               />
@@ -61,13 +71,10 @@
       </table>
 
       <div class="button-row">
-        <a href="/admin/sites/create">
-          <button class="btn" type="button" name="create">Create</button>
-        </a>
-        <button class="btn" type="submit" name="buttonType" value="edit">
+        <button class="btn" type="submit" formaction="/admin/sites/edit" name="buttonType" value="edit">
           Edit
         </button>
-        <button class="btn" type="submit" name="buttonType" value="delete">
+        <button class="btn" type="submit">
           Delete
         </button>
       </div>
