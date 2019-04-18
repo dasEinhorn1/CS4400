@@ -34,12 +34,13 @@
           disabled>
       </div>
     </div>
-    <form class="" action="<%= site.name %>" method="post">
+    <form class="" action="" method="post">
       <div class="input-row">
         <div class="labelled-input --centered">
           <label for="visitDate">Visit Date</label>
           <input type="text" name="visitDate" value="">
         </div>
+        <input type="hidden" name="site" value="<%= site.name %>">
         <button class="btn" type="submit">Log Visit</button>
       </div>
     </form>

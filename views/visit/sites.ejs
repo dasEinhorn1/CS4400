@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <% include ../../partials/head %>
-    <title>Explore Events</title>
+    <title>Explore Sites</title>
   </head>
   <body>
     <h1 class="title --centered">Explore Site</h1>
@@ -78,11 +78,13 @@
       </div>
     </form>
     <div class="button-row --right">
-      <button class="btn" type="button">Event Detail</button>
+      <button class="btn"
+        type="button" onclick="goToSiteDetail()">Site Detail</button>
+      <button class="btn"
+        type="button" onclick="goToTransitDetail()">Transit Detail</button>
     </div>
     <div class="resultsTable">
-      <form class="" action="/visit/sites/site" method="get">
-        <button class="btn" type="submit">Site Detail</button>
+      <form id="site-picker" action="/visit/sites/site" method="get">
         <table>
           <thead>
             <tr>
@@ -115,4 +117,16 @@
       </a>
     </div>
   </body>
+  <script type="text/javascript">
+    function goToSiteDetail() {
+      var sitePicker = document.getElementById('site-picker')
+        sitePicker.action = "/visit/sites/site"
+        sitePicker.submit()
+    }
+    function goToTransitDetail () {
+      var sitePicker = document.getElementById('site-picker')
+        sitePicker.action = "/visit/sites/site/transits"
+        sitePicker.submit()
+    }
+  </script>
 </html>

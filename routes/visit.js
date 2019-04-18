@@ -179,6 +179,7 @@ router.post('/sites/site/transits', (req, res, next) => {
 // Screen 37
 router.get('/sites/site', (req, res, next) => {
   const siteName = req.query.site;
+  if (!siteName) res.redirect('/visit/sites')
 
   res.render('visit/site', {
     site: {
@@ -278,7 +279,9 @@ router.get('/events', (req, res, next) => {
 // Screen 34
 router.get('/events/event', (req, res, next) => {
   const eventName = req.query.event;
+  const siteName = req.query.site;
 
+  if (!eventName || !siteName) res.redirect('back')
 
   const event = {
     name: 'Bus Tour',

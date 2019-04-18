@@ -79,35 +79,45 @@
       </div>
       <div class="button-row">
         <button class="btn" type="submit" name="filter">Filter</button>
-        <button class="btn" type="button" name="eventDetail">Event Detail</button>
+        <button class="btn" type="button"
+          onclick="goToEventDetail()">Event Detail</button>
       </div>
     </form>
     <div class="resultsTable">
-      <table>
-        <thead>
-          <tr>
-            <th>Event Name</th>
-            <th>Site Name</th>
-            <th>Ticket Price</th>
-            <th>Ticket Remaining</th>
-            <th>Total Visits</th>
-            <th>My Visits</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% events.forEach((evt) => { %>
+      <form id="event-picker" action="events/event" method="get">
+        <table>
+          <thead>
             <tr>
-              <td><%= evt.name %></td>
-              <td><%= evt.siteName %></td>
-              <td><%= evt.price %></td>
-              <td><%= evt.ticketsRemaining %></td>
-              <td><%= evt.totalVisits %></td>
-              <td><%= evt.personalVisits %></td>
+              <th>Event Name</th>
+              <th>Site Name</th>
+              <th>Ticket Price</th>
+              <th>Ticket Remaining</th>
+              <th>Total Visits</th>
+              <th>My Visits</th>
             </tr>
-          <% })%>
-        </tbody>
-        <%# insert list of qualifying events here %>
-      </table>
+          </thead>
+          <tbody>
+            <% events.forEach((evt) => { %>
+              <tr class="event-line">
+                <td>
+                  <input type='radio'
+                    value="<%= evt.name %>"
+                    name="event"
+                    data-site="<%= evt.siteName %>"
+                    onclick="pickEvent(this)"/>
+                  <%= evt.name %>
+                </td>
+                <td><%= evt.siteName %></td>
+                <td><%= evt.price %></td>
+                <td><%= evt.ticketsRemaining %></td>
+                <td><%= evt.totalVisits %></td>
+                <td><%= evt.personalVisits %></td>
+              </tr>
+            <% })%>
+          </tbody>
+        </table>
+        <input id="site-name" type="hidden" name="site" value="">
+      </form>
     </div>
     <div class="button-row">
       <a class="btn-link" href="/dashboard">
@@ -115,4 +125,16 @@
       </a>
     </div>
   </body>
+  <script type="text/javascript">
+    function goToEventDetail () {
+      const siteInput = document.getElementById('site-name');
+      const evt = document.querySelector('.event-line input:checked')
+      if (siteInput.value && evt)
+        document.getElementById('event-picker').submit();
+    }
+    function pickEvent (el) {
+      document.getElementById('site-name')
+        .value = el.dataset.site;
+    }
+  </script>
 </html>

@@ -34,10 +34,11 @@
         <tbody>
           <% transits.forEach((transit) => { %>
           <tr>
-            <td data-type="<%= transit.type %>">
+            <td>
               <input type='radio'
                 value="<%= transit.route %>"
                 name="route"
+                data-type="<%= transit.type %>"
                 onclick="pickTransit(this)"/>
                 <%= transit.route %></td>
             <td><%= transit.type %></td>
@@ -64,8 +65,7 @@
   </body>
   <script type="text/javascript">
     function pickTransit (el) {
-      document.getElementById('transit-type')
-        .value = el.parentElement.dataset.type;
+      document.getElementById('transit-type').value = el.dataset.type;
     }
   </script>
 </html>
