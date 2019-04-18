@@ -7,27 +7,21 @@
   </head>
   <body>
     <h1 class="title --centered">Take Transit</h1>
-    <form class="" action="" method="">
+    <form class="" action="" method="get">
       <div class="input-row">
         <div class="labelled-input">
           <label for="site">Site</label>
-          <input type="text" name="site" value="" disabled/>
+          <input type="text" name="site" value="<%= site.name %>" disabled/>
         </div>
-        <div class="labelled-input">
-          <label for="transportType">Transport Type</label>
-          <select class="dropdown" name="transportType">
-            <option value="MARTA">MARTA</option>
-            <option value="Bus">Bus</option>
-            <option value="Bike">Bike</option>
-            <option value="all">&ndash; All &ndash;</option>
-          </select>
-        </div>
+        <%- include('../../partials/transport-selector', {
+          selected: formValues.transportType
+        }) %>
       </div>
       <div class="input-row">
         <button class="btn" type="submit">Filter</button>
       </div>
     </form>
-    <form class="" action="index.html" method="post">
+    <form class="" action="" method="post">
       <table>
         <thead>
           <tr>
@@ -38,14 +32,19 @@
           </tr>
         </thead>
         <tbody>
-          <%# for transit in transits {%>
+          <% transits.forEach((transit) => { %>
           <tr>
-            <td>816<%# transit.route %></td>
-            <td>Bus<%# transit.type %></td>
-            <td>2.5<%# transit.price %></td>
-            <td>4<%# transit.siteCount %></td>
+            <td data-type="<%= transit.type %>">
+              <input type='radio'
+                value="<%= transit.route %>"
+                name="route"
+                onclick="pickTransit(this)"/>
+                <%= transit.route %></td>
+            <td><%= transit.type %></td>
+            <td><%= transit.price %></td>
+            <td><%= transit.siteCount %></td>
           </tr>
-          <%# }%>
+          <% }) %>
         </tbody>
       </table>
       <br>
@@ -57,8 +56,16 @@
           <label for="transitDate">Transit Date</label>
           <input type="text" name="transitDate" value=""/>
         </div>
+        <input type="hidden" name="site" value="<%= site.name %>">
+        <input id="transit-type" type="hidden" name="type" value="">
         <button class="btn" type="submit">Log Transit</button>
       </div>
     </form>
   </body>
+  <script type="text/javascript">
+    function pickTransit (el) {
+      document.getElementById('transit-type')
+        .value = el.parentElement.dataset.type;
+    }
+  </script>
 </html>

@@ -6,62 +6,79 @@
   </head>
   <body>
     <h1 class="title --centered">Explore Event</h1>
-    <form class="" action="" method="">
+    <form class="" action="" method="get">
       <div class="input-row">
         <div class="labelled-input">
           <label for="name">Name</label>
-          <input type="text" name="name" value=""/>
+          <input type="text" name="name"
+            value="<%= formValues.name %>"/>
         </div>
         <div class="labelled-input">
           <label for="keyword">Description Keyword</label>
-          <input type="text" name="keyword" value=""/>
+          <input type="text" name="keyword"
+            value="<%= formValues.keyword %>"/>
         </div>
       </div>
       <div class="input-row">
         <%- include('../../partials/site-selector', {
-          sites: (locals.sites || [])
+          sites: sites.map(s => s.name),
+          selected: formValues.site
         })%>
       </div>
       <div class="input-row">
         <div class="labelled-input">
           <label for="startDate">Start Date</label>
-          <input type="text" name="startDate" value=""/>
+          <input type="text" name="startDate"
+            value="<%= formValues.startDate %>"/>
         </div>
         <div class="labelled-input">
           <label for="endDate">End Date</label>
-          <input type="text" name="endDate" value=""/>
+          <input type="text" name="endDate"
+            value="<%= formValues.startDate %>"/>
         </div>
       </div>
       <div class="input-row">
         <div class="labelled-input">
           <label for="visitRange">Total Visits Range</label>
           <div class="range-inputs">
-            <input class="--little" type="text" name="lowerVisitTotal" value=""/>
+            <input class="--little"
+              type="text" name="lowerVisitTotal"
+              value="<%= formValues.lowerVisitTotal %>"/>
             &nbsp;&mdash;&nbsp;
-            <input class="--little" type="text" name="upperVisitTotal" value=""/>
+            <input class="--little"
+              type="text" name="upperVisitTotal"
+              value="<%= formValues.upperVisitTotal %>"/>
           </div>
         </div>
         <div class="labelled-input">
           <label for="priceRange">Ticket Price Range</label>
           <div class="range-inputs">
-            <input class="--little" type="text" name="lowerTicketPrice" value=""/>
+            <input class="--little"
+              type="text" name="lowerTicketPrice"
+              value="<%= formValues.lowerTicketPrice %>"/>
             &nbsp;&mdash;&nbsp;
-            <input class="--little" type="text" name="upperTicketPrice" value=""/>
+            <input class="--little"
+              type="text" name="upperTicketPrice"
+              value="<%= formValues.upperTicketPrice %>"/>
           </div>
         </div>
       </div>
       <div class="input-row --centered">
         <div class="labelled-input">
-          <input type="checkbox" name="includeVisited" checked='false'/>
+          <input type="checkbox"
+            name="includeVisited"
+            <%= (formValues.includeVisited) ? 'checked' : '' %>/>
           <label for="includeVisited">Include Visited</label>
         </div>
         <div class="labelled-input">
-          <input type="checkbox" name="includeSoldOut" checked='false'/>
+          <input type="checkbox"
+            name="includeSoldOut"
+            <%= (formValues.includeSoldOut) ? 'checked' : ''%>/>
           <label for="includeSoldOut">Include Sold Out Events</label>
         </div>
       </div>
       <div class="button-row">
-        <button class="btn" type="button" name="filter">Filter</button>
+        <button class="btn" type="submit" name="filter">Filter</button>
         <button class="btn" type="button" name="eventDetail">Event Detail</button>
       </div>
     </form>

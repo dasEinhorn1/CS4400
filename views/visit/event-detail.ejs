@@ -9,30 +9,35 @@
     <div class="input-row">
       <div class="labelled-input">
         <label for="event">Event</label>
-        <input type="text" name="event" value="" disabled>
+        <input type="text"
+          name="event" value="<%= event.name %>" disabled>
       </div>
       <div class="labelled-input">
         <label for="site">Site</label>
-        <input type="text" name="site" value="" disabled>
+        <input type="text"
+          name="site" value="<%= event.siteName %>" disabled>
       </div>
     </div>
     <div class="input-row">
       <div class="labelled-input">
         <label for="startDate">Start Date</label>
-        <input type="text" name="startDate" value="" disabled>
+        <input type="text"
+          name="startDate" value="<%= event.startDate %>" disabled>
       </div>
       <div class="labelled-input">
         <label for="endDate">End Date</label>
-        <input type="text" name="endDate" value="" disabled>
+        <input type="text"
+          name="endDate" value="<%= event.endDate %>" disabled>
       </div>
     </div>
     <div class="input-row">
       <div class="labelled-input">
         <label for="description">Description</label>
-        <textarea name="description" disabled></textarea>
+        <textarea name="description"
+          value="" disabled><%= event.description %></textarea>
       </div>
     </div>
-    <form class="" action="" method="">
+    <form class="" action="" method="post">
       <div class="input-row">
         <div class="labelled-input">
           <label for="visitDate">Visit Date</label>
@@ -40,6 +45,10 @@
         </div>
         <button class="btn" type="submit">Log Visit</button>
       </div>
+      <input type="hidden" name="event"
+        value="<%= event.name %>"/>
+      <input type="hidden" name="site"
+        value="<%= event.siteName %>"/>
     </form>
     <div class="button-row">
       <a class="btn-link" href="/visit/events">
