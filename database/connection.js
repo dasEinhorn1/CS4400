@@ -1,19 +1,19 @@
 import mysql from 'mysql';
 
-const con = mysql.createConnection({
+const conn = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: 'password',
-  database: 'company'
+  database: 'beltline'
 });
 
-con.connect(err => {
+conn.connect(err => {
   if (err) {
     console.log(err);
     throw err; 
   }
-  console.log('connect')
+  console.log('connected to database');
 });
 
 
-export default con;
+export default conn;
