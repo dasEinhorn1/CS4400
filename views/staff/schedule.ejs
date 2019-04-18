@@ -6,53 +6,83 @@
   <body>
     <%# Screen 31 %>
     <h1>View Schedule</h1>
-    <form class="" action="/staff/schedule" method="get">
+    <form class="" action="" method="get">
       <div class="input-row">
         <div class="labelled-input">
           <label for="Name">Event Name</label>
-          <input type="text" name="name" value="" />
+          <input type="text" name="name"
+            value="<%= formValues.name %>" />
         </div>
         <div class="labelled-input">
           <label for="Name">Description Keyword</label>
-          <input type="text" name="keyword" value="" />
+          <input type="text" name="keyword"
+            value="<%= formValues.keyword %>" />
         </div>
       </div>
       <div class="input-row">
         <div class="labelled-input">
           <label for="Name">Start Date</label>
-          <input type="text" name="startDate" value="" />
+          <input type="text" name="startDate"
+            value="<%= formValues.startDate %>" />
         </div>
         <div class="labelled-input">
           <label for="Name">End Date</label>
-          <input type="text" name="endDate" value="" />
+          <input type="text" name="endDate"
+            value="<%= formValues.endDate %>" />
         </div>
       </div>
       <div class="button-row">
-        <button class="btn" type="button" name="filter">Filter</button>
-        <button class="btn" type="button" name="edit">View Event</button>
+        <button class="btn" type="submit">Filter</button>
+        <button class="btn" type="button"
+          name="edit" onclick="goToEventDetail()">View Event</button>
       </div>
     </form>
-    <table>
-      <tr>
-        <th>Event Name</th>
-        <th>Site Name</th>
-        <th>Start Date</th>
-        <th>End Date</th>
-        <th>Staff Count</th>
-      </tr>
-      <tr>
-        <td>Tour</td>
-        <td>Park</td>
-        <td>2019-02-02</td>
-        <td>2019-02-01</td>
-        <td>1</td>
-      </tr>
-    </table>
-
+    <form id="event-picker" action="staff/detail" method="get">
+      <table>
+        <thead>
+          <tr>
+            <th>Event Name</th>
+            <th>Site Name</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Staff Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% events.forEach((evt) => { %>
+          <tr class="event-line">
+            <td>
+              <input type="radio" name="event"
+                value="<%= evt.name %>"
+                data-site="<%= evt.siteName %>"
+                onclick="chooseEvent(this)"/>
+              <%= evt.name %>
+            </td>
+            <td><%= evt.siteName %></td>
+            <td><%= evt.startDate %></td>
+            <td><%= evt.endDate %></td>
+            <td><%= evt.staffCount %></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+      <input id="site-name" type="hidden" name="site" value="">
+    </form>
     <div class="button-row">
       <a href="/dashboard">
         <button class="btn" type="button" name="back">Back</button>
       </a>
     </div>
+    <script type="text/javascript">
+      function chooseEvent(el) {
+        document.getElementById('site-name').value = el.dataset.site;
+      }
+      function goToEventDetail() {
+        const siteInput = document.getElementById('site-name');
+        const evt = document.querySelector('.event-line input:checked')
+        if (siteInput.value && evt)
+          document.getElementById('event-picker').submit();
+      }
+    </script>
   </body>
 </html>

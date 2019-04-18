@@ -9,45 +9,54 @@
     <div class="input-row">
       <div class="labelled-input">
         <label for="event">Event</label>
-        <input type="text" name="event" value="" disabled>
+        <input type="text" name="event"
+          value="<%= event.name %>" disabled>
       </div>
       <div class="labelled-input">
         <label for="site">Site</label>
-        <input type="text" name="site" value="" disabled>
+        <input type="text" name="site"
+          value="<%= event.siteName %>" disabled>
       </div>
     </div>
     <div class="input-row">
       <div class="labelled-input">
         <label for="startDate">Start Date</label>
-        <input type="text" name="startDate" value="" disabled>
+        <input type="text" name="startDate"
+          value="<%= event.startDate %>" disabled>
       </div>
       <div class="labelled-input">
         <label for="endDate">End Date</label>
-        <input type="text" name="endDate" value="" disabled>
+        <input type="text" name="endDate"
+          value="<%= event.endDate %>" disabled>
       </div>
       <div class="labelled-input">
-        <label for="endDate">Duration Days</label>
-        <input type="text" name="endDate" value="" disabled>
+        <label for="duration">Duration Days</label>
+        <input type="text" name="duration"
+          value="<%= event.duration %>" disabled>
       </div>
     </div>
     <div class="input-row">
       <div class="labelled-input">
-        <label for="startDate">Staffs Assigned</label>
-        <input type="text" name="startDate" value="" disabled>
+        <label for="staffAssigned">Staffs Assigned</label>
+        <input type="text" name="staffAssigned"
+          value="<%= event.staffAssigned.join(', ') %>" disabled>
       </div>
       <div class="labelled-input">
-        <label for="endDate">Capacity</label>
-        <input type="text" name="endDate" value="" disabled>
+        <label for="capacity">Capacity</label>
+        <input type="text" name="capacity"
+          value="<%= event.capacity %>" disabled>
       </div>
       <div class="labelled-input">
-        <label for="endDate">Price</label>
-        <input type="text" name="endDate" value="" disabled>
+        <label for="price">Price</label>
+        <input type="text" name="price"
+          value="<%= event.price %>" disabled>
       </div>
     </div>
     <div class="input-row">
       <div class="labelled-input">
         <label for="description">Description</label>
-        <textarea name="description" disabled></textarea>
+        <textarea name="description" disabled><%= event.description %>
+        </textarea>
       </div>
     </div>
     <div class="button-row">
