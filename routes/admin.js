@@ -4,7 +4,6 @@ import users from '../fixtures/users';
 import manages from '../fixtures/manages';
 import transits from '../fixtures/transits';
 import sites from '../fixtures/sites';
-import $ from 'jquery';
 
 const router = express.Router();
 
