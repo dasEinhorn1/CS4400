@@ -26,28 +26,39 @@ router.post('/users', (req, res) => {
 router.get('/sites', (req, res) => {
   // res.send('Screen 19');
 
-  console.log(req.query);
+  // console.log(req.query);
   res.render('admin/sites', { title: 'Sites' , manages: manages });
 });
 router.post('/sites', (req, res) => {
 
-  console.log(req.body);
+  // console.log(req.body);
   const buttonType = req.body.buttonType;
+  const { selectedSiteName } = req.body;
 
   if (buttonType == 'edit') {
     // if 'Edit', retrieve its info and send it to 'edit'
-
+    // TODO: inject site's info 
+    res.redirect(`/admin/sites/${selectedSiteName}/edit`)
   } else if (buttonType == 'delete') {
     // elif 'Delete', just delete it and return back
 
+    // TODO: perform delete
+    res.redirect('/admin/sites');
   }
 })
 
 // Screen 21
 router.get('/sites/create', (req, res) => {
   // res.send('Screen 21');
-  res.render('admin/create-sites', { title: 'Create Sites' });
+  // TODO: send only the managers
+  res.render('admin/create-sites', { title: 'Create Sites', users: users });
 });
+router.post('/sites/create', (req, res) => {
+
+
+  console.log(req.body);
+  res.redirect('/admin/sites');
+})
 
 // Screen 20
 router.get('/sites/:id/edit', (req, res) => {
