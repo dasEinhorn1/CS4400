@@ -35,59 +35,125 @@ router.post('/login', Auth.unauthenticated, (req, res, next) => {
 })
 
 // Screen 2
-router.get('/register',
-  Auth.unauthenticated,
-  (req, res, next) => {
+router.get('/register', Auth.unauthenticated, (req, res, next) => {
   res.render('register');
 })
 
 // Screen 3
-router.get('/register/user',
-  Auth.unauthenticated,
-  (req, res, next) => {
+router.get('/register/user', Auth.unauthenticated, (req, res, next) => {
   res.render('register-user')
 })
-router.post('/register/user',
-  Auth.unauthenticated,
-  (req, res, next) => {
+
+// register the new user in the database
+router.post('/register/user', Auth.unauthenticated, (req, res, next) => {
   // res.send('registered user')
+  const firstName = req.body.firstName;
+  const lastName = req.body.lastName;
+  const username = req.body.username;
+  const password = req.body.password;
+  const confirmPassword = req.body.confirmPassword;
+  const emails = req.body.emails;
+  const isVisitor = false;
+
+  // check password is string >= 8 characters and == confirmPassword
+    // if not, redirect and show an error
+  // make sure username is not empty
+  // make sure emails are valid
+  // insert new user with status 'P' for pending
+  // if the insertion fails, then the email or username must already exist
+    // redirect and show an error
+  // otherwise, set the user in the session and go to dashboard
   res.redirect('/dashboard')
 })
 
+
 // Screen 4
-router.get('/register/visitor',
-  Auth.unauthenticated,
-  (req, res, next) => {
+router.get('/register/visitor', Auth.unauthenticated, (req, res, next) => {
   res.render('register-visitor');
 })
-router.post('/register/visitor',
-  Auth.unauthenticated,
-  (req, res, next) => {
+
+//
+router.post('/register/visitor', Auth.unauthenticated, (req, res, next) => {
   // res.send('registered visitor')
+  const firstName = req.body.firstName;
+  const lastName = req.body.lastName;
+  const username = req.body.username;
+  const password = req.body.password;
+  const confirmPassword = req.body.confirmPassword;
+  const emails = req.body.emails;
+  const isVisitor = true;
+  // check password is string >= 8 characters and == confirmPassword
+    // if not, redirect and show an error
+  // make sure username is not empty
+  // make sure emails are valid
+  // insert new user with status 'P' for pending
+  // if the insertion fails, then the email or username must already exist
+    // redirect and show an error
+  // otherwise, set the user in the session and go to dashboard
   res.redirect('/dashboard')
 })
+
+
 // Screen 5
-router.get('/register/employee',
-  Auth.unauthenticated,
-  (req, res, next) => {
+router.get('/register/employee', Auth.unauthenticated, (req, res, next) => {
   res.render('register-employee')
 })
-router.post('/register/employee',
-  Auth.unauthenticated,
-  (req, res, next) => {
+
+router.post('/register/employee', Auth.unauthenticated, (req, res, next) => {
   // res.send('registered employee')
+  const firstName = req.body.firstName;
+  const lastName = req.body.lastName;
+  const username = req.body.username;
+  const userType = req.body.userType;
+  const password = req.body.password;
+  const confirmPassword = req.body.confirmPassword;
+  const phone = req.body.phone;       // must be 10 digits
+  const address = req.body.zipcode;   // must be 5 digits
+  const city = req.body.city;
+  const state = req.body.state;
+  const zipcode = req.body.zipcode;
+  const emails = req.body.emails;
+  const isVisitor = false;
+  // check password is string >= 8 characters and == confirmPassword
+    // if not, redirect and show an error
+  // make sure username is not empty
+  // make sure emails are valid
+  // insert new user with status 'P' for pending
+  // if the insertion fails, then the email or username must already exist
+    // redirect and show an error
+  // otherwise, set the user in the session and go to dashboard
   res.redirect('/dashboard')
 })
+
+
 // Screen 6
-router.get('/register/employee-visitor',
-  Auth.unauthenticated,
-  (req, res, next) => {
+router.get('/register/employee-visitor', Auth.unauthenticated, (req, res, next) => {
   res.render('register-employee-visitor')
 })
-router.post('/register/employee-visitor',
-  Auth.unauthenticated,
-  (req, res, next) => {
+
+router.post('/register/employee-visitor', Auth.unauthenticated, (req, res, next) => {
   // res.render('register-employee-visitor')
+  const firstName = req.body.firstName;
+  const lastName = req.body.lastName;
+  const username = req.body.username;
+  const userType = req.body.userType;
+  const password = req.body.password;
+  const confirmPassword = req.body.confirmPassword;
+  const phone = req.body.phone;       // must be 10 digits
+  const address = req.body.zipcode;   // must be 5 digits
+  const city = req.body.city;
+  const state = req.body.state;
+  const zipcode = req.body.zipcode;
+  const emails = req.body.emails;
+  const isVisitor = true;
+  // check password is string >= 8 characters and == confirmPassword
+    // if not, redirect and show an error
+  // make sure username is not empty
+  // make sure emails are valid
+  // insert new user with status 'P' for pending
+  // if the insertion fails, then the email or username must already exist
+    // redirect and show an error
+  // otherwise, set the user in the session and go to dashboard
   res.redirect('/dashboard')
 })
 
