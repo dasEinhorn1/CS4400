@@ -6,74 +6,79 @@
   <body>
     <%# Screen 26 %>
     <h1 class="title --centered">View/Edit Event</h1>
-    <form class="" action="/manager/events/create" method="post">
-      <div class="input-row">
-        <div class="labelled-input">
-          <label for="name">Name</label>
-          <input type="text" name="name" value="" disabled/>
-        </div>
-        <div class="labelled-input">
-          <label for="price">Price ($)</label>
-          <input type="text" name="price" value="" disabled/>
-        </div>
+    <form class="" action="/manager/events/edit" method="post">
+      <div class="labelled-input">
+        <label for="name">Name</label>
+        <input type="text" name="name"
+          value="<%= event.name %>"/>
       </div>
-      <div class="input-row">
-        <div class="labelled-input">
-          <label for="startDate">Start Date</label>
-          <input type="text" name="startDate" value="" disabled/>
-        </div>
-        <div class="labelled-input">
-          <label for="endDate">End Date</label>
-          <input type="text" name="endDate" value="" disabled/>
-        </div>
+      <div class="labelled-input">
+        <label for="price">Price</label>
+        <input class="--little" type="text" name="price"
+          value="<%= event.price %>"/>
       </div>
-      <div class="input-row">
-        <div class="labelled-input">
-          <label for="capacity">Capacity</label>
-          <input type="text" name="capacity" value="" disabled/>
-        </div>
-        <div class="labelled-input">
-          <label for="minstaff">Minimum Staff Requirement</label>
-          <input type="text" name="minstaff" value="" disabled/>
-        </div>
+      <div class="labelled-input">
+        <label for="capacity">Capacity</label>
+        <input class="--little" type="text" name="capacity"
+          value="<%= event.capacity %>"/>
       </div>
-      <div class="input-row">
-        <div class="labelled-input">
-          <label for="assignStaff">Staff Assigned</label>
-          <select name="assignStaff" multiple>
-            <option value="1">Filler Staff 1</option>
-            <option value="2">Filler Staff 2</option>
-          </select>
-        </div>
+      <div class="labelled-input">
+        <label for="minStaff">Minimum Staff Requirement</label>
+        <input class="--little" type="text" name="minStaff"
+          value="<%= event.minStaff %>"/>
       </div>
-      <div class="input-row">
-        <div class="labelled-input">
-          <label for="description">Description</label>
-          <textarea type="text" name="description" value=""></textarea>
-        </div>
+      <div class="labelled-input">
+        <label for="startDate">Start Date</label>
+        <input type="text" name="startDate"
+          value="<%= event.startDate %>"/>
+      </div>
+      <div class="labelled-input">
+        <label for="endDate">End Date</label>
+        <input type="text" name="endDate"
+          value="<%= event.endDate %>"/>
+      </div>
+      <div class="labelled-input">
+        <label for="description">Description</label>
+        <textarea type="text"
+          name="description"><%= event.description %></textarea>
+      </div>
+      <div class="labelled-input">
+        <label for="assignStaff">Assign Staff</label>
+        <select name="assignStaff" multiple>
+          <% staff.forEach ((s) => { %>
+            <option value="<%= s.username %>"
+              <%= (s.assigned) ? 'selected' : '' %>>
+              <%= s.firstName %> <%= s.lastName %>
+            </option>
+          <% })%>
+        </select>
       </div>
       <div class="button-row">
         <button class="btn" type="submit">Update</button>
       </div>
     </form>
     <br>
-    <form class="" action="" method="">
+    <form class="" action="" method="get">
       <div class="input-row">
         <div class="labelled-input">
           <label for="dailyVisitsRange">Daily Visits Range</label>
-          <input class="--little" type="text" name="lowerDailyVisits" value=""/>
+          <input class="--little" type="text"
+            name="lowerDailyVisits" value="<%= formValues.lowerDailyVisits%>"/>
           &nbsp;&mdash;&nbsp;
-          <input class="--little" type="text" name="upperDailyVisits" value=""/>
+          <input class="--little" type="text"
+            name="upperDailyVisits" value="<%= formValues.upperDailyVisits %>"/>
         </div>
         <div class="labelled-input">
           <label for="revenueRange">Daily Revenue Range</label>
-          <input class="--little" type="text" name="lowerRevenue" value=""/>
+          <input class="--little" type="text"
+            name="lowerRevenue" value="<%= formValues.lowerRevenue %>"/>
           &nbsp;&mdash;&nbsp;
-          <input class="--little" type="text" name="upperRevenue" value=""/>
+          <input class="--little" type="text"
+            name="upperRevenue" value="<%= formValues.upperRevenue %>"/>
         </div>
       </div>
       <div class="button-row">
-        <button type="button">Filter</button>
+        <button class="btn" type="submit">Filter</button>
       </div>
       <table>
         <thead>
@@ -84,11 +89,13 @@
           </tr>
         </thead>
         <tbody>
+          <% dailies.forEach((daily) => { %>
           <tr>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td><%= daily.date %></td>
+            <td><%= daily.visits %></td>
+            <td><%= daily.revenue %></td>
           </tr>
+          <% }) %>
         </tbody>
       </table>
     </form>

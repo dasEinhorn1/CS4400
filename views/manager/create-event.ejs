@@ -2,53 +2,55 @@
 <html lang="en" dir="ltr">
   <head>
     <% include ../../partials/head %>
+    <title>Create Event</title>
   </head>
   <body>
     <%# Screen 27 %>
     <h1>Create Event</h1>
     <form class="" action="/manager/events/create" method="post">
-      <div class="">
+      <div class="labelled-input">
         <label for="name">Name</label>
         <input type="text" name="name" value=""/>
       </div>
-      <div class="">
+      <div class="labelled-input">
         <label for="price">Price</label>
-        <input type="text" name="price" value=""/>
+        <input class="--little" type="text" name="price" value=""/>
       </div>
-      <div class="">
+      <div class="labelled-input">
         <label for="capacity">Capacity</label>
-        <input type="text" name="capacity" value=""/>
+        <input class="--little" type="text" name="capacity" value=""/>
       </div>
-      <div class="">
-        <label for="minstaff">Minimum Staff Requirement</label>
-        <input type="text" name="minstaff" value=""/>
+      <div class="labelled-input">
+        <label for="minStaff">Minimum Staff Requirement</label>
+        <input class="--little" type="text" name="minStaff" value=""/>
       </div>
-      <div class="">
+      <div class="labelled-input">
         <label for="startDate">Start Date</label>
         <input type="text" name="startDate" value=""/>
       </div>
-      <div class="">
+      <div class="labelled-input">
         <label for="endDate">End Date</label>
         <input type="text" name="endDate" value=""/>
       </div>
-      <div class="">
+      <div class="labelled-input">
         <label for="description">Description</label>
-        <textarea type="text" name="description" value=""></textarea>
+        <textarea type="text" name="description"></textarea>
       </div>
-      <div class="">
+      <div class="labelled-input">
         <label for="assignStaff">Assign Staff</label>
         <select name="assignStaff" multiple>
-          <option value="1">Filler Staff 1</option>
-          <option value="2">Filler Staff 2</option>
+          <% staff.forEach ((s) => { %>
+            <option value="<%= s.username %>">
+              <%= s.firstName %> <%= s.lastName %>
+            </option>
+          <% })%>
         </select>
       </div>
-      <div class="buttons">
-        <div class="">
-          <button type="button" name="back">Back</button>
-        </div>
-        <div class="">
-          <button type="submit" name="submit">Create</button>
-        </div>
+      <div class="button-row">
+        <a class="btn-link" href="/manager/events">
+          <button class="btn" type="button" name="back">Back</button>
+        </a>
+        <button class="btn" type="submit">Create</button>
       </div>
     </form>
   </body>
