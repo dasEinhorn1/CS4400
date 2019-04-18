@@ -9,14 +9,14 @@
   </head>
   <body>
     <h1 class="title --centered">Edit Site</h1>
-    <form action="">
+    <form action="" method="POST">
       <div class="input-row">
         <div class="labelled-input">
-          <label for="firstName">Name</label>
-          <input type="text" name="name" />
+          <label for="siteName">Name</label>
+          <input type="text" name="siteName" />
         </div>
         <div class="labelled-input">
-          <label for="lastName">Zipcode</label>
+          <label for="zipcode">Zipcode</label>
           <input type="text" name="zipcode" />
         </div>
       </div>
@@ -29,8 +29,8 @@
       <div class="input-row">
         <div class="labelled-input">
           <label for="password">Manager</label>
-          <select name="manage" id="">
-            <option value="clara" selected>Clara Wilson</option>
+          <select name="manager" id="">
+            <option value="Clara Wilson" selected>Clara Wilson</option>
           </select>
         </div>
         <div class="labelled-input">
@@ -42,7 +42,7 @@
         <a href="/admin/sites">
           <button class="btn" type="button" name="back">Back</button>
         </a>
-        <button class="btn" type="submit" name="update">Update</button>
+        <button class="btn" type="submit">Update</button>
       </div>
     </form>
   </body>

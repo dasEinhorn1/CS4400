@@ -38,12 +38,12 @@ router.post('/sites', (req, res) => {
   if (buttonType == 'edit') {
     // if 'Edit', retrieve its info and send it to 'edit'
     // TODO: inject site's info 
-    res.redirect(`/admin/sites/${selectedSiteName}/edit`)
+    res.redirect(`/admin/sites/edit?selectedSiteName=${selectedSiteName}`)
   } else if (buttonType == 'delete') {
     // elif 'Delete', just delete it and return back
-
+    
     // TODO: perform delete
-    res.redirect('/admin/sites');
+    res.redirect(`/admin/sites`);
   }
 })
 
@@ -61,9 +61,17 @@ router.post('/sites/create', (req, res) => {
 })
 
 // Screen 20
-router.get('/sites/:id/edit', (req, res) => {
+router.get('/sites/edit', (req, res) => {
   // res.send('Screen 20', {title: 'Edit Site'});
+  // console.log(req.query);
+  const { selectedSiteName } = req.query;
+  // todo: fetch data for selected site, and inject 
   res.render('admin/edit-site', { title: 'Edit Site' });
+});
+router.post('/sites/edit', (req, res) => {
+  console.log(req.body);
+
+  res.redirect('/admin/sites');
 });
 
 // Screen 22
