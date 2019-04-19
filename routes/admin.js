@@ -1,9 +1,10 @@
 import express from 'express';
 import Auth from '../middleware/Auth';
-import users from '../fixtures/users';
+// import users from '../fixtures/users';
 import manages from '../fixtures/manages';
 import transits from '../fixtures/transits';
 import sites from '../fixtures/sites';
+import conn from '../database/connection';
 
 const router = express.Router();
 
@@ -15,8 +16,16 @@ router.get('/users', (req, res) => {
   // res.send('Screen 18');
 
   console.log(req.query);
-  res.render('admin/users', { title: 'Users', users: users });
+
+  conn.query('SELECT * FROM USER').then(rows => {
+    
+    const users = rows;
+
+    res.render('admin/users', { title: 'Users', users: users });
+  });
+
 });
+
 router.post('/users', (req, res) => {
   console.log(req.body);
   res.redirect('/admin/users');
@@ -126,8 +135,7 @@ router.get('/transits/edit', (req, res) => {
   const { route, type } = req.query;
   res.render('admin/edit-transit', { title: 'Edit Transit' });
 });
-router.post('/transits/edit', (req,res) => {
-
+router.post('/transits/edit', (req, res) => {
   res.redirect('/admin/transits');
 });
 
