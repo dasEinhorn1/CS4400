@@ -48,10 +48,10 @@
         <tbody>
           <% users.forEach(user => { %>
           <tr>
-            <td><input type="radio" name="selectedUsername" value="<%= user.username %>"/> <%= user.username %></td>
-            <td><%= user.emails.length%></td>
-            <td><%= user.type %></td>
-            <td><%= user.status %></td>
+            <td><input type="radio" name="selectedUsername" value="<%= user.username %>"/> <%= user.Username %></td>
+            <td><%= user.numEmails%></td>
+            <td><%= user.numEmails%></td>
+            <td><%= user.Status %></td>
           </tr>
           <% });%>
         </tbody>
