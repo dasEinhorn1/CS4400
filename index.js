@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+dotenv.config();
 
 import AdminRoutes from './routes/admin';
 import GeneralRoutes from './routes/general';
@@ -10,7 +11,7 @@ import conn from './database/connection';
 
 if (process.env.RESET_DB) {
   // run the sql files to drop and re-add all tables
-  
+
   // run the script to insert the starting data into the db
 
 }

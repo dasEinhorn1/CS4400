@@ -1,4 +1,5 @@
 import express from 'express';
+import db from '../database/db';
 import Auth from '../middleware/Auth';
 
 const router = express.Router();
@@ -6,6 +7,8 @@ router.use(Auth.manager);
 
 // Screen 25
 router.get('/events', (req, res, next) => {
+  db.events.getAll()
+
   const name = req.query.name;
   const keyword = req.query.keyword;
   const startDate = req.query.startDate;

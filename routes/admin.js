@@ -4,7 +4,7 @@ import Auth from '../middleware/Auth';
 import manages from '../fixtures/manages';
 import transits from '../fixtures/transits';
 import sites from '../fixtures/sites';
-import conn from '../database/connection';
+import db from '../database/db';
 
 const router = express.Router();
 
@@ -22,8 +22,7 @@ router.get('/users', (req, res) => {
   const managerQuery =
     'select U.Username, count(*) as numEmails, Status from User as U left join Email as E1 on U.Username = E1.Username left join Manager as E2 on U.Username = E2.Username group by U.Username';
 
-  conn
-    .query(employeeQuery)
+  db.query(employeeQuery)
     .then(employees => {
       // console.log(users);
       users = users.concat(employees);

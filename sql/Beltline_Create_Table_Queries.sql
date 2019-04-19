@@ -1,20 +1,22 @@
+create database if not exists beltline;
+use beltline;
 -- DROP ALL EXISTING TABLES
 
-DROP TABLE IF EXISTS `User`;
-DROP TABLE IF EXISTS `Email`;
-DROP TABLE IF EXISTS `Visitor`;
-DROP TABLE IF EXISTS `Employee`;
-DROP TABLE IF EXISTS `Administrator`;
-DROP TABLE IF EXISTS `Staff`;
-DROP TABLE IF EXISTS `Manager`;
-DROP TABLE IF EXISTS `Site`;
-DROP TABLE IF EXISTS `Event`;
 DROP TABLE IF EXISTS `AssignTo`;
-DROP TABLE IF EXISTS `Transit`;
 DROP TABLE IF EXISTS `Connect`;
 DROP TABLE IF EXISTS `TakeTransit`;
 DROP TABLE IF EXISTS `VisitSite`;
 DROP TABLE IF EXISTS `VisitEvent`;
+DROP TABLE IF EXISTS `Transit`;
+DROP TABLE IF EXISTS `Event`;
+DROP TABLE IF EXISTS `Site`;
+DROP TABLE IF EXISTS `Manager`;
+DROP TABLE IF EXISTS `Staff`;
+DROP TABLE IF EXISTS `Administrator`;
+DROP TABLE IF EXISTS `Visitor`;
+DROP TABLE IF EXISTS `Employee`;
+DROP TABLE IF EXISTS `Email`;
+DROP TABLE IF EXISTS `User`;
 
 -- CREATE TABLE BELOW
 
@@ -94,13 +96,13 @@ SiteZipcode char(5) NOT NULL,
 
 -- EVENT
 CREATE TABLE Event (
-  EventName varchar(160) NOT NULL, 
-  StartDate date NOT NULL, 
-  SiteName varchar(160) NOT NULL,  
-  EndDate date NOT NULL, 
+  EventName varchar(160) NOT NULL,
+  StartDate date NOT NULL,
+  SiteName varchar(160) NOT NULL,
+  EndDate date NOT NULL,
   EventPrice decimal(9, 2) NOT NULL DEFAULT 0,
-Capacity int(1) NOT NULL, 
-  Description text NOT NULL, 
+Capacity int(1) NOT NULL,
+  Description text NOT NULL,
   MinStaffRequired int NOT NULL DEFAULT 1, -- (> 0)
   PRIMARY KEY (EventName, StartDate, SiteName),
   CONSTRAINT Fk_EventSite FOREIGN KEY (SiteName) REFERENCES Site (SiteName)
@@ -108,22 +110,22 @@ Capacity int(1) NOT NULL,
 
 -- AssignTo
 CREATE TABLE AssignTo (
-StaffUsername varchar(160) NOT NULL,
-EventName varchar(160) NOT NULL,
+  StaffUsername varchar(160) NOT NULL,
+  EventName varchar(160) NOT NULL,
   StartDate date NOT NULL,
   SiteName varchar(160) NOT NULL,
   PRIMARY KEY(StaffUsername, EventName, StartDate, SiteName),
   CONSTRAINT Fk_AssignToUser FOREIGN KEY (StaffUsername) REFERENCES Staff (Username)
     ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT Fk_AssignToEvent FOREIGN KEY (EventName, StartDate, SiteName) 
-  	REFERENCES EVENT (EventName, StartDate, SiteName)
+  CONSTRAINT Fk_AssignToEvent FOREIGN KEY (EventName, StartDate, SiteName)
+  	REFERENCES Event (EventName, StartDate, SiteName)
     ON DELETE CASCADE ON UPDATE CASCADE);
 
 
 -- Transit
 CREATE TABLE Transit (
   TransitType varchar(5) NOT NULL,
-  TransitRoute varchar(128) NOT NULL, 
+  TransitRoute varchar(128) NOT NULL,
   TransitPrice decimal(9,2) NOT NULL DEFAULT 0, -- (>= 0)
   PRIMARY KEY (TransitType, TransitRoute));
 
@@ -134,9 +136,9 @@ CREATE TABLE Connect (
   TransitType varchar(5) NOT NULL,
   TransitRoute varchar(128) NOT NULL,
   PRIMARY KEY (SiteName, TransitType, TransitRoute),
-  CONSTRAINT Fk_ConnectSite FOREIGN KEY (SiteName) REFERENCES SITE (SiteName)
+  CONSTRAINT Fk_ConnectSite FOREIGN KEY (SiteName) REFERENCES Site (SiteName)
     ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT Fk_ConnectTransit FOREIGN KEY (TransitType, TransitRoute) REFERENCES      TRANSIT(TransitType, TransitRoute)
+  CONSTRAINT Fk_ConnectTransit FOREIGN KEY (TransitType, TransitRoute) REFERENCES Transit (TransitType, TransitRoute)
     ON DELETE CASCADE ON UPDATE CASCADE);
 
 
@@ -147,9 +149,9 @@ CREATE TABLE TakeTransit (
   TransitRoute varchar(128) NOT NULL,
   TransitDate Date NOT NULL,
   PRIMARY KEY (Username, TransitType, TransitRoute, TransitDate),
-  CONSTRAINT Fk_TakeUser FOREIGN KEY (Username) REFERENCES USER(Username)
+  CONSTRAINT Fk_TakeUser FOREIGN KEY (Username) REFERENCES User(Username)
     ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT Fk_TakeTransit FOREIGN KEY (TransitType, TransitRoute) REFERENCES TRANSIT(TransitType, TransitRoute)
+  CONSTRAINT Fk_TakeTransit FOREIGN KEY (TransitType, TransitRoute) REFERENCES Transit(TransitType, TransitRoute)
     ON DELETE CASCADE ON UPDATE CASCADE);
 
 -- Visit_Site
@@ -158,9 +160,9 @@ CREATE TABLE VisitSite (
   SiteName varchar(160) NOT NULL,
   VisitDate date NOT NULL,
   PRIMARY KEY (VisitorUsername, Sitename, VisitDate),
-  CONSTRAINT Fk_SiteVisitUser FOREIGN KEY (VisitorUsername) REFERENCES USER (Username)
+  CONSTRAINT Fk_SiteVisitUser FOREIGN KEY (VisitorUsername) REFERENCES User (Username)
     ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT Fk_SiteVisitName FOREIGN KEY (SiteName) REFERENCES SITE (SiteName)
+  CONSTRAINT Fk_SiteVisitName FOREIGN KEY (SiteName) REFERENCES Site (SiteName)
     ON DELETE CASCADE ON UPDATE CASCADE);
 
 -- Visit_Event
@@ -171,12 +173,8 @@ CREATE TABLE VisitEvent (
   SiteName varchar(160) NOT NULL,
   VisitEventDate date NOT NULL,
   PRIMARY KEY (VisitorUsername, EventName, StartDate, SiteName, VisitEventDate),
-  CONSTRAINT Fk_EventVisitUser FOREIGN KEY (VisitorUsername) REFERENCES USER (Username)
+  CONSTRAINT Fk_EventVisitUser FOREIGN KEY (VisitorUsername) REFERENCES User (Username)
     ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT Fk_EventVisitKey FOREIGN KEY (EventName, StartDate, SiteName) 
-    REFERENCES EVENT (EventName, StartDate, SiteName)
+  CONSTRAINT Fk_EventVisitKey FOREIGN KEY (EventName, StartDate, SiteName)
+    REFERENCES Event (EventName, StartDate, SiteName)
     ON DELETE CASCADE ON UPDATE CASCADE);
-    
-
-
-
