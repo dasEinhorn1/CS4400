@@ -1,9 +1,11 @@
-import { query } from './connection'
-import events from './modules/events'
+import { query } from './connection';
+import events from './modules/events';
+import auth from './modules/auth';
 
 const db =  {
   query,
-  events
-}
+  events,
+  auth
+};
 
-export default db
+export default db;

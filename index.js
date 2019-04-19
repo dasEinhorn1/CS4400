@@ -30,4 +30,8 @@ app.use('/manager', ManagerRoutes);
 app.use('/staff', StaffRoutes);
 app.use('/visit', VisitRoutes);
 
-app.listen(port, () => console.log(`CS 4400 app running on port ${port}.`));
+import db from './database/db'
+
+app.listen(port, () => {
+  console.log(`CS 4400 app running on port ${port}.`);
+});

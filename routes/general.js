@@ -1,7 +1,7 @@
 import express from 'express';
 import sitesFixture from '../fixtures/sites'
 import Auth from '../middleware/Auth';
-
+import db from '../database/db';
 
 const router = express.Router();
 
@@ -27,11 +27,19 @@ router.post('/login', Auth.unauthenticated, (req, res, next) => {
 
   // check if a user exists with the given email
   // call the database with email and hashed password
-  // if they don't, redirect to login with an error
-    // res.redirect('login')
-  // else
-    // set the user in the session, give the session to the cookie
-    res.redirect('dashboard');
+  db.auth.login(email, hashedPassword)
+    .then(user => {
+      // if they don't, redirect to login with an error
+      if (!user) {
+        res.redirect('login');
+      }
+      // set the user in the session, give the session to the cookie
+      console.log(user);
+      res.redirect('dashboard');
+    }).catch((err) => {
+      console.log(err);
+      res.redirect('login');
+    })
 })
 
 // Screen 2

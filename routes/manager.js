@@ -7,8 +7,7 @@ router.use(Auth.manager);
 
 // Screen 25
 router.get('/events', (req, res, next) => {
-  db.events.getAll()
-
+  // db.events.getAll()
   const name = req.query.name;
   const keyword = req.query.keyword;
   const startDate = req.query.startDate;
