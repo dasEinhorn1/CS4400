@@ -7,54 +7,72 @@
   </head>
   <body>
     <h1 class="title --centered">Site Report</h1>
-    <form class="" action="" method="">
+    <form class="" action="" method="get">
       <div class="input-row">
         <div class="labelled-input">
-          <label for="Name">Start Date</label>
-          <input type="text" name="startDate" value=""/>
+          <label for="startDate">Start Date</label>
+          <input type="text"
+            name="startDate"
+            value="<%= formValues.startDate %>"/>
         </div>
         <div class="labelled-input">
-          <label for="Name">End Date</label>
-          <input type="text" name="endDate" value=""/>
+          <label for="endDate">End Date</label>
+          <input type="text"
+            name="endDate"
+            value="<%= formValues.endDate %>"/>
         </div>
       </div>
       <div class="input-row">
         <div class="labelled-input">
           <label for="eventCountRange">Daily Visits Range</label>
-          <input class="--little" type="text" name="lowerEventCount" value=""/>
+          <input class="--little" type="text"
+            name="lowerEventCount"
+            value="<%= formValues.lowerEventCount %>"/>
           &nbsp;&mdash;&nbsp;
-          <input class="--little" type="text" name="upperEventCount" value=""/>
+          <input class="--little" type="text"
+            name="upperEventCount"
+            value="<%= formValues.upperEventCount %>"/>
         </div>
         <div class="labelled-input">
           <label for="staffCountRange">Daily Revenue Range</label>
-          <input class="--little" type="text" name="lowerStaffCount" value=""/>
+          <input class="--little" type="text"
+            name="lowerStaffCount"
+            value="<%= formValues.lowerStaffCount %>"/>
           &nbsp;&mdash;&nbsp;
-          <input class="--little" type="text" name="upperStaffCount" value=""/>
+          <input class="--little" type="text"
+            name="upperStaffCount"
+            value="<%= formValues.upperStaffCount %>"/>
         </div>
       </div>
       <div class="input-row">
         <div class="labelled-input">
           <label for="visitRange">Total Visits Range</label>
-          <input class="--little" type="text" name="lowerVisits" value=""/>
+          <input class="--little" type="text"
+            name="lowerVisits"
+            value="<%= formValues.lowerVisits %>"/>
           &nbsp;&mdash;&nbsp;
-          <input class="--little" type="text" name="upperVisits" value=""/>
+          <input class="--little" type="text"
+            name="upperVisits"
+            value="<%= formValues.upperVisits %>"/>
         </div>
         <div class="labelled-input">
           <label for="revenueRange">Total Revenue Range</label>
-          <input class="--little" type="text" name="lowerRevenue" value=""/>
+          <input class="--little" type="text"
+            name="lowerRevenue"
+            value="<%= formValues.lowerRevenue %>"/>
           &nbsp;&mdash;&nbsp;
-          <input class="--little" type="text" name="upperRevenue" value=""/>
+          <input class="--little" type="text"
+            name="upperRevenue"
+            value="<%= formValues.upperRevenue %>"/>
         </div>
       </div>
       <div class="button-row --centered">
         <button class="btn" type="submit">Filter</button>
+        <button type="button" class="btn" onclick="goToDailyDetail()">Daily Detail</button>
       </div>
     </form>
     <br>
-    <form class="" action="" method="">
-      <div class="button-row">
-        <button type="submit" class="btn">Daily Detail</button>
-      </div>
+    <form id="daily-picker" action="site/detail" method="get">
       <table>
         <thead>
           <tr>
@@ -66,15 +84,19 @@
           </tr>
         </thead>
         <tbody>
-          <%# for day in report { %>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-          <%# }%>
+          <% dailies.forEach ((daily) => { %>
+          <tr class="daily-line">
+            <td>
+              <input type="radio"
+                name="date" value="<%= daily.date %>"/>
+              <%= daily.date %>
+            </td>
+            <td><%= daily.eventCount %></td>
+            <td><%= daily.staffCount %></td>
+            <td><%= daily.visits %></td>
+            <td><%= daily.revenue %></td>
+          </tr>
+          <% }); %>
         </tbody>
       </table>
     </form>
@@ -84,4 +106,13 @@
       </a>
     </div>
   </body>
+  <script type="text/javascript">
+    function goToDailyDetail () {
+      // const siteInput = document.getElementById('site-name');
+      const daily = document.querySelector('.daily-line input:checked')
+      if (!daily) return;
+      var form = document.getElementById('daily-picker');
+      form.submit()
+    }
+  </script>
 </html>

@@ -11,31 +11,35 @@
       <div class="input-row --centered">
         <div class="labelled-input">
           <label for="site">Site</label>
-          <select class="dropdown" name="site">
-            <%# for site in sites { %>
-              <option value="<%# site.name%>Filler">Filler<%# site.name %></option>
-              <%# } %>
-            </select>
-          </div>
+          <input type="text" name="site" value="<%= site.name %>" disabled/>
+        </div>
       </div>
       <div class="input-row">
         <div class="labelled-input">
           <label for="firstName">First Name</label>
-          <input type="text" name="firstName" value=""/>
+          <input type="text"
+            name="firstName"
+            value="<%= formValues.firstName %>"/>
         </div>
         <div class="labelled-input">
           <label for="lastName">Last Name</label>
-          <input type="text" name="lastName" value=""/>
+          <input type="text"
+            name="lastName"
+            value="<%= formValues.lastName %>"/>
         </div>
       </div>
       <div class="input-row">
         <div class="labelled-input">
           <label for="startDate">Start Date</label>
-          <input type="text" name="startDate" value=""/>
+          <input type="text"
+            name="startDate"
+            value="<%= formValues.startDate %>"/>
         </div>
         <div class="labelled-input">
           <label for="endDate">End Date</label>
-          <input type="text" name="endDate" value=""/>
+          <input type="text"
+            name="endDate"
+            value="<%= formValues.endDate %>"/>
         </div>
       </div>
       <div class="button-row  --centered">
@@ -50,12 +54,12 @@
         </tr>
       </thead>
       <tbody>
-        <%# for staff in staff {%>
+        <% staff.forEach((staff) => {%>
         <tr>
-          <td><%# staff.name %></td>
-          <td><%# staff.eventShifts %></td>
+          <td><%= staff.firstName + ' ' + staff.lastName %></td>
+          <td><%= staff.eventShifts %></td>
         </tr>
-        <%# } %>
+        <% }) %>
       </tbody>
     </table>
     <div class="button-row --centered">

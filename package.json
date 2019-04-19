@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/dasEinhorn1/CS4400#readme",
   "dependencies": {
+    "dotenv": "^7.0.0",
     "ejs": "^2.6.1",
     "esm": "^3.2.22",
     "express": "^4.16.4",
