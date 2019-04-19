@@ -6,11 +6,11 @@
     <% if (locals.allowAll || true) {%>
       <option value="all"
       <%= (locals.selected !== 'all') ? "selected": "" %>>
-      &mdash; ALL &mdash;
+      &mdash; All &mdash;
     </option>
     <% } %>
     <% sites.forEach(function(site) { %>
-    <option value="<%=site%>"
+    <option value="<%= site %>"
       <%= (locals.selected === site) ? "selected":"" %>>
       <%= site %>
     </option>

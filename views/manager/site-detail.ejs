@@ -17,12 +17,14 @@
         </tr>
       </thead>
       <tbody>
+        <% eventDailies.forEach((evt) => { %>
         <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td><%= evt.name %></td>
+          <td><%= evt.staff.join(', ') %></td>
+          <td><%= evt.visits %></td>
+          <td><%= evt.revenue %></td>
         </tr>
+        <% })%>
       </tbody>
     </table>
     <div class="button-row --centered">
