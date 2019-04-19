@@ -7,17 +7,17 @@
   <body>
     <h1 class="title --centered">Dashboard</h1>
     <div class="two-column">
-      <% if (type !== 'U') { %>
+      <% if (isAdmin || isStaff || isManager) { %>
         <a class="btn-link" href="/profile">
           <button class="btn --centered">Manage profile</button>
         </a>
       <% } %>
-      <% if (type === 'S') { %>
+      <% if (isStaff) { %>
         <a class="btn-link" href="/staff">
           <button class="btn --centered">View Schedule</button>
         </a>
       <% } %>
-      <% if (type === 'M') { %>
+      <% if (isManager) { %>
         <a class="btn-link" href="/manager/events">
         <button class="btn --centered">Manage Event</button>
         </a>
@@ -29,7 +29,7 @@
         </a>
 
       <% } %>
-      <% if (type === 'A') { %>
+      <% if (isAdmin) { %>
         <a class="btn-link" href="/admin/users">
           <button class="btn --centered">Manage User</button>
         </a>
@@ -57,7 +57,7 @@
       <a class="btn-link" href="/transits/history">
         <button class="btn --centered">View Transit History</button>
       </a>
-      <a class="btn-link" href="/login">
+      <a class="btn-link" href="/logout">
         <button class="btn --centered">Back</button>
       </a>
     </div>

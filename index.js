@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import session from 'express-session';
 dotenv.config();
 
 import AdminRoutes from './routes/admin';
@@ -18,6 +19,13 @@ if (process.env.RESET_DB) {
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'yourhorriblesecretthateveryoneongithhubknowsnow',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}));
 
 app.set('view engine', 'ejs');
 

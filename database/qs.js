@@ -8,6 +8,10 @@ export const allUserInfo =
   on U.Username = E.Username
   `;
 
+export const userCheckQ = (table, username) => `select *
+   from ${table}
+   where Username='${username}'`;
+
 export default {
   allUserInfo
 }

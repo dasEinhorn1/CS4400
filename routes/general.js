@@ -11,9 +11,6 @@ router.get('/', Auth.user, (req, res, next) => {
 
 // Screen 1
 router.get('/login', Auth.unauthenticated, (req, res, next) => {
-  // if the user is logged in redirect to dashboard
-    // res.redirect('dashboard')
-  // else
   res.render('login');
 })
 
@@ -34,13 +31,24 @@ router.post('/login', Auth.unauthenticated, (req, res, next) => {
         res.redirect('login');
       }
       // set the user in the session, give the session to the cookie
-      console.log(user);
+      const seshUser = {
+        username: user.Username,
+        firstName: user.FirstName,
+        lastName: user.LastName
+      };
+      req.session.user = seshUser;
       res.redirect('dashboard');
     }).catch((err) => {
       console.log(err);
       res.redirect('login');
     })
 })
+
+// no screen logout
+router.get('/logout', Auth.user, (req, res, next) => {
+  req.session.user = undefined;
+  res.redirect('login');
+});
 
 // Screen 2
 router.get('/register', Auth.unauthenticated, (req, res, next) => {
@@ -171,15 +179,19 @@ router.post('/register/employee-visitor', Auth.unauthenticated, (req, res, next)
 // Screen 7-14 (CHECK AUTH; Minimum=user)
 router.get('/dashboard', Auth.user, (req, res, next) => {
   // TODO: check user auth, render correct page
-  const currentUser = {
-    type: "M",
-    isVisitor: true
-  };
-
-  res.render('dashboard', {
-    type: currentUser.type,
-    isVisitor:currentUser.isVisitor
-  })
+  db.auth.getUser(req.session.user.username)
+    .then(user => {
+      const currentUser = {
+        isVisitor: user.isVisitor,
+        isStaff: user.isStaff,
+        isManager: user.isManager,
+        isAdmin: user.isAdmin
+      }
+      return res.render('dashboard', currentUser);
+    }).catch(err => {
+      console.log(err);
+      res.redirect('back');
+    })
 })
 
 // Screen 15 (CHECK AUTH; Minimum=user)
