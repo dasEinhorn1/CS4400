@@ -8,8 +8,15 @@ import StaffRoutes from './routes/staff';
 import VisitRoutes from './routes/visit';
 import conn from './database/connection';
 
+if (process.env.RESET_DB) {
+  // run the sql files to drop and re-add all tables
+  
+  // run the script to insert the starting data into the db
+
+}
+
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.set('view engine', 'ejs');
 
