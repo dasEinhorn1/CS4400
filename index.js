@@ -1,4 +1,6 @@
 import express from 'express';
+import dotenv from 'dotenv';
+
 import AdminRoutes from './routes/admin';
 import GeneralRoutes from './routes/general';
 import ManagerRoutes from './routes/manager';

@@ -1,10 +1,10 @@
 import mysql from 'promise-mysql';
 
 const conn = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: 'password',
-  database: 'beltline'
+  host: process.env.HOST || 'localhost',
+  user: process.env.USER || 'root',
+  password: process.env.PASSWORD || 'password',
+  database: process.env.DATABASE || 'beltline'
 });
 
 // conn.connect(err => {
