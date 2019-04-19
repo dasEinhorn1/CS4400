@@ -28,7 +28,11 @@ const connect = (info=CONNECTION_INFO) => {
 export const query = (q) => {
   return connect().then((conn) => {
     const result = conn.query(q);
+    // console.log(result);
     conn.end();
+    // if (!result) {
+      // return;
+    // }
     return result;
   })
 }

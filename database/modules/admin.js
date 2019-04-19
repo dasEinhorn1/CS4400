@@ -33,7 +33,6 @@ const getAllUsers = () => {
 
       return { ...user, userType: userType, status: status };
     });
-
     return users;
   });
 };
@@ -107,7 +106,22 @@ const filterUsers = args => {
     });
 };
 
+const updateUserStatus = args => {
+  const username = args.username || '';
+  const status = args.status || '';
+
+  const query = `UPDATE User SET Status = '${status}' WHERE Username = '${username}';`;
+  console.log(query);
+  return db.query(query).then(result => {
+    console.log(result);
+  });
+};
+
+
+
 export default {
   getAllUsers,
-  filterUsers
+  filterUsers,
+  updateUserStatus,
+  
 };

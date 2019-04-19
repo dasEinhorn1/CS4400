@@ -48,7 +48,7 @@
         <tbody>
           <% users.forEach(user => { %>
           <tr>
-            <td><input type="radio" name="selectedUsername" value="<%= user.username %>"/> <%= user.Username %></td>
+            <td><input type="radio" name="username" value="<%= user.Username %>"/> <%= user.Username %></td>
             <td><%= user.numEmails%></td>
             <td><%= user.userType%></td>
             <td><%= user.status %></td>
@@ -57,10 +57,10 @@
         </tbody>
       </table>
       <div class="button-row">
-        <button class="btn" type="submit" name="confirmStatus" value="approve">
+        <button class="btn" type="submit" name="status" value="a">
           Approve
         </button>
-        <button class="btn" type="submit" name="confirmStatus" value="decline">
+        <button class="btn" type="submit" name="status" value="d">
           Decline
         </button>
       </div>

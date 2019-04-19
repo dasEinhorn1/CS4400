@@ -31,8 +31,11 @@ router.get('/users', (req, res) => {
 });
 
 router.post('/users', (req, res) => {
-  console.log(req.body);
-  res.redirect('/admin/users');
+  
+  const { username, status } = req.body;
+  db.admin.updateUserStatus({ username, status }).then(() => {
+    res.redirect('/admin/users');
+  })
 });
 
 // ========================== SITES ================================
@@ -41,7 +44,10 @@ router.post('/users', (req, res) => {
 router.get('/sites', (req, res) => {
   // res.send('Screen 19');
   // console.log(req.query);
+  const { username } = req.session.user;
   const { sites, manager, openEveryday, buttonType } = req.query;
+
+  
   res.render('admin/sites', { title: 'Sites', manages: manages });
 });
 router.post('/sites', (req, res) => {
