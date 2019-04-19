@@ -16,14 +16,28 @@ router.get('/users', (req, res) => {
   // res.send('Screen 18');
 
   console.log(req.query);
+  let users = [];
+  const employeeQuery =
+    'select U.Username, count(*) as numEmails, Status from User as U left join Email as E1 on U.Username = E1.Username left join Employee as E2 on U.Username = E2.Username group by U.Username';
+  const managerQuery =
+    'select U.Username, count(*) as numEmails, Status from User as U left join Email as E1 on U.Username = E1.Username left join Manager as E2 on U.Username = E2.Username group by U.Username';
 
-  conn.query('SELECT * FROM USER').then(rows => {
-    
-    const users = rows;
-
-    res.render('admin/users', { title: 'Users', users: users });
-  });
-
+  conn
+    .query(employeeQuery)
+    .then(employees => {
+      // console.log(users);
+      users = users.concat(employees);
+      console.log(users.length);
+      return conn.query(managerQuery);
+    })
+    .then(managers => {
+      users = users.concat(managers);
+      console.log(users.length);
+    })
+    .then(() => {
+      console.log(users);
+      res.render('admin/users', { title: 'Users', users: users });
+    });
 });
 
 router.post('/users', (req, res) => {
