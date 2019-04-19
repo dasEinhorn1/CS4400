@@ -5,7 +5,11 @@
     <title>Dashboard</title>
   </head>
   <body>
-    <h1 class="title --centered">Dashboard</h1>
+    <h1 class="title --centered">
+      <%= (isStaff) ? 'Staff' : '' %><%= (isManager) ? 'Manager' : '' %><%= (isAdmin) ? 'Admin' : '' %>
+      <%= (isVisitor) ? 'Visitor': '' %>
+      Dashboard
+    </h1>
     <div class="two-column">
       <% if (isAdmin || isStaff || isManager) { %>
         <a class="btn-link" href="/profile">

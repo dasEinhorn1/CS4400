@@ -1,4 +1,51 @@
 import db from '../database/db';
+import dotenv from 'dotenv';
+dotenv.config();
+
+// WARNING: for debugging only!!
+const noAuth = {
+  unauthenticated (req, res, next) {
+    req.session.user= undefined;
+    next();
+  },
+  user (req, res, next) {
+    req.session.user= {
+      username: 'james.smith'
+    };
+    next();
+  },
+  employee (req, res, next) {
+    req.session.user= {
+      username: 'staff1'
+    };
+    next();
+  },
+  visitor (req, res, next) {
+    req.session.user= {
+      username: 'visitor1'
+    };
+    next();
+  },
+  staff (req, res, next) {
+    req.session.user= {
+      username: 'staff3'
+    };
+    next();
+  },
+  manager (req, res, next) {
+    req.session.user= {
+      username: 'manager1'
+    };
+    next();
+  },
+  admin (req, res, next) {
+    req.session.user= {
+      username: 'james.smith'
+    };
+    next();
+  },
+};
+
 const Auth = {
   unauthenticated (req, res, next) {
     if (req.session.user) {
@@ -92,4 +139,5 @@ const Auth = {
   },
 }
 
-export default Auth;
+let exportedAuth = (process.env.DEBUG_MODE == 1) ? noAuth : Auth;
+export default exportedAuth;
