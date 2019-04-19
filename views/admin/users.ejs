@@ -15,25 +15,25 @@
         <div class="labelled-input">
           <label for="userType">User Type</label>
           <select class="dropdown" name="userType">
-            <option value="user" selected>User</option>
-            <option value="visitor">Visitor</option>
-            <option value="staff">Staff</option>
-            <option value="manage">Manager</option>
+            <option value="User" selected>User</option>
+            <option value="Visitor">Visitor</option>
+            <option value="Staff">Staff</option>
+            <option value="Manager">Manager</option>
           </select>
         </div>
         <div class="labelled-input">
           <label for="status">Status</label>
           <select class="dropdown" name="status">
             <option value="all" selected>--All--</option>
-            <option value="approved">Approved</option>
-            <option value="pending">Pending</option>
-            <option value="declined">Declined</option>
+            <option value="a">Approved</option>
+            <option value="p">Pending</option>
+            <option value="d">Declined</option>
           </select>
         </div>
       </div>
       <div class="button-row">
         <div class="button-row">
-          <button class="btn" type="submit">Filter</button>
+          <button class="btn" type="submit" name="filter" value="true">Filter</button>
         </div>
       </div>
     </form>
@@ -48,19 +48,19 @@
         <tbody>
           <% users.forEach(user => { %>
           <tr>
-            <td><input type="radio" name="selectedUsername" value="<%= user.username %>"/> <%= user.Username %></td>
+            <td><input type="radio" name="username" value="<%= user.Username %>"/> <%= user.Username %></td>
             <td><%= user.numEmails%></td>
-            <td><%= user.numEmails%></td>
-            <td><%= user.Status %></td>
+            <td><%= user.userType%></td>
+            <td><%= user.status %></td>
           </tr>
           <% });%>
         </tbody>
       </table>
       <div class="button-row">
-        <button class="btn" type="submit" name="confirmStatus" value="approve">
+        <button class="btn" type="submit" name="status" value="a">
           Approve
         </button>
-        <button class="btn" type="submit" name="confirmStatus" value="decline">
+        <button class="btn" type="submit" name="status" value="d">
           Decline
         </button>
       </div>

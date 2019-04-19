@@ -1,6 +1,6 @@
 import express from 'express';
 import Auth from '../middleware/Auth';
-// import users from '../fixtures/users';
+import users from '../fixtures/users';
 import manages from '../fixtures/manages';
 import transits from '../fixtures/transits';
 import sites from '../fixtures/sites';
@@ -14,34 +14,28 @@ router.use(Auth.admin);
 // Screen 18
 router.get('/users', (req, res) => {
   // res.send('Screen 18');
+  // console.log(req.query);
+  let types = ['User', 'Visitor', 'Staff', 'Manager'];
+  const { username, userType, status, filter } = req.query;
 
-  console.log(req.query);
-  let users = [];
-  const employeeQuery =
-    'select U.Username, count(*) as numEmails, Status from User as U left join Email as E1 on U.Username = E1.Username left join Employee as E2 on U.Username = E2.Username group by U.Username';
-  const managerQuery =
-    'select U.Username, count(*) as numEmails, Status from User as U left join Email as E1 on U.Username = E1.Username left join Manager as E2 on U.Username = E2.Username group by U.Username';
-
-  db.query(employeeQuery)
-    .then(employees => {
-      // console.log(users);
-      users = users.concat(employees);
-      console.log(users.length);
-      return conn.query(managerQuery);
-    })
-    .then(managers => {
-      users = users.concat(managers);
-      console.log(users.length);
-    })
-    .then(() => {
-      console.log(users);
+  // filter
+  if (filter == 'true') {
+    db.admin.filterUsers({ username, userType, status }).then(users => {
       res.render('admin/users', { title: 'Users', users: users });
     });
+  } else {
+    db.admin.getAllUsers().then(users => {
+      res.render('admin/users', { title: 'Users', users: users });
+    });
+  }
 });
 
 router.post('/users', (req, res) => {
-  console.log(req.body);
-  res.redirect('/admin/users');
+  
+  const { username, status } = req.body;
+  db.admin.updateUserStatus({ username, status }).then(() => {
+    res.redirect('/admin/users');
+  })
 });
 
 // ========================== SITES ================================
@@ -50,7 +44,10 @@ router.post('/users', (req, res) => {
 router.get('/sites', (req, res) => {
   // res.send('Screen 19');
   // console.log(req.query);
+  const { username } = req.session.user;
   const { sites, manager, openEveryday, buttonType } = req.query;
+
+  
   res.render('admin/sites', { title: 'Sites', manages: manages });
 });
 router.post('/sites', (req, res) => {

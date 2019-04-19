@@ -28,18 +28,14 @@ const connect = (info=CONNECTION_INFO) => {
 export const query = (q) => {
   return connect().then((conn) => {
     const result = conn.query(q);
+    // console.log(result);
     conn.end();
+    // if (!result) {
+      // return;
+    // }
     return result;
   })
 }
-
-// conn.connect(err => {
-//   if (err) {
-//     console.log(err);
-//     throw err;
-//   }
-//   console.log('connected to database');
-// });
 
 export default {
   connect
