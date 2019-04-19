@@ -2,6 +2,8 @@ import express from 'express';
 import sitesFixture from '../fixtures/sites'
 import Auth from '../middleware/Auth';
 import db from '../database/db';
+import { body, query, validationResult } from 'express-validator/check';
+// import { sanitizeBody } = require('express-validator/filter');
 
 const router = express.Router();
 
@@ -19,25 +21,12 @@ router.post('/login', Auth.unauthenticated, (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
 
-  // TODO: hash the password
-  const hashedPassword = password;
-
   // check if a user exists with the given email
   // call the database with email and hashed password
-  db.auth.login(email, hashedPassword)
-    .then(user => {
-      // if they don't, redirect to login with an error
-      if (!user) {
-        res.redirect('login');
-      }
-      // set the user in the session, give the session to the cookie
-      const seshUser = {
-        username: user.Username,
-        firstName: user.FirstName,
-        lastName: user.LastName
-      };
-      req.session.user = seshUser;
-      res.redirect('dashboard');
+  db.auth.login(email, password)
+    .then(db.auth.helpers.setUserSession(req))
+    .then(() => {
+      res.redirect('/dashboard');
     }).catch((err) => {
       console.log(err);
       res.redirect('login');
@@ -61,7 +50,21 @@ router.get('/register/user', Auth.unauthenticated, (req, res, next) => {
 })
 
 // register the new user in the database
-router.post('/register/user', Auth.unauthenticated, (req, res, next) => {
+router.post('/register/user', Auth.unauthenticated, [
+  body('firstName').not().isEmpty(),
+  body('lastName').not().isEmpty(),
+  body('username').not().isEmpty(),
+  // check password is string >= 8 characters
+  body('password').isLength({ min: 8 }),
+  // check password == confirmPassword
+  // body('confirmPassword').custom((value, { req }) => {
+  //   console.log(value, req.body.password);
+  //   if (value !== req.body.password) {
+  //     throw new Error('Password confirmation does not match password');
+  //   }
+  // })
+  // body('emails').not().isEmpty()
+], (req, res, next) => {
   // res.send('registered user')
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
@@ -71,15 +74,28 @@ router.post('/register/user', Auth.unauthenticated, (req, res, next) => {
   const emails = req.body.emails;
   const isVisitor = false;
 
-  // check password is string >= 8 characters and == confirmPassword
-    // if not, redirect and show an error
-  // make sure username is not empty
-  // make sure emails are valid
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    errors.array().forEach(console.log);
+    return res.redirect('back');
+  }
+  // TODO: make sure emails are valid
+
+  // hash password
+  const hashedPassword = db.auth.helpers.hashPassword(password);
   // insert new user with status 'P' for pending
-  // if the insertion fails, then the email or username must already exist
-    // redirect and show an error
-  // otherwise, set the user in the session and go to dashboard
-  res.redirect('/dashboard')
+  db.auth.registerUser({
+    firstName,
+    lastName,
+    username,
+    emails,
+    password: hashedPassword
+  }).then(() => {
+    res.redirect('/login');
+  }).catch(err => {
+    console.log(err)
+    res.redirect('back');
+  })
 })
 
 
