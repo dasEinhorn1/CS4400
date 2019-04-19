@@ -128,7 +128,7 @@ const Auth = {
     if (!req.session.user) {
       return res.redirect('/login');
     }
-    db.auth.isManager(req.session.user.username)
+    db.auth.isAdmin(req.session.user.username)
       .then(allowed => {
         if (allowed) {
           return next();
