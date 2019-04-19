@@ -33,14 +33,6 @@ export const query = (q) => {
   })
 }
 
-// conn.connect(err => {
-//   if (err) {
-//     console.log(err);
-//     throw err;
-//   }
-//   console.log('connected to database');
-// });
-
 export default {
   connect
 };
