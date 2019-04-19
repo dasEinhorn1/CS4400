@@ -85,9 +85,9 @@ CONSTRAINT Fk_ManagerUsername FOREIGN KEY (Username) REFERENCES Employee(Usernam
 
 -- SITE
 CREATE TABLE Site (
-SiteName varchar(160) NOT NULL,
+  SiteName varchar(160) NOT NULL,
   SiteAddress varchar(160),
-SiteZipcode char(5) NOT NULL,
+  SiteZipcode char(5) NOT NULL,
   OpenEveryday bit(1) NOT NULL DEFAULT 0,
   ManagerUsername varchar(160) NOT NULL UNIQUE,
   PRIMARY KEY (SiteName),
