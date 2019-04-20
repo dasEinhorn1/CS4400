@@ -48,7 +48,7 @@ CONSTRAINT Fk_VistorUsername FOREIGN KEY (Username) REFERENCES User(Username)
 -- Employee
 CREATE TABLE Employee (
   Username varchar(160) NOT NULL,
-  EmployeeID char(9) NOT NULL UNIQUE,
+  EmployeeID int(9) ZEROFILL NOT NULL UNIQUE AUTO_INCREMENT,
   Phone varchar(10) NOT NULL UNIQUE,
   EmployeeAddress varchar(160) NOT NULL,
   EmployeeCity varchar(100) NOT NULL,  -- longest city name is less than 100

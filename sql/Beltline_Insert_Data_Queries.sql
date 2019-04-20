@@ -59,20 +59,20 @@ INSERT INTO `Visitor` VALUES
 	('visitor1');
 
 -- Employee
-INSERT INTO `Employee` VALUES
-	('james.smith','000000001','4043721234','123 East Main Street','Rochester','NY','14604'),
-	('michael.smith','000000002','4043726789','350 Ferst Drive','Atlanta','GA','30332'),
-	('robert.smith','000000003','1234567890','123 East Main Street','Columbus','OH','43215'),
-	('maria.garcia','000000004','7890123456','123 East Main Street','Richland','PA','17987'),
-	('david.smith','000000005','5124776435','350 Ferst Drive','Atlanta','GA','30332'),
-	('manager1','000000006','8045126767','123 East Main Street','Rochester','NY','14604'),
-	('manager2','000000007','9876543210','123 East Main Street','Rochester','NY','14604'),
-	('manager3','000000008','5432167890','350 Ferst Drive','Atlanta','GA','30332'),
-	('manager4','000000009','8053467565','123 East Main Street','Columbus','OH','43215'),
-	('manager5','000000010','8031446782','801 Atlantic Drive','Atlanta','GA','30332'),
-	('staff1','000000011','8024456765','266 Ferst Drive Northwest','Atlanta','GA','30332'),
-	('staff2','000000012','8888888888','266 Ferst Drive Northwest','Atlanta','GA','30332'),
-	('staff3','000000013','3333333333','801 Atlantic Drive','Atlanta','GA','30332');
+INSERT INTO `Employee` (Username, Phone, EmployeeAddress, EmployeeCity, EmployeeState, EmployeeZipcode) VALUES
+	('james.smith','4043721234','123 East Main Street','Rochester','NY','14604'),
+	('michael.smith','4043726789','350 Ferst Drive','Atlanta','GA','30332'),
+	('robert.smith','1234567890','123 East Main Street','Columbus','OH','43215'),
+	('maria.garcia','7890123456','123 East Main Street','Richland','PA','17987'),
+	('david.smith','5124776435','350 Ferst Drive','Atlanta','GA','30332'),
+	('manager1','8045126767','123 East Main Street','Rochester','NY','14604'),
+	('manager2','9876543210','123 East Main Street','Rochester','NY','14604'),
+	('manager3','5432167890','350 Ferst Drive','Atlanta','GA','30332'),
+	('manager4','8053467565','123 East Main Street','Columbus','OH','43215'),
+	('manager5','8031446782','801 Atlantic Drive','Atlanta','GA','30332'),
+	('staff1','8024456765','266 Ferst Drive Northwest','Atlanta','GA','30332'),
+	('staff2','8888888888','266 Ferst Drive Northwest','Atlanta','GA','30332'),
+	('staff3','3333333333','801 Atlantic Drive','Atlanta','GA','30332');
 
 -- Admin
 INSERT INTO `Administrator` VALUES
