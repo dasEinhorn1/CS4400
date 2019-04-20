@@ -36,7 +36,63 @@ const getEmployee = (username) => {
     .then(getFirst)
 };
 
-const updateEmployee = (employee)=> {
+const checkNewEmailsUniqueFor = (employee) => {
+  const emails = employee.emails;
+  const emailsQuoted = emails.map(email => `'${email}'`).join(',');
+  const qStr =
+  ` select Count(Email) as conflicts
+    from Email
+    where Email in (${emailsQuoted})
+      and Email.Username != '${employee.username}';`;
+  return db.query(qStr)
+    .then(getFirst)
+    .then(({conflicts}) => conflicts < 1);
+}
+
+export const userTypeInsertion = (table, user) => {
+  return db.query(`insert into ${table} values ('${user.username}')`)
+    .then(() => user);
+}
+
+
+const updateEmployee = (employee) => {
+  console.log(employee);
+  const { firstName, lastName, username, phone, isVisitor, emails } = employee;
+  let insertEmails = 'INSERT INTO Email VALUES '
+  if (emails.length < 1) {
+    insertEmails = ''
+  } else {
+    insertEmails += emails.map(email =>`('${username}', '${email}')`).join(',');
+  }
+
+  const setVisitor = (isVisitor) ? userTypeInsertion : false;
+
+  return checkNewEmailsUniqueFor(employee)
+    .then(result => {
+      if (!result) throw new Error("1 or more emails not unique.")
+      return db.query(`
+        UPDATE User
+        SET User.FirstName = '${firstName}', User.LastName = '${lastName}'
+        WHERE User.Username = '${username}';`);
+    }).then(() => {
+      return db.query(`UPDATE Employee
+        SET Employee.Phone='${phone}' WHERE Employee.Username = '${username}';`)
+    }).then(() => {
+      return db.query(`DELETE FROM Visitor WHERE Username = '${username}';`)
+    }).then(() => {
+      if (setVisitor) {
+        return userTypeInsertion('Visitor', employee)
+      };
+    }).then(() => {
+      return db.query(`DELETE FROM Email WHERE Email.Username = '${username}'`)
+    }).then(() => {
+      if (!insertEmails) {
+        return;
+      }
+      return db.query(insertEmails)
+    })
+
+
 
 };
 

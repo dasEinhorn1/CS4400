@@ -6,6 +6,12 @@ const getSiteNames = () => {
     .then(rows => rows.map(site => site.name));
 }
 
+export const userTypeInsertion = (table, user) => {
+  return db.query(`insert into ${table} values ('${user.username}')`)
+    .then(() => user);
+}
+
+
 const notNull = (d) => d || undefined;
 const notNullOrAll = (d) => d && d != 'all';
 const posNum = (d) => (d || -1) >= 0;

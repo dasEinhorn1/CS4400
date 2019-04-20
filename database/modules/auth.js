@@ -10,6 +10,12 @@ const UserStatus = {
   REJECTED: 'r'
 }
 
+export const userTypeInsertion = (table, user) => {
+  return db.query(`insert into ${table} values ('${user.username}')`)
+    .then(() => user);
+}
+
+
 const createUserChecker = (table) => {
   return (username) => {
     const qStr = userCheckQ(table, username);
@@ -100,11 +106,6 @@ const registerUser = (user) => {
       const emailInsert = `insert into Email values ${emails}`;
       return db.query(emailInsert)
     }).then(() => user);
-}
-
-const userTypeInsertion = (table, user) => {
-  return db.query(`insert into ${table} values ('${user.username}')`)
-    .then(() => user);
 }
 
 const registerEmployee = (user) => {

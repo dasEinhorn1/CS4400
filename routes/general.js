@@ -341,7 +341,7 @@ router.get('/profile', Auth.employee, (req, res, next) => {
   // }
   return db.employee.getEmployee(req.session.user.username)
     .then((employee) => {
-      console.log(employee);
+      // console.log(employee);
       return res.render('profile', {employee})
     }).catch(err => {
       console.log(err);
@@ -350,18 +350,37 @@ router.get('/profile', Auth.employee, (req, res, next) => {
 })
 
 // update the employee profile
-router.post('/profile', Auth.employee, (req, res, next) => {
+router.post('/profile', Auth.employee, [
+  body('firstName').not().isEmpty(),
+  body('lastName').not().isEmpty(),
+  body('phone').isLength(10),
+  Validator.emails('emails')
+], Validator.validate, (req, res, next) => {
+  const username = req.session.user.username;
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
   const phone = req.body.phone;
-  const isVisitor = req.body.isVisitor;
-  const emails = req.body.emails;
+  const isVisitor = (req.body.isVisitor) ? true : false;
+  const emails = req.body.emails.split(',').map(e => e.trim());
 
   /* get the currently logged in employee and update
    * these values for them
    */
+   console.log({firstName, lastName, phone, isVisitor, username, emails});
+  db.employee.updateEmployee({
+    username,
+    firstName,
+    lastName,
+    phone,
+    isVisitor,
+    emails,
+  }).then(() => {
+    res.redirect('profile');
+  }).catch(err => {
+    console.log(err);
+    res.redirect('back');
+  })
 
-  res.redirect('profile');
 })
 
 export default router;
