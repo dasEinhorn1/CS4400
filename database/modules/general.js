@@ -6,10 +6,12 @@ const getSiteNames = () => {
     .then(rows => rows.map(site => site.name));
 }
 
+const notNull = (d) => d || undefined;
+const notNullOrAll = (d) => d && d != 'all';
+const posNum = (d) => (d || -1) >= 0;
+
 const filterTransits = (filters) => {
   const { transportType, siteName, lowerPrice, upperPrice } = filters;
-  const notNullOrAll = (d) => d && d != 'all';
-  const posNum = (d) => (d || -1) >= 0;
 
   const connectTransWhere = qs.generateWhere([
     qs.createFilter('Connect.TransitType', transportType, notNullOrAll)
@@ -40,13 +42,33 @@ const logTransit = (transitTaken) => {
   return db.query(qStr);
 }
 
-const getTransitsTaken = () => {
-  
+const getTransitsTaken = (filters) => {
+  const {username, siteName, transportType, route, startDate, endDate} = filters;
+  const optionalWhere = qs.generateWhere([
+    qs.createFilter('TakeTransit.Username', username),
+    qs.createFilter('TakeTransit.TransitType', transportType, notNullOrAll),
+    qs.createFilter('Connect.SiteName', siteName, notNullOrAll),
+    qs.createFilter('TakeTransit.TransitRoute', route, notNull),
+    ...qs.createRangeFilters('TakeTransit.TransitDate', [startDate, endDate], notNull),
+  ]);
+
+  const qStr =
+   `SELECT TakeTransit.TransitDate as dateTaken,
+            TakeTransit.TransitRoute as route,
+            TakeTransit.TransitType as type,
+            Transit.TransitPrice as price
+    FROM TakeTransit INNER JOIN Transit
+    ON TakeTransit.TransitType = Transit.TransitType AND TakeTransit.TransitRoute = Transit.TransitRoute
+    INNER JOIN Connect
+    ON TakeTransit.TransitType = Connect.TransitType AND TakeTransit.TransitRoute = Connect.TransitRoute
+    ${optionalWhere}`
+  return db.query(qStr);
 }
 
 
 export default {
   filterTransits,
   getSiteNames,
-  logTransit
+  logTransit,
+  getTransitsTaken
 }

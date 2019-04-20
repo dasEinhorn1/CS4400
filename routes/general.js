@@ -296,34 +296,25 @@ router.get('/transits/history', Auth.user, (req, res, next) => {
   const endDate = req.query.endDate;
 
   // get all the transitsTaken that we care about
-  const transitsTaken = [
-    {
-      dateTaken: '2019-01-01',
-      route: '815',
-      type: 'Bus',
-      price: 1.5,
-      siteCount: 3
-    },
-    {
-      dateTaken: '2019-02-01',
-      route: 'Red',
-      type: 'MARTA',
-      price: 3,
-      siteCount: 6
-    },
-  ];
-
-  res.render('transit-history', {
-    sites: sitesFixture,
-    formValues: {
-      site: siteName,
-      transportType,
-      route,
-      startDate,
-      endDate
-    },
-    transitsTaken,
+  return db.general.getTransitsTaken({
+    username: req.session.user.username, ...req.query
+  }).then((transitsTaken) => {
+      return res.render('transit-history', {
+        sites: sitesFixture,
+        formValues: {
+          site: siteName,
+          transportType,
+          route,
+          startDate,
+          endDate
+        },
+        transitsTaken,
+      })
+  }).catch(err => {
+    console.log(err);
+    return res.redirect('back')
   })
+
 })
 
 /*

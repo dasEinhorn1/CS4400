@@ -55,6 +55,13 @@ export const createFilter = (name, value, condition=(()=>true), operator='=') =>
   name, value, condition, operator
 })
 
+export const createRangeFilters = (name, [lower, upper], condition, [lInc=true, uInc=true]=[]) => {
+  return [
+    createFilter(name, lower, condition, `>${(lInc) ? '=' : '' }`),
+    createFilter(name, upper, condition, `<${(uInc) ? '=' : '' }`)
+  ]
+}
+
 export const employeeInsert = `INSERT INTO Employee (Username, Phone, EmployeeAddress, EmployeeCity, EmployeeState, EmployeeZipcode) VALUES `;
 
 export default {
@@ -63,5 +70,6 @@ export default {
   createAllUserView,
   employeeInsert,
   generateWhere,
-  createFilter
+  createFilter,
+  createRangeFilters
 };
