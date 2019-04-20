@@ -10,15 +10,24 @@
       <div class="input-row">
         <div class="labelled-input">
           <label for="username">Sites</label>
-          <select class="dropdown" name="sites">
-            <option value="all" selected>--All--</option>
-            <!-- TODO: insert  -->
+          <select class="dropdown" name="site">
+            <option value="" selected>--All--</option>
+            <% manages.forEach( manage => { %>
+            <option value="<%= manage.SiteName %>"
+              ><%= manage.SiteName%></option
+            >
+            <% }) %>
           </select>
         </div>
         <div class="labelled-input">
           <label for="username">Manager</label>
           <select class="dropdown" name="manager">
-            <option value="all" selected>--All--</option>
+            <option value="" selected>--All--</option>
+            <% manages.forEach( manage => { %>
+            <option value="<%= manage.Username %>"
+              ><%= manage.fullName%></option
+            >
+            <% }) %>
           </select>
         </div>
       </div>
@@ -33,7 +42,7 @@
       </div>
       <div class="button-row">
         <div class="button-row-left">
-          <button class="btn" type="submit" name="buttonType" value="filter">
+          <button class="btn" type="submit" name="filter" value="true">
             Filter
           </button>
         </div>
@@ -58,12 +67,12 @@
               <input
                 type="radio"
                 id="siteName"
-                name="selectedSiteName"
-                value="<%= manage.name %>"
+                name="site"
+                value="<%= manage.SiteName %>"
               />
-              <%= manage.name %>
+              <%= manage.SiteName %>
             </td>
-            <td><%= manage.manager%></td>
+            <td><%= manage.fullName%></td>
             <td><%= manage.openEveryday%></td>
           </tr>
           <% });%>
@@ -71,10 +80,10 @@
       </table>
 
       <div class="button-row">
-        <button class="btn" type="submit" formaction="/admin/sites/edit" name="buttonType" value="edit">
+        <button class="btn" type="submit" name="buttonType" value="edit">
           Edit
         </button>
-        <button class="btn" type="submit">
+        <button class="btn" type="submit" name="buttonType" value="delete">
           Delete
         </button>
       </div>

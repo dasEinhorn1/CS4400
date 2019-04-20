@@ -13,29 +13,44 @@
       <div class="input-row">
         <div class="labelled-input">
           <label for="siteName">Name</label>
-          <input type="text" name="siteName" />
+          <input type="text" name="siteName" value="<%= site.SiteName %>" />
         </div>
         <div class="labelled-input">
           <label for="zipcode">Zipcode</label>
-          <input type="text" name="zipcode" />
+          <input type="text" name="zipcode" value="<%= site.SiteZipcode %>" />
         </div>
       </div>
       <div class="input-row">
         <div class="labelled-input">
           <label for="address">Address</label>
-          <input type="text" name="address" />
+          <input type="text" name="address" value="<%= site.SiteAddress %>" />
         </div>
       </div>
       <div class="input-row">
         <div class="labelled-input">
           <label for="password">Manager</label>
           <select name="manager" id="">
-            <option value="Clara Wilson" selected>Clara Wilson</option>
+            <% managers.forEach(manager => { if (site.Username ==
+            manager.Username) { %>
+            <option value="<%= site.Username %>" selected
+              ><%= site.fullName%></option
+            >
+            <% } else { %>
+            <option value="<%= site.Username %>"><%= manager.fullName%></option>
+            <% } }) %>
           </select>
         </div>
         <div class="labelled-input">
-          <input type="checkbox" name="openEveryday" value="openEveryday" />
-          <label for="openEveryday">Open Everyday</label>
+          <label for="">Open Everyday</label>
+          <select class="dropdown" name="openEveryday">
+            <% if (site.openEveryday == 'Yes') { %>
+            <option value="true" selected>Yes</option>
+            <option value="false">No</option>
+            <% } else { %>
+            <option value="true">Yes</option>
+            <option value="false" selected>No</option>
+            <% } %>
+          </select>
         </div>
       </div>
       <div class="button-row --centered">
@@ -44,6 +59,7 @@
         </a>
         <button class="btn" type="submit">Update</button>
       </div>
+      <input type="hidden" name="originalSiteName" value="<%= site.SiteName %>"/>
     </form>
   </body>
 </html>
