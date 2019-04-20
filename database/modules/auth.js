@@ -76,14 +76,21 @@ const registerUser = (user) => {
         throw new Error('Email(s) already in use')
       }
       return db.query(qStr)
-    })
-    .then(() => {
+    }).then(() => {
       const emails = user.emails.map((eml) => `('${user.username}','${eml}')`).join(',')
       const emailInsert = `insert into Email values ${emails}`;
       return db.query(emailInsert)
-    })
+    }).then(() => user);
 }
 
+const userTypeInsertion = (table) => {
+  return (user) => db.query(`insert into ${table} values ('${user.username}')`)
+}
+
+const registerVisitor = (user) => {
+  return registerUser(user)
+    .then(userTypeInsertion('Visitor'));
+}
 
 export default {
   login (email, password) {
@@ -101,6 +108,7 @@ export default {
       })
   },
   registerUser,
+  registerVisitor,
   getUser: (username) => {
     const qStr = allUserInfo
       + `where U.Username = '${username}'`;

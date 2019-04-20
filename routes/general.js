@@ -1,8 +1,9 @@
 import express from 'express';
 import sitesFixture from '../fixtures/sites'
 import Auth from '../middleware/Auth';
+import Validator from '../middleware/Validator';
 import db from '../database/db';
-import { body, query, validationResult } from 'express-validator/check';
+import { validationResult } from 'express-validator/check';
 // import { sanitizeBody } = require('express-validator/filter');
 
 const router = express.Router();
@@ -50,34 +51,10 @@ router.get('/register/user', Auth.unauthenticated, (req, res, next) => {
 })
 
 // register the new user in the database
-router.post('/register/user', Auth.unauthenticated, [
-  body('firstName').not().isEmpty(),
-  body('lastName').not().isEmpty(),
-  body('username').not().isEmpty(),
-  // check password is string >= 8 characters
-  body('password').isLength({ min: 8 }),
-  // check password == confirmPassword
-  body('confirmPassword').custom((value, { req }) => {
-    console.log(value, req.body.password);
-    if (value === req.body.password)
-      return true;
-    throw new Error('Password confirmation does not match password');
-  }),
-  body('emails').custom((value) => {
-    const allValid = value.split(',')
-      .map(email => email.trim())
-      .reduce((valid, email) => valid &&
-        /[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+/.test(email))
-    if (allValid)
-      return true;
-    throw new Error('One or more emails invalid');
-  })
-], (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    errors.array().forEach(console.log);
-    return res.redirect('back');
-  }
+router.post('/register/user', Auth.unauthenticated,
+  Validator.userRegister,
+  Validator.validate,
+  (req, res, next) => {
   // res.send('registered user')
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
@@ -86,7 +63,6 @@ router.post('/register/user', Auth.unauthenticated, [
   const confirmPassword = req.body.confirmPassword;
   const emails = req.body.emails.split(',').map(email => email.trim());
   const isVisitor = false;
-  // TODO: make sure emails are valid
 
   // hash password
   const hashPassword = db.auth.helpers.hashPassword(password);
@@ -115,24 +91,35 @@ router.get('/register/visitor', Auth.unauthenticated, (req, res, next) => {
 })
 
 //
-router.post('/register/visitor', Auth.unauthenticated, (req, res, next) => {
+router.post('/register/visitor', Auth.unauthenticated,
+  Validator.userRegister, Validator.validate,
+  (req, res, next) => {
   // res.send('registered visitor')
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
   const username = req.body.username;
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
-  const emails = req.body.emails;
+  const emails = req.body.emails.split(',').map(email => email.trim());
   const isVisitor = true;
-  // check password is string >= 8 characters and == confirmPassword
-    // if not, redirect and show an error
-  // make sure username is not empty
-  // make sure emails are valid
+  // hash password
+  const hashPassword = db.auth.helpers.hashPassword(password);
   // insert new user with status 'P' for pending
-  // if the insertion fails, then the email or username must already exist
-    // redirect and show an error
-  // otherwise, set the user in the session and go to dashboard
-  res.redirect('/dashboard')
+  hashPassword.then((hashedPassword) => {
+    return db.auth.registerVisitor({
+      firstName,
+      lastName,
+      username,
+      emails,
+      password: hashedPassword
+    })
+  })
+  .then(() => {
+    res.redirect('/login');
+  }).catch(err => {
+    console.log(err)
+    res.redirect('back');
+  })
 })
 
 
