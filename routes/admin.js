@@ -42,7 +42,6 @@ router.post('/users', (req, res) => {
 // Screen 19
 router.get('/sites', (req, res) => {
   // res.send('Screen 19');
-  console.log(req.query);
   const { username } = req.session.user;
   const { site, manager, openEveryday, filter } = req.query;
 
@@ -57,7 +56,6 @@ router.get('/sites', (req, res) => {
   }
 });
 router.post('/sites', (req, res) => {
-  console.log(req.body);
   const { site, buttonType } = req.body;
 
   if (buttonType == 'edit') {
@@ -75,12 +73,14 @@ router.post('/sites', (req, res) => {
 router.get('/sites/create', (req, res) => {
   // res.send('Screen 21');
   // TODO: send only the managers
-  res.render('admin/create-sites', { title: 'Create Sites', users: users });
+  db.admin.fetchUnassignedManagers().then(managers => {
+    res.render('admin/create-sites', { title: 'Create Sites', managers: managers });
+  })
 });
 router.post('/sites/create', (req, res) => {
   // TODO: create an instance with data
   console.log(req.body);
-
+  db.admin.createSite(req.body);
   res.redirect('/admin/sites');
 });
 

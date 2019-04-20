@@ -229,8 +229,19 @@ const updateSite = args => {
   } = args;
   let openEverydayInt = openEveryday == 'true ' ? 1 : 0;
   let query = `UPDATE Site SET SiteName = '${siteName}', SiteAddress = '${address}', SiteZipcode = '${zipcode}', OpenEveryday = ${openEverydayInt}, ManagerUsername = '${manager}' WHERE SiteName = '${originalSiteName}'`;
-  console.log(query);
+  // console.log(query);
 
+  return db.query(query);
+};
+
+const createSite = args => {
+  let { name, zipcode, address, manager } = args;
+  if (name.length < 1) name = null;
+  const openEveryday = args.openEveryday || '';
+  let openEverydayInt = openEveryday == 'Yes' ? 1 : 0;
+  let query = `INSERT INTO Site(SiteName, SiteAddress, SiteZipcode, OpenEveryday, ManagerUsername) VALUES ('${name}', '${address}', '${zipcode}', ${openEverydayInt}, '${manager}')`;
+
+  console.log(query);
   return db.query(query);
 };
 
@@ -241,6 +252,7 @@ export default {
   getAllSites,
   filterSites,
   deleteSite,
+  createSite,
   updateSite,
   fetchManagers,
   fetchUnassignedManagers
