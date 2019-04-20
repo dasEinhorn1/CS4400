@@ -1,6 +1,6 @@
 import db from '../db';
 import bcrypt from 'bcrypt';
-import { allUserInfo, userCheckQ, employeeInsert } from '../qs';
+import { allUserInfo, userCheckQ, employeeInsert, getFirst } from '../qs';
 
 const SALT_ROUNDS = 10;
 
@@ -9,12 +9,6 @@ const UserStatus = {
   PENDING: 'p',
   REJECTED: 'r'
 }
-
-const getSingle = (index) => {
-  return (rows) => rows[index];
-};
-
-const getFirst = getSingle(0);
 
 const createUserChecker = (table) => {
   return (username) => {

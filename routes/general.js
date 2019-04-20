@@ -325,24 +325,28 @@ router.get('/transits/history', Auth.user, (req, res, next) => {
 // Screen 17
 router.get('/profile', Auth.employee, (req, res, next) => {
   // get the current employee's profile
-  const employee = {
-    firstName: 'Adam',
-    lastName: 'Hayward',
-    username: 'ahayward3',
-    site: 'Inman Park',
-    id: '903247965',
-    address: '8 Sabra Circle, Derry NH, 03038',
-    phone: '(603)247-8988',
-    isVisitor: true,
-    emails: [
-      'achayward1@gmail.com',
-      'adam.hayward@gatech.edu'
-    ]
-  }
-  //
-  res.render('profile', {
-    employee
-  })
+  // const employee = {
+  //   firstName: 'Adam',
+  //   lastName: 'Hayward',
+  //   username: 'ahayward3',
+  //   site: 'Inman Park',
+  //   id: '903247965',
+  //   address: '8 Sabra Circle, Derry NH, 03038',
+  //   phone: '(603)247-8988',
+  //   isVisitor: true,
+  //   emails: [
+  //     'achayward1@gmail.com',
+  //     'adam.hayward@gatech.edu'
+  //   ]
+  // }
+  return db.employee.getEmployee(req.session.user.username)
+    .then((employee) => {
+      console.log(employee);
+      return res.render('profile', {employee})
+    }).catch(err => {
+      console.log(err);
+      return res.redirect('back');
+    })
 })
 
 // update the employee profile

@@ -44,21 +44,11 @@
         </div>
       </div>
       <div class="input-row">
-        <ul>
-          <%# for email in emails%>
-          <li>
-            <p>cwilson@hotmail.com</p>
-            <button name="removeEmail" type="button">Remove</button>
-          </li>
-          <%# End loop%>
-          <li>
-            <input type="text" name="email" value=""/>
-            <button name="addEmail" type="button">Add</button>
-          </li>
-        </ul>
+        <%- include('../partials/emails-input', { emails: employee.emails })%>
       </div>
       <div class="input-row --centered">
-        <input type="checkbox" name="isVisitor" checked="<%= employee.isVisitor %>">
+        <input type="checkbox" name="isVisitor"
+          <%= (employee.isVisitor) ? 'checked' : '' %>>
         <label for="isVisitor">Visitor Account</label>
       </div>
       <div class="button-row">

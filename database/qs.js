@@ -55,6 +55,12 @@ export const createFilter = (name, value, condition=(()=>true), operator='=') =>
   name, value, condition, operator
 })
 
+export const getSingle = (index) => {
+  return (rows) => rows[index];
+};
+
+export const getFirst = getSingle(0);
+
 export const createRangeFilters = (name, [lower, upper], condition, [lInc=true, uInc=true]=[]) => {
   return [
     createFilter(name, lower, condition, `>${(lInc) ? '=' : '' }`),
@@ -71,5 +77,7 @@ export default {
   employeeInsert,
   generateWhere,
   createFilter,
-  createRangeFilters
+  createRangeFilters,
+  getSingle,
+  getFirst
 };
