@@ -57,40 +57,50 @@ router.post('/register/user', Auth.unauthenticated, [
   // check password is string >= 8 characters
   body('password').isLength({ min: 8 }),
   // check password == confirmPassword
-  // body('confirmPassword').custom((value, { req }) => {
-  //   console.log(value, req.body.password);
-  //   if (value !== req.body.password) {
-  //     throw new Error('Password confirmation does not match password');
-  //   }
-  // })
-  // body('emails').not().isEmpty()
+  body('confirmPassword').custom((value, { req }) => {
+    console.log(value, req.body.password);
+    if (value === req.body.password)
+      return true;
+    throw new Error('Password confirmation does not match password');
+  }),
+  body('emails').custom((value) => {
+    const allValid = value.split(',')
+      .map(email => email.trim())
+      .reduce((valid, email) => valid &&
+        /[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+/.test(email))
+    if (allValid)
+      return true;
+    throw new Error('One or more emails invalid');
+  })
 ], (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    errors.array().forEach(console.log);
+    return res.redirect('back');
+  }
   // res.send('registered user')
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
   const username = req.body.username;
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
-  const emails = req.body.emails;
+  const emails = req.body.emails.split(',').map(email => email.trim());
   const isVisitor = false;
-
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    errors.array().forEach(console.log);
-    return res.redirect('back');
-  }
   // TODO: make sure emails are valid
 
   // hash password
-  const hashedPassword = db.auth.helpers.hashPassword(password);
+  const hashPassword = db.auth.helpers.hashPassword(password);
   // insert new user with status 'P' for pending
-  db.auth.registerUser({
-    firstName,
-    lastName,
-    username,
-    emails,
-    password: hashedPassword
-  }).then(() => {
+  hashPassword.then((hashedPassword) => {
+    return db.auth.registerUser({
+      firstName,
+      lastName,
+      username,
+      emails,
+      password: hashedPassword
+    })
+  })
+  .then(() => {
     res.redirect('/login');
   }).catch(err => {
     console.log(err)

@@ -47,6 +47,43 @@ const helpers = {
   }
 }
 
+// QUERIES
+
+const checkEmailsUnique = (emails) => {
+  const emailsQuoted = emails.map(email => `'${email}'`).join(',');
+  const qStr =
+  ` select Count(Email) as conflicts
+    from Email
+    where Email in (${emailsQuoted});`;
+  return db.query(qStr)
+    .then(getFirst)
+    .then(({conflicts}) => conflicts < 1);
+}
+
+const registerUser = (user) => {
+  // (Username, Password, Status, FirstName, LastName)
+  const qStr =
+  `insert into User values (
+    '${user.username}',
+    '${user.password}',
+    'p',
+    '${user.firstName}',
+    '${user.lastName}'
+  );`;
+
+  return checkEmailsUnique(user.emails).then((unique) => {
+      if (!unique) {
+        throw new Error('Email(s) already in use')
+      }
+      return db.query(qStr)
+    })
+    .then(() => {
+      const emails = user.emails.map((eml) => `('${user.username}','${eml}')`).join(',')
+      const emailInsert = `insert into Email values ${emails}`;
+      return db.query(emailInsert)
+    })
+}
+
 
 export default {
   login (email, password) {
@@ -63,18 +100,7 @@ export default {
           .then(eq => (eq || (user.Password === password)) ? user : undefined);
       })
   },
-  registerUser (user) {
-    // (Username, Password, Status, FirstName, LastName)
-    const qStr =
-    `insert into User values (
-      '${user.username}',
-      '${user.password}',
-      'p',
-      '${user.firstName}',
-      '${user.lastName}'
-    );`;
-    return db.query(qStr)
-  },
+  registerUser,
   getUser: (username) => {
     const qStr = allUserInfo
       + `where U.Username = '${username}'`;
