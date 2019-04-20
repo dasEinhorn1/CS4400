@@ -23,6 +23,19 @@ const userRegister = [
   })
 ]
 
+const employeeRegister = [
+  ...userRegister,
+  body('phone').isLength(10),
+  body('address').not().isEmpty(),
+  body('city').not().isEmpty(),
+  body('state').isLength(2),
+  body('zipcode').isLength(5),
+  body('userType').custom((v) => {
+    if (v === "M" || v === "S")
+      return true;
+    throw new Error('Invalid employee type')
+  })
+]
 
 const validate = (req, res, next) => {
   const errors = validationResult(req);
@@ -35,5 +48,6 @@ const validate = (req, res, next) => {
 
 export default {
   userRegister,
+  employeeRegister,
   validate
 }

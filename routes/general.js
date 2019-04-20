@@ -62,19 +62,18 @@ router.post('/register/user', Auth.unauthenticated,
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
   const emails = req.body.emails.split(',').map(email => email.trim());
-  const isVisitor = false;
 
   // hash password
   const hashPassword = db.auth.helpers.hashPassword(password);
   // insert new user with status 'P' for pending
   hashPassword.then((hashedPassword) => {
-    return db.auth.registerUser({
+    return db.auth.register({
       firstName,
       lastName,
       username,
       emails,
       password: hashedPassword
-    })
+    }, false)
   })
   .then(() => {
     res.redirect('/login');
@@ -101,18 +100,17 @@ router.post('/register/visitor', Auth.unauthenticated,
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
   const emails = req.body.emails.split(',').map(email => email.trim());
-  const isVisitor = true;
   // hash password
   const hashPassword = db.auth.helpers.hashPassword(password);
   // insert new user with status 'P' for pending
   hashPassword.then((hashedPassword) => {
-    return db.auth.registerVisitor({
+    return db.auth.register({
       firstName,
       lastName,
       username,
       emails,
       password: hashedPassword
-    })
+    }, true)
   })
   .then(() => {
     res.redirect('/login');
@@ -128,7 +126,9 @@ router.get('/register/employee', Auth.unauthenticated, (req, res, next) => {
   res.render('register-employee')
 })
 
-router.post('/register/employee', Auth.unauthenticated, (req, res, next) => {
+router.post('/register/employee', Auth.unauthenticated,
+  Validator.employeeRegister, Validator.validate,
+  (req, res, next) => {
   // res.send('registered employee')
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
@@ -137,21 +137,36 @@ router.post('/register/employee', Auth.unauthenticated, (req, res, next) => {
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
   const phone = req.body.phone;       // must be 10 digits
-  const address = req.body.zipcode;   // must be 5 digits
+  const zipcode = req.body.zipcode;   // must be 5 digits
   const city = req.body.city;
   const state = req.body.state;
-  const zipcode = req.body.zipcode;
-  const emails = req.body.emails;
-  const isVisitor = false;
-  // check password is string >= 8 characters and == confirmPassword
-    // if not, redirect and show an error
-  // make sure username is not empty
-  // make sure emails are valid
+  const address = req.body.zipcode;
+  const emails = req.body.emails.split(',').map(email => email.trim());
+  // const isVisitor = false;
+  // hash password
+  const hashPassword = db.auth.helpers.hashPassword(password);
   // insert new user with status 'P' for pending
-  // if the insertion fails, then the email or username must already exist
-    // redirect and show an error
-  // otherwise, set the user in the session and go to dashboard
-  res.redirect('/dashboard')
+  hashPassword.then((hashedPassword) => {
+    return db.auth.register({
+      firstName,
+      lastName,
+      username,
+      emails,
+      password: hashedPassword,
+      phone,
+      zipcode,
+      city,
+      state,
+      address,
+      employeeType: userType
+    }, false)
+  })
+  .then(() => {
+    res.redirect('/login');
+  }).catch(err => {
+    console.log(err)
+    res.redirect('back');
+  })
 })
 
 
@@ -173,17 +188,31 @@ router.post('/register/employee-visitor', Auth.unauthenticated, (req, res, next)
   const city = req.body.city;
   const state = req.body.state;
   const zipcode = req.body.zipcode;
-  const emails = req.body.emails;
-  const isVisitor = true;
-  // check password is string >= 8 characters and == confirmPassword
-    // if not, redirect and show an error
-  // make sure username is not empty
-  // make sure emails are valid
+  const emails = req.body.emails.split(',').map(email => email.trim());
+
+  const hashPassword = db.auth.helpers.hashPassword(password);
   // insert new user with status 'P' for pending
-  // if the insertion fails, then the email or username must already exist
-    // redirect and show an error
-  // otherwise, set the user in the session and go to dashboard
-  res.redirect('/dashboard')
+  hashPassword.then((hashedPassword) => {
+    return db.auth.register({
+      firstName,
+      lastName,
+      username,
+      emails,
+      password: hashedPassword,
+      phone,
+      zipcode,
+      city,
+      state,
+      address,
+      employeeType: userType
+    }, true)
+  })
+  .then(() => {
+    res.redirect('/login');
+  }).catch(err => {
+    console.log(err)
+    res.redirect('back');
+  })
 })
 
 /*

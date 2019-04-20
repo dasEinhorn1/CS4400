@@ -1,6 +1,6 @@
 import db from '../db';
 import bcrypt from 'bcrypt';
-import { allUserInfo, userCheckQ } from '../qs';
+import { allUserInfo, userCheckQ, employeeInsert } from '../qs';
 
 const SALT_ROUNDS = 10;
 
@@ -48,6 +48,20 @@ const helpers = {
 }
 
 // QUERIES
+const login = (email, password) => {
+  const qStr = allUserInfo
+    + `
+      WHERE '${email}' in (select Email from Email
+                           where Email.Username = U.Username)
+        AND U.Status = '${UserStatus.APPROVED}'`
+  return db.query(qStr)
+    .then(getFirst)
+    .then(user => {
+      if (!user) throw new Error("User not found");
+      return bcrypt.compare(password, user.Password)
+        .then(eq => (eq || (user.Password === password)) ? user : undefined);
+    })
+}
 
 const checkEmailsUnique = (emails) => {
   const emailsQuoted = emails.map(email => `'${email}'`).join(',');
@@ -55,6 +69,16 @@ const checkEmailsUnique = (emails) => {
   ` select Count(Email) as conflicts
     from Email
     where Email in (${emailsQuoted});`;
+  return db.query(qStr)
+    .then(getFirst)
+    .then(({conflicts}) => conflicts < 1);
+}
+
+const checkPhoneUnique = (phone) => {
+  const qStr =
+    `select Count(Phone) as conflicts
+     from Employee
+     where Phone = '${phone}';`;
   return db.query(qStr)
     .then(getFirst)
     .then(({conflicts}) => conflicts < 1);
@@ -71,7 +95,8 @@ const registerUser = (user) => {
     '${user.lastName}'
   );`;
 
-  return checkEmailsUnique(user.emails).then((unique) => {
+  return checkEmailsUnique(user.emails)
+    .then((unique) => {
       if (!unique) {
         throw new Error('Email(s) already in use')
       }
@@ -83,38 +108,60 @@ const registerUser = (user) => {
     }).then(() => user);
 }
 
-const userTypeInsertion = (table) => {
-  return (user) => db.query(`insert into ${table} values ('${user.username}')`)
+const userTypeInsertion = (table, user) => {
+  return db.query(`insert into ${table} values ('${user.username}')`)
+    .then(() => user);
 }
 
-const registerVisitor = (user) => {
-  return registerUser(user)
-    .then(userTypeInsertion('Visitor'));
+const registerEmployee = (user) => {
+  const insertEmpStr = employeeInsert + `(
+    '${user.username}',
+    '${user.phone}',
+    '${user.address}',
+    '${user.city}',
+    '${user.state}',
+    '${user.zipcode}');`;
+  return checkPhoneUnique(user.phone)
+    .then((unique) => {
+      if (!unique) {
+        throw new Error('Phone number already in use');
+      }
+      return registerUser(user)
+    }).then(() => db.query(insertEmpStr))
+      .then(() => user);
 }
+
+const register = (user, isVisitor=false) => {
+  const registerFn = (!user.employeeType) ? registerUser : registerEmployee;
+  return registerFn(user)
+    .then(u => {
+      if (!u.employeeType) {
+        return u;
+      } else {
+        const table = (u.employeeType == "M") ? "Manager" : "Staff";
+        return userTypeInsertion(table, u);
+      }
+    }).then(u => {
+      if (isVisitor) {
+        return userTypeInsertion('Visitor', u)
+      }
+      return u
+    })
+}
+
+const getUser = (username) => {
+  const qStr = allUserInfo
+    + `where U.Username = '${username}'`;
+  return db.query(qStr)
+    .then(getFirst);
+};
 
 export default {
-  login (email, password) {
-    const qStr = allUserInfo
-      + `
-        WHERE '${email}' in (select Email from Email
-                             where Email.Username = U.Username)
-          AND U.Status = '${UserStatus.APPROVED}'`
-    return db.query(qStr)
-      .then(getFirst)
-      .then(user => {
-        if (!user) throw new Error("User not found");
-        return bcrypt.compare(password, user.Password)
-          .then(eq => (eq || (user.Password === password)) ? user : undefined);
-      })
-  },
-  registerUser,
-  registerVisitor,
-  getUser: (username) => {
-    const qStr = allUserInfo
-      + `where U.Username = '${username}'`;
-    return db.query(qStr)
-      .then(getFirst);
-  },
+  login,
+  register,
+  getUser,
+  checkEmailsUnique,
+  checkPhoneUnique,
   isUser: createUserChecker('User'),
   isVisitor: createUserChecker('Visitor'),
   isEmployee: createUserChecker('Employee'),

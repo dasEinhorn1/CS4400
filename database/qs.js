@@ -20,7 +20,7 @@ export const allUserInfoWithNumEmails = `select  U.*, COUNT(*) AS numEmails, Emp
     LEFT JOIN Email ON U.username = Email.Username
     GROUP BY U.Username`;
 
-export const createAllUserView = `CREATE VIEW USERS_VIEW AS 
+export const createAllUserView = `CREATE VIEW USERS_VIEW AS
     select  U.*, COUNT(*) AS numEmails, EmployeeID, Phone, EmployeeAddress as Address, EmployeeCity as City, EmployeeState as State, EmployeeZipcode as Zipcode,
       CASE WHEN exists (select * from Administrator as A where A.Username = U.Username) then 1 else 0 end as isAdmin,
       CASE WHEN exists (select * from Manager as A where A.Username = U.Username) then 1 else 0 end as isManager,
@@ -30,8 +30,11 @@ export const createAllUserView = `CREATE VIEW USERS_VIEW AS
     LEFT JOIN Email ON U.username = Email.Username
     GROUP BY U.Username`;
 
+export const employeeInsert = `INSERT INTO Employee (Username, Phone, EmployeeAddress, EmployeeCity, EmployeeState, EmployeeZipcode) VALUES `;
+
 export default {
   allUserInfo,
   allUserInfoWithNumEmails,
-  createAllUserView
+  createAllUserView,
+  employeeInsert
 };
