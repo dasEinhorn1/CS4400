@@ -1,4 +1,4 @@
-import { body, query, validationResult } from 'express-validator/check';
+import { check, body, query, validationResult } from 'express-validator/check';
 
 const userRegister = [
   body('firstName').not().isEmpty(),
@@ -37,6 +37,34 @@ const employeeRegister = [
   })
 ]
 
+const discreteSelect = (name, options) => [
+  check(name).custom(val => {
+    if (options.includes(val))
+      return true;
+    throw new Error('Invalid Transport Type');
+  })
+]
+
+const range = ([lower, upper]) => [
+  check(upper)
+    .custom((val) => {
+      const numVal = Number.parseFloat(val)
+      if (!val || (!Number.isNaN(numVal) && numVal >= 0)) return true;
+      throw new Error('Invalid bound entry')
+    }),
+  check(lower)
+    .custom((val) => {
+      const numVal = Number.parseFloat(val)
+      if (!val || (!Number.isNaN(numVal) && numVal >= 0)) return true;
+      throw new Error('Invalid bound entry')
+    }).custom((val, {req}) => {
+      if (req.query.upperPrice && val && req.query.upperPrice < val) {
+        throw new Error('Upper price must be higher than lower price')
+      }
+      return true;
+    })
+]
+
 const validate = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -49,5 +77,7 @@ const validate = (req, res, next) => {
 export default {
   userRegister,
   employeeRegister,
+  discreteSelect,
+  range,
   validate
 }

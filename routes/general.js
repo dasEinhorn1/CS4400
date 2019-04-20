@@ -3,7 +3,7 @@ import sitesFixture from '../fixtures/sites'
 import Auth from '../middleware/Auth';
 import Validator from '../middleware/Validator';
 import db from '../database/db';
-import { validationResult } from 'express-validator/check';
+import { query, body } from 'express-validator/check';
 // import { sanitizeBody } = require('express-validator/filter');
 
 const router = express.Router();
@@ -237,45 +237,54 @@ router.get('/dashboard', Auth.user, (req, res, next) => {
 })
 
 // Screen 15 (CHECK AUTH; Minimum=user)
-router.get('/transits', Auth.user, (req, res, next) => {
-  const siteName = req.query.site;
-  const transportType = req.query.transportType;
+router.get('/transits', Auth.user, [
+  ...Validator.discreteSelect('transportType', ["MARTA", "Bus", "Bike", "all", undefined]),
+  ...Validator.range(['lowerPrice', 'upperPrice'])
+], Validator.validate,
+(req, res, next) => {
+  const siteName = req.query.site || 'all';
+  const transportType = req.query.transportType || 'all';
   const lowerPrice = req.query.lowerPrice;
   const upperPrice = req.query.upperPrice;
-  const transits = [
-    {
-      route: 'Red',
-      type: 'MARTA',
-      price: 2,
-      siteCount: 4
-    },
-    {
-      route: '815',
-      type: 'Bus',
-      price: 1.5,
-      siteCount: 3
-    },
-  ];
-  res.render('transits', {
-    transits,
-    sites: sitesFixture,
-    formValues: {
-      site: siteName,
-      transportType,
-      lowerPrice,
-      upperPrice
-    }
-  })
+  db.general.filterTransits({siteName, transportType, lowerPrice, upperPrice})
+    .then(transits => {
+      return db.general.getSiteNames()
+        .then(sites => {
+          return res.render('transits', {
+            transits,
+            sites,
+            formValues: {
+              site: siteName,
+              transportType,
+              lowerPrice,
+              upperPrice
+            }
+          })
+        });
+    }).catch(err => {
+      console.log(err);
+      res.render(req.originalUrl);
+    })
 });
 
 // log a new take transit for the user
-router.post('/transits', Auth.user, (req, res, next) => {
-  const transitRoute = req.body.route;
-  const transitType = req.body.type;
-  const transitDate = req.body.date;
-  // validate the route, type, and date
+router.post('/transits', Auth.user, [
+  body('route').not().isEmpty(),
+  ...Validator.discreteSelect('type', ["MARTA", "Bus", "Bike"]),
+  body('date').isISO8601()], Validator.validate,
+ (req, res, next) => {
+  const username = req.session.user.username;
+  const route = req.body.route;
+  const type = req.body.type;
+  const date = req.body.date;
+
+  db.general.logTransit({username, type, route, date}).then(() => {
+    return res.redirect('transits')
+  }).catch(err => {
+    console.log(err);
+    return res.redirect('back')
+  })
   // insert the Takes tuple into the database
-  res.redirect('transits');
 });
 
 // Screen 16 (CHECK AUTH; Minimum=user)

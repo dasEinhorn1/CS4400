@@ -1,11 +1,11 @@
 import { query } from './connection';
-import events from './modules/events';
+import general from './modules/general';
 import auth from './modules/auth';
 import admin from './modules/admin';
 
 const db =  {
   query,
-  events,
+  general,
   auth,
   admin
 }
