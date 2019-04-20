@@ -8,25 +8,18 @@ const getSiteNames = () => {
 
 const filterTransits = (filters) => {
   const { transportType, siteName, lowerPrice, upperPrice } = filters;
-  const connectTransWhere = (transportType && transportType != 'all') ?
-    `WHERE Connect.TransitType = '${transportType}'` : '';
+  const notNullOrAll = (d) => d && d != 'all';
+  const posNum = (d) => (d || -1) >= 0;
 
-  const filterArr = [];
-  if (siteName && siteName !== 'all') {
-    filterArr.push(`Connect.SiteName = '${siteName}'`);
-  }
-  if (transportType && transportType !== 'all') {
-    filterArr.push(`Transit.TransitType = '${transportType}'`);
-  }
-  if ((lowerPrice || -1) >= 0) {
-    filterArr.push(`Transit.TransitPrice >= ${lowerPrice}`);
-  }
-  if ((upperPrice || -1) >= 0) {
-    filterArr.push(`Transit.TransitPrice <= ${upperPrice}`);
-  }
-
-  const optionalWhere = (filterArr.length > 0) ?
-    ` WHERE ${filterArr.join(' AND ')}` : '';
+  const connectTransWhere = qs.generateWhere([
+    qs.createFilter('Connect.TransitType', transportType, notNullOrAll)
+  ])
+  const optionalWhere = qs.generateWhere([
+    qs.createFilter('Connect.SiteName', siteName, notNullOrAll),
+    qs.createFilter('Transit.TransitType', transportType, notNullOrAll),
+    qs.createFilter('Transit.TransitPrice', lowerPrice, posNum, '<='),
+    qs.createFilter('Transit.TransitPrice', upperPrice, posNum, '>=')
+  ])
 
   const qStr =
     ` SELECT Transit.TransitRoute as route, Transit.TransitType as type,
@@ -35,7 +28,7 @@ const filterTransits = (filters) => {
             FROM Connect ${connectTransWhere}) AS siteCount
       FROM Transit INNER JOIN Connect
       ON Transit.TransitType = Connect.TransitType
-        AND Transit.TransitRoute = Connect.TransitRoute ${optionalWhere};`;
+        AND Transit.TransitRoute = Connect.TransitRoute ${optionalWhere}`;
   return db.query(qStr);
 }
 
@@ -45,6 +38,10 @@ const logTransit = (transitTaken) => {
       TransitRoute, TransitDate) VALUES
     ('${transitTaken.username}', '${transitTaken.type}', '${transitTaken.route}', '${transitTaken.date}');`
   return db.query(qStr);
+}
+
+const getTransitsTaken = () => {
+  
 }
 
 
