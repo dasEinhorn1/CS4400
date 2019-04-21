@@ -58,7 +58,7 @@ router.post('/events', (req, res, next) => {
   // get the siteName associated with the current manager
   const username = req.session.user.username;
   const eventName = req.body.event;
-  const startDate = (new Date(req.body.date)).toISOString().slice(0, 10).replace('T', ' ');
+  const startDate = db.helpers.dateify(req.body.date);
 
   // delete the event from the database
   db.manager.deleteEvent({username, eventName, startDate})

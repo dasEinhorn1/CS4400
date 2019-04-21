@@ -55,6 +55,7 @@
               <input type="radio" name="event"
                 value="<%= evt.name %>"
                 data-site="<%= evt.siteName %>"
+                data-startdate="<%= evt.startDate %>"
                 onclick="chooseEvent(this)"/>
               <%= evt.name %>
             </td>
@@ -67,6 +68,7 @@
         </tbody>
       </table>
       <input id="site-name" type="hidden" name="site" value="">
+      <input id="start-date" type="hidden" name="startDate" value="">
     </form>
     <div class="button-row">
       <a href="/dashboard">
@@ -76,6 +78,7 @@
     <script type="text/javascript">
       function chooseEvent(el) {
         document.getElementById('site-name').value = el.dataset.site;
+        document.getElementById('start-date').value = el.dataset.startdate;
       }
       function goToEventDetail() {
         const siteInput = document.getElementById('site-name');

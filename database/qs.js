@@ -55,6 +55,7 @@ const generateFilterGenerator = (filterType) => {
 
 export const generateWhere = generateFilterGenerator('WHERE');
 export const generateHaving = generateFilterGenerator('HAVING');
+export const generateAdditional = generateFilterGenerator('AND');
 
 export const createFilter = (name, value, condition=(()=>true), operator='=') => ({
   name, value, condition, operator
@@ -89,6 +90,7 @@ export default {
   employeeInsert,
   generateWhere,
   generateHaving,
+  generateAdditional,
   createFilter,
   createRangeFilters,
   createConcatFilter,

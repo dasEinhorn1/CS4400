@@ -4,6 +4,7 @@ import auth from './modules/auth';
 import admin from './modules/admin';
 import employee from './modules/employee';
 import manager from './modules/manager';
+import staff from './modules/staff';
 
 const db =  {
   query,
@@ -11,7 +12,11 @@ const db =  {
   auth,
   admin,
   employee,
-  manager
+  manager,
+  staff,
+  helpers: {
+    dateify: (d) => (new Date(d)).toISOString().slice(0, 10).replace('T', ' ')
+  }
 }
 
 export default db;
