@@ -30,19 +30,21 @@ export const createAllUserView = `CREATE VIEW USERS_VIEW AS
     LEFT JOIN Email ON U.username = Email.Username
     GROUP BY U.Username`;
 
-
 // [{
-  //   name: 'Connect.TransitType',
-  //   operator: '=',
-  //   value: transportType,
-  //   condition: (transportType && transportType != 'all')
-  // }]
-const generateFilterGenerator = (filterType) => {
-  return (filters) => {
-    const statements = filters.filter((filt) => filt.condition(filt.value))
-      .map(({name, operator="=", value, interpret=true}) => {
-        if (Array.isArray(value) && interpret) return `${name} ${operator} (${value})`;
-        if (typeof value === 'string' && interpret) return `${name} ${operator} '${value}'`;
+//   name: 'Connect.TransitType',
+//   operator: '=',
+//   value: transportType,
+//   condition: (transportType && transportType != 'all')
+// }]
+const generateFilterGenerator = filterType => {
+  return filters => {
+    const statements = filters
+      .filter(filterType => filterType.condition(filterType.value))
+      .map(({ name, operator = '=', value, interpret = true }) => {
+        if (Array.isArray(value) && interpret)
+          return `${name} ${operator} (${value})`;
+        if (typeof value === 'string' && interpret)
+          return `${name} ${operator} '${value}'`;
         return `${name} ${operator} ${value}`;
       });
     if (statements.length > 0) {
@@ -50,38 +52,69 @@ const generateFilterGenerator = (filterType) => {
     } else {
       return '';
     }
-  }
-}
+  };
+};
 
 export const generateWhere = generateFilterGenerator('WHERE');
 export const generateHaving = generateFilterGenerator('HAVING');
 export const generateAdditional = generateFilterGenerator('AND');
 
-export const createFilter = (name, value, condition=(()=>true), operator='=') => ({
-  name, value, condition, operator
-})
+export const createFilter = (
+  name,
+  value,
+  condition = () => true,
+  operator = '='
+) => ({
+  name,
+  value,
+  condition,
+  operator
+});
 
-export const getSingle = (index) => {
-  return (rows) => rows[index];
+export const getSingle = index => {
+  return rows => rows[index];
 };
 
 export const getFirst = getSingle(0);
 
-export const createConcatFilter = (name, value, condition=(()=>true), operator="LIKE") => {
+export const createConcatFilter = (
+  name,
+  value,
+  condition = () => true,
+  operator = 'LIKE'
+) => {
   return {
-    ...createFilter(name, `CONCAT('%','${value}','%')`, (()=>condition(value)), operator),
+    ...createFilter(
+      name,
+      `CONCAT('%','${value}','%')`,
+      () => condition(value),
+      operator
+    ),
     interpret: false
   };
-}
+};
 
-export const createRangeFilters = (name, [lower, upper], condition, [lInc=true, uInc=true]=[]) => {
+export const createRangeFilters = (
+  name,
+  [lower, upper],
+  condition,
+  [lInc = true, uInc = true] = []
+) => {
   return [
-    createFilter(name, lower, condition, `>${(lInc) ? '=' : '' }`),
-    createFilter(name, upper, condition, `<${(uInc) ? '=' : '' }`)
-  ]
-}
+    createFilter(name, lower, condition, `>${lInc ? '=' : ''}`),
+    createFilter(name, upper, condition, `<${uInc ? '=' : ''}`)
+  ];
+};
 
 export const employeeInsert = `INSERT INTO Employee (Username, Phone, EmployeeAddress, EmployeeCity, EmployeeState, EmployeeZipcode) VALUES `;
+
+// export const appendFilters = (names, values, types) => {
+//   let query = '';
+//   names.forEach((name, i) => {
+//     const filter = `${name} = '${values}'`;
+//     query += query.length > 0 ? ` AND ${filter}` : ` WHERE ${filter}`;
+//   });
+// };
 
 export default {
   allUserInfo,

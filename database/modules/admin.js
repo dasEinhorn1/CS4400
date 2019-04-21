@@ -457,5 +457,5 @@ export default {
   createTransit,
   deleteTransit,
   getConnect,
-  updateTransitAndConnect
+  updateTransitAndConnect,
 };
