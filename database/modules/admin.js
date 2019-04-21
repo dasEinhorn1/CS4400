@@ -117,11 +117,143 @@ const updateUserStatus = args => {
   });
 };
 
+// SCREEN 19
+const getAllSites = () => {
+  let query =
+    'SELECT Site.SiteName, User.FirstName, User.LastName, Site.OpenEveryday, User.Username FROM Site INNER JOIN User ON Site.ManagerUsername = User.Username';
 
+  return db.query(query).then(rows => {
+    rows = rows.map(row => {
+      const fullName = `${row.FirstName} ${row.LastName}`;
+      let isOpenEveryday = row.OpenEveryday.toJSON().data[0];
+      return {
+        ...row,
+        fullName: fullName,
+        openEveryday: isOpenEveryday ? 'Yes' : 'No'
+      };
+    });
+    // console.log(rows);
+    return rows;
+  });
+};
+
+const filterSites = args => {
+  const site = args.site || '';
+  const manager = args.manager || ''; // manager's username
+  let openEveryday = args.openEveryday || '';
+
+  let query =
+    'SELECT Site.SiteName, User.FirstName, User.LastName, User.Username, Site.OpenEveryday, Site.SiteAddress, Site.SiteZipcode FROM Site INNER JOIN User ON Site.ManagerUsername = User.Username';
+  let conditions = '';
+
+  if (site.length > 0) {
+    const siteFilter = `Site.SiteName = '${site}'`;
+    conditions +=
+      conditions.length > 0 ? ` AND ${siteFilter}` : ` WHERE ${siteFilter}`;
+  }
+
+  if (manager.length > 0) {
+    const managerFilter = `User.Username = '${manager}'`;
+    conditions +=
+      conditions.length > 0
+        ? ` AND ${managerFilter}`
+        : ` WHERE ${managerFilter}`;
+  }
+
+  if (openEveryday.length > 0) {
+    openEveryday = openEveryday == 'true' ? 1 : 0;
+    const everydayFilter = `Site.OpenEveryDay = ${openEveryday}`;
+    conditions +=
+      conditions.length > 0
+        ? ` AND ${everydayFilter}`
+        : ` WHERE ${everydayFilter}`;
+  }
+  query += conditions;
+  // console.log(query);
+
+  return db.query(query).then(rows => {
+    return rows.map(row => {
+      const fullName = `${row.FirstName} ${row.LastName}`;
+      let isOpenEveryDay = row.OpenEveryday.toJSON().data[0];
+      return {
+        ...row,
+        fullName: fullName,
+        openEveryday: isOpenEveryDay ? 'Yes' : 'No'
+      };
+    });
+  });
+};
+
+const deleteSite = args => {
+  const site = args.site || '';
+  let query = `DELETE FROM Site WHERE Site.SiteName = '${site}'`;
+  console.log(query);
+  return db.query(query);
+};
+
+const fetchManagers = () => {
+  let query =
+    'select User.Username, FirstName, LastName from User INNER JOIN Manager ON User.Username = Manager.Username';
+  return db.query(query).then(rows => {
+    return rows.map(row => {
+      const fullName = `${row.FirstName} ${row.LastName}`;
+      return {
+        ...row,
+        fullName: fullName
+      };
+    });
+  });
+};
+const fetchUnassignedManagers = () => {
+  let query =
+    'select User.Username, FirstName, LastName from User INNER JOIN Manager ON User.Username = Manager.Username WHERE User.Username NOT IN (SELECT ManagerUsername FROM Site)';
+  return db.query(query).then(rows => {
+    return rows.map(row => {
+      const fullName = `${row.FirstName} ${row.LastName}`;
+      return {
+        ...row,
+        fullName: fullName
+      };
+    });
+  });
+};
+
+const updateSite = args => {
+  const {
+    siteName,
+    zipcode,
+    address,
+    manager,
+    openEveryday,
+    originalSiteName
+  } = args;
+  let openEverydayInt = openEveryday == 'true ' ? 1 : 0;
+  let query = `UPDATE Site SET SiteName = '${siteName}', SiteAddress = '${address}', SiteZipcode = '${zipcode}', OpenEveryday = ${openEverydayInt}, ManagerUsername = '${manager}' WHERE SiteName = '${originalSiteName}'`;
+  // console.log(query);
+
+  return db.query(query);
+};
+
+const createSite = args => {
+  let { name, zipcode, address, manager } = args;
+  if (name.length < 1) name = null;
+  const openEveryday = args.openEveryday || '';
+  let openEverydayInt = openEveryday == 'Yes' ? 1 : 0;
+  let query = `INSERT INTO Site(SiteName, SiteAddress, SiteZipcode, OpenEveryday, ManagerUsername) VALUES ('${name}', '${address}', '${zipcode}', ${openEverydayInt}, '${manager}')`;
+
+  console.log(query);
+  return db.query(query);
+};
 
 export default {
   getAllUsers,
   filterUsers,
   updateUserStatus,
-  
+  getAllSites,
+  filterSites,
+  deleteSite,
+  createSite,
+  updateSite,
+  fetchManagers,
+  fetchUnassignedManagers
 };

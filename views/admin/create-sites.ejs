@@ -30,16 +30,16 @@
       <div class="input-row">
         <div class="labelled-input">
           <label for="password">Manager</label>
-          <select name="manage" id="">
-            <% users.forEach(user => { %>
-            <option value='<%= user.firstName + " " + user.lastName %>' selected
-              ><%= user.firstName + ' ' + user.lastName %></option
+          <select name="manager" id="">
+            <% managers.forEach(manager => { %>
+            <option value='<%= manager.Username%>' selected
+              ><%= manager.fullName %></option
             >
             <% }) %>
           </select>
         </div>
         <div class="labelled-input">
-          <input type="checkbox" name="openEveryday" value="openEveryday" />
+          <input type="checkbox" name="openEveryday" value="Yes" />
           <label for="openEveryday">Open Everyday</label>
         </div>
       </div>

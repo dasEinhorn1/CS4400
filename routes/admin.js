@@ -31,11 +31,10 @@ router.get('/users', (req, res) => {
 });
 
 router.post('/users', (req, res) => {
-  
   const { username, status } = req.body;
   db.admin.updateUserStatus({ username, status }).then(() => {
     res.redirect('/admin/users');
-  })
+  });
 });
 
 // ========================== SITES ================================
@@ -43,26 +42,30 @@ router.post('/users', (req, res) => {
 // Screen 19
 router.get('/sites', (req, res) => {
   // res.send('Screen 19');
-  // console.log(req.query);
   const { username } = req.session.user;
-  const { sites, manager, openEveryday, buttonType } = req.query;
+  const { site, manager, openEveryday, filter } = req.query;
 
-  
-  res.render('admin/sites', { title: 'Sites', manages: manages });
+  if (filter == 'true') {
+    db.admin.filterSites({ site, manager, openEveryday }).then(manages => {
+      res.render('admin/sites', { title: 'Sites', manages: manages });
+    });
+  } else {
+    db.admin.getAllSites().then(manages => {
+      res.render('admin/sites', { title: 'Sites', manages: manages });
+    });
+  }
 });
 router.post('/sites', (req, res) => {
-  // console.log(req.body);
-  const { selectedSiteName } = req.body;
+  const { site, buttonType } = req.body;
 
   if (buttonType == 'edit') {
     // if 'Edit', retrieve its info and send it to 'edit'
-    // TODO: inject site's info
-    res.redirect(`/admin/sites/edit?selectedSiteName=${selectedSiteName}`);
+    res.redirect(`/admin/sites/edit?site=${site}`);
   } else if (buttonType == 'delete') {
     // elif 'Delete', just delete it and return back
-
-    // TODO: perform delete
-    res.redirect(`/admin/sites`);
+    db.admin.deleteSite({ site }).then(() => {
+      res.redirect(`/admin/sites`);
+    });
   }
 });
 
@@ -70,12 +73,14 @@ router.post('/sites', (req, res) => {
 router.get('/sites/create', (req, res) => {
   // res.send('Screen 21');
   // TODO: send only the managers
-  res.render('admin/create-sites', { title: 'Create Sites', users: users });
+  db.admin.fetchUnassignedManagers().then(managers => {
+    res.render('admin/create-sites', { title: 'Create Sites', managers: managers });
+  })
 });
 router.post('/sites/create', (req, res) => {
   // TODO: create an instance with data
   console.log(req.body);
-
+  db.admin.createSite(req.body);
   res.redirect('/admin/sites');
 });
 
@@ -83,14 +88,27 @@ router.post('/sites/create', (req, res) => {
 router.get('/sites/edit', (req, res) => {
   // res.send('Screen 20', {title: 'Edit Site'});
   // console.log(req.query);
-  const { selectedSiteName } = req.query;
-  // todo: fetch data for selected site, and inject
-  res.render('admin/edit-site', { title: 'Edit Site' });
+  const { site } = req.query;
+  db.admin
+    .fetchUnassignedManagers()
+    .then(managers => managers)
+    .then(managers => {
+      db.admin.filterSites({ site }).then(site => {
+        if (site.length > 0) site = site[0];
+        res.render('admin/edit-site', {
+          title: 'Edit Site',
+          site: site,
+          managers: managers
+        });
+      });
+    });
 });
 router.post('/sites/edit', (req, res) => {
   console.log(req.body);
-
-  res.redirect('/admin/sites');
+  const { siteName, zipcode, address, manager, openEveryday, originalSiteName } = req.body;
+  db.admin.updateSite({ siteName, zipcode, address, manager, openEveryday, originalSiteName }).then(() => {
+    res.redirect('/admin/sites');
+  })
 });
 
 // ========================== TRANSITS ================================
