@@ -91,38 +91,18 @@ router.get('/events/edit', (req, res, next) => {
     startDate
   }).then(event => {
     return db.manager.getStaffForEvent(event).then((staff) => {
-      const dailies = [
-        {
-          date: '2019-01-01',
-          visits: 34,
-          revenue: 34 * 0
-        },
-        {
-          date: '2019-01-02',
-          visits: 3,
-          revenue: 0
-        },
-        {
-          date: '2019-01-03',
-          visits: 40,
-          revenue: 0
-        },
-        {
-          date: '2019-01-04',
-          visits: 45,
-          revenue: 0
-        },
-      ]
-      return res.render('manager/edit-event', {
-        event,
-        dailies,
-        staff,
-        formValues: {
-          lowerDailyVisits,
-          upperDailyVisits,
-          lowerRevenue,
-          upperRevenue
-        }
+      return db.manager.getEventVisitDetails(event, req.query).then(dailies => {
+        return res.render('manager/edit-event', {
+          event,
+          dailies,
+          staff,
+          formValues: {
+            lowerDailyVisits,
+            upperDailyVisits,
+            lowerRevenue,
+            upperRevenue
+          }
+        })
       })
     })
   }).catch(err => {
@@ -218,38 +198,27 @@ router.post('/events/create', [
 // Screen 28
 router.get('/events/staff', (req, res, next) => {
   // get the name of the manager's site as siteName
-  const siteName = "Piedmont Park";
-
   const firstName = req.query.firstName;
   const lastName = req.query.lastName;
   const startDate = req.query.startDate;
   const endDate = req.query.endDate;
 
-  const staff = [
-    {
-      firstName: "Adam",
-      lastName: "Hayward",
-      username: "ahayward3",
-      eventShifts: 4,
-    },
-    {
-      firstName: "MJ",
-      lastName: "Park",
-      username: "mjpark",
-      eventShifts: 5,
-    }
-  ];
-
-  res.render('manager/event-staff', {
-    site: { name: siteName },
-    staff,
-    formValues: {
-      firstName,
-      lastName,
-      startDate,
-      endDate
-    }
-  })
+  return db.manager.getManagerSite(req.session.user.username)
+    .then(siteName => {
+      return db.manager.getStaffAt(siteName, {firstName,lastName,startDate,endDate})
+        .then(staff => {
+          res.render('manager/event-staff', {
+            site: { name: siteName },
+            staff,
+            formValues: {
+              firstName,
+              lastName,
+              startDate,
+              endDate
+            }
+          })
+        })
+    })
 })
 
 // Screen 29
@@ -302,24 +271,19 @@ router.get('/site/detail', (req, res, next) => {
   // get each event name, the staff for that day,
   // the daily revenue and visit total
 
-  const eventDailies = [
-    {
-      name: "Arboretum Walking Tour",
-      staff: ["ahayward1"],
-      visits: 34,
-      revenue: 0
-    },
-    {
-      name: "Bus Tour",
-      staff: ["mjpark"],
-      visits: 13,
-      revenue: 13 * 5
-    }
-  ]
+  db.manager.getManagerSite(req.session.user.username)
+    .then(siteName => {
+      return db.manager.getSiteDaily(siteName, date)
+    }).then(eventDailies => {
+      return res.render('manager/site-detail', {
+        eventDailies
+      })
+    }).catch(err => {
+      console.log(err);
+      return res.redirect('back')
+    })
 
-  res.render('manager/site-detail', {
-    eventDailies
-  })
+
 })
 
 export default router;
