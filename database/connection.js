@@ -33,6 +33,11 @@ export const query = (q) => {
     // if (!result) {
       // return;
     // }
+    if (process.env.PRINT_QUERIES == 1) {
+      console.log('BEGIN QUERY--------------------------------------------')
+      console.log(q);
+      console.log('END QUERY----------------------------------------------')
+    }
     return result;
   })
 }
