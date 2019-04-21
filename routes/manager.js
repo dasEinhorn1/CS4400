@@ -8,6 +8,7 @@ router.use(Auth.manager);
 // Screen 25
 router.get('/events', (req, res, next) => {
   // db.events.getAll()
+  const username = req.session.user.username;
   const name = req.query.name;
   const keyword = req.query.keyword;
   const startDate = req.query.startDate;
@@ -19,41 +20,54 @@ router.get('/events', (req, res, next) => {
   const lowerRevenue = req.query.lowerRevenue;
   const upperRevenue = req.query.upperRevenue;
 
-  const events = [
-    {
-      name: 'Arboretum Walking Tour',
-      staffCount: 1,
-      duration: 2,
-      visits: 34,
-      revenue: 0
-    }
-  ]
-
-  res.render('manager/events', {
-    events,
-    formValues: {
-      name,
-      keyword,
-      startDate,
-      endDate,
-      lowerDuration,
-      upperDuration,
-      lowerVisit,
-      upperVisit,
-      lowerRevenue,
-      upperRevenue
-    }
+  db.manager.getEvents({
+    username,
+    name,
+    keyword,
+    startDate,
+    endDate,
+    lowerDuration,
+    upperDuration,
+    lowerVisit,
+    upperVisit,
+    lowerRevenue,
+    upperRevenue
+  }).then((events) => {
+    res.render('manager/events', {
+      events,
+      formValues: {
+        name,
+        keyword,
+        startDate,
+        endDate,
+        lowerDuration,
+        upperDuration,
+        lowerVisit,
+        upperVisit,
+        lowerRevenue,
+        upperRevenue
+      }
+    })
+  }).catch((err) => {
+    console.log(err);
+    res.redirect('back');
   })
 });
 
 router.post('/events', (req, res, next) => {
   // get the siteName associated with the current manager
-  const site = "Piedmont Park";
+  const username = req.session.user.username;
   const eventName = req.body.event;
+  const startDate = (new Date(req.body.date)).toISOString().slice(0, 10).replace('T', ' ');
 
   // delete the event from the database
-
-  res.redirect(req.originalUrl)
+  db.manager.deleteEvent({username, eventName, startDate})
+    .then(() => {
+      return res.redirect(req.originalUrl)
+    }).catch(err => {
+      console.log(err)
+      res.redirect(req.originalUrl)
+    })
 });
 
 // Screen 26
@@ -162,7 +176,6 @@ router.post('/events/edit', (req, res, next) => {
 // Screen 27
 router.get('/events/create', (req, res, next) => {
   // get the site from the database
-  const site = "Piedmont Park";
 
   // get all staff from the database
   const staff = [

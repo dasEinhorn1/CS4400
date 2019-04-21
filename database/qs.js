@@ -30,26 +30,31 @@ export const createAllUserView = `CREATE VIEW USERS_VIEW AS
     LEFT JOIN Email ON U.username = Email.Username
     GROUP BY U.Username`;
 
-export const generateWhere = (filters) => {
-  // [{
+
+// [{
   //   name: 'Connect.TransitType',
   //   operator: '=',
   //   value: transportType,
   //   condition: (transportType && transportType != 'all')
   // }]
-  const statements = filters
-    .filter((filt) => filt.condition(filt.value))
-    .map(({name, operator="=", value}) => {
-      if (Array.isArray(value)) return `${name} ${operator} (${value})`;
-      if (typeof value === 'string') return `${name} ${operator} '${value}'`;
-      return `${name} ${operator} ${value}`;
-    });
-  if (statements.length > 0) {
-    return ' WHERE ' + statements.join(' AND ') + ' ';
-  } else {
-    return '';
+const generateFilterGenerator = (filterType) => {
+  return (filters) => {
+    const statements = filters.filter((filt) => filt.condition(filt.value))
+      .map(({name, operator="=", value, interpret=true}) => {
+        if (Array.isArray(value) && interpret) return `${name} ${operator} (${value})`;
+        if (typeof value === 'string' && interpret) return `${name} ${operator} '${value}'`;
+        return `${name} ${operator} ${value}`;
+      });
+    if (statements.length > 0) {
+      return ` ${filterType} ` + statements.join(' AND ') + ' ';
+    } else {
+      return '';
+    }
   }
 }
+
+export const generateWhere = generateFilterGenerator('WHERE');
+export const generateHaving = generateFilterGenerator('HAVING');
 
 export const createFilter = (name, value, condition=(()=>true), operator='=') => ({
   name, value, condition, operator
@@ -60,6 +65,13 @@ export const getSingle = (index) => {
 };
 
 export const getFirst = getSingle(0);
+
+export const createConcatFilter = (name, value, condition=(()=>true), operator="LIKE") => {
+  return {
+    ...createFilter(name, `CONCAT('%','${value}','%')`, (()=>condition(value)), operator),
+    interpret: false
+  };
+}
 
 export const createRangeFilters = (name, [lower, upper], condition, [lInc=true, uInc=true]=[]) => {
   return [
@@ -76,8 +88,10 @@ export default {
   createAllUserView,
   employeeInsert,
   generateWhere,
+  generateHaving,
   createFilter,
   createRangeFilters,
+  createConcatFilter,
   getSingle,
   getFirst
 };

@@ -101,7 +101,7 @@ CREATE TABLE Event (
   SiteName varchar(160) NOT NULL,
   EndDate date NOT NULL,
   EventPrice decimal(9, 2) NOT NULL DEFAULT 0,
-Capacity int(1) NOT NULL,
+  Capacity int(1) NOT NULL,
   Description text NOT NULL,
   MinStaffRequired int NOT NULL DEFAULT 1, -- (> 0)
   PRIMARY KEY (EventName, StartDate, SiteName),

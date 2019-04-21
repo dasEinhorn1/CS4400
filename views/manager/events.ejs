@@ -91,6 +91,7 @@
           <tr class="event-line">
             <td>
               <input type="radio" name="event"
+                onclick="document.getElementById('start-date').value = '<%= evt.startDate %>';"
                 value="<%= evt.name %>"/>
               <%= evt.name %>
             </td>
@@ -102,6 +103,7 @@
           <% }) %>
         </tbody>
       </table>
+      <input id="start-date" name="date" type="hidden" value="">
     </form>
     <div class="button-row --centered">
       <a class="btn-link" href="/dashboard">
@@ -124,6 +126,7 @@
       if (!evt) return;
       var conf = confirm("Are you sure you want to delete this event?")
       if (!conf) return;
+
       var form = document.getElementById('event-picker');
       form.action = '';
       form.method = 'post';
