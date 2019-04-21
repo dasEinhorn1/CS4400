@@ -245,6 +245,131 @@ const createSite = args => {
   return db.query(query);
 };
 
+const transitQueryBuilder = filters => {
+  let drop1 = `DROP VIEW IF EXISTS Filter_Transit_View;`;
+  let drop2 = `DROP VIEW IF EXISTS Filter_Connect_View;`;
+  let drop3 = 'DROP VIEW IF EXISTS Transit_Site_View;';
+  let drop4 = 'DROP VIEW IF EXISTS Transit_View';
+
+  if (filters) {
+    var { siteName } = filters;
+  }
+
+  let q1_1 = `
+    -- filter by any SiteName
+    CREATE VIEW Filter_Connect_View AS SELECT TransitType, TransitRoute FROM Connect`;
+  let q1_2 = `GROUP BY TransitType, TransitRoute;`;
+  // apply 'siteName' filter
+  let query1 = filters
+    ? `${q1_1} WHERE SiteName = '${siteName}' ${q1_2}`
+    : `${q1_1} ${q1_2}`;
+
+  let query2 = `
+    -- Filter Transit By Filtered Type + Price
+    CREATE VIEW Filter_Transit_View AS
+    SELECT T.TransitType, T.TransitRoute, T.TransitPrice
+    FROM Transit AS T INNER JOIN Filter_Connect_View AS FCV
+    ON T.TransitType = FCV.TransitType AND T.TransitRoute = FCV.TransitRoute;`;
+
+  let query3 = `
+    -- Create a view tih filtered Sites
+    CREATE VIEW Transit_Site_View AS
+    select T.TransitType, T.TransitRoute, T.TransitPrice, COUNT(*) AS ConnectedSites FROM Filter_Transit_View AS T
+    inner join Connect AS C ON T.TransitType = C.TransitType AND T.TransitRoute = C.TransitRoute
+    GROUP BY T.TransitType, T.TransitRoute;`;
+
+  let query4 = `
+    -- Create a View with with Logs
+    CREATE VIEW Transit_View AS 
+    SELECT TSV.TransitType, TSV.TransitRoute, TSV.TransitPrice, TSV.ConnectedSites, Count(*) AS TransitLogs FROM Transit_Site_View as TSV
+    INNER JOIN TakeTransit AS TT ON TSV.TransitRoute = TT.TransitRoute AND TSV.TransitType = TT.TransitType
+    GROUP BY TSV.TransitType, TSV.TransitRoute;
+  `;
+
+  let query5 = 'SELECT * FROM Transit_View';
+  if (filters) {
+    var { transportType, route, priceMin, priceMax } = filters;
+    let filterQuery = '';
+
+    if (transportType.length > 0) {
+      filterQuery +=
+        filterQuery.length > 0
+          ? ` AND TransitType = '${transportType}'`
+          : ` WHERE TransitType= '${transportType}'`;
+    }
+    if (route.length > 0) {
+      filterQuery +=
+        filterQuery.length > 0
+          ? ` AND TransitRoute = '${route}'`
+          : ` WHERE TransitRoute = '${route}'`;
+    }
+
+    if (priceMin.length > 0 && priceMax.length > 0) {
+      filterQuery +=
+        filterQuery.length > 0
+          ? ` AND TransitPrice BETWEEN ${priceMin} AND ${priceMax}`
+          : ` WHERE TransitPrice BETWEEN ${priceMin} AND ${priceMax}`;
+    }
+    if (filterQuery.length > 0) {
+      query5 += filterQuery;
+    }
+    // console.log(query5);
+  }
+
+  return { drop1, drop2, drop3, drop4, query1, query2, query3, query4, query5 };
+};
+
+const getAllTransits = () => {
+  let {
+    drop1,
+    drop2,
+    drop3,
+    drop4,
+    query1,
+    query2,
+    query3,
+    query4,
+    query5
+  } = transitQueryBuilder();
+
+  return db
+    .query(drop1)
+    .then(() => db.query(drop2))
+    .then(() => db.query(drop3))
+    .then(() => db.query(drop4))
+    .then(() => db.query(query1))
+    .then(() => db.query(query2))
+    .then(() => db.query(query3))
+    .then(() => db.query(query4))
+    .then(() => db.query(query5));
+};
+
+const filterTransits = filters => {
+  let {
+    drop1,
+    drop2,
+    drop3,
+    drop4,
+    query1,
+    query2,
+    query3,
+    query4,
+    query5
+  } = transitQueryBuilder(filters);
+
+  return db
+    .query(drop1)
+    .then(() => db.query(drop2))
+    .then(() => db.query(drop3))
+    .then(() => db.query(drop4))
+    .then(() => db.query(query1))
+    .then(() => db.query(query2))
+    .then(() => db.query(query3))
+    .then(() => db.query(query4))
+    .then(() => db.query(query5));
+  // console.log(query);
+};
+
 export default {
   getAllUsers,
   filterUsers,
@@ -255,5 +380,7 @@ export default {
   createSite,
   updateSite,
   fetchManagers,
-  fetchUnassignedManagers
+  fetchUnassignedManagers,
+  getAllTransits,
+  filterTransits
 };
