@@ -20,6 +20,7 @@
       <div class="input-row">
           <label for="">Site Name</label>
           <select class="dropdown" name="siteName">
+            <option value="">== ALL ==</option>
               <% sites.forEach(site => { %>
                 <option value="<%= site.SiteName %>"><%= site.SiteName %></option>
               <% }) %>
@@ -114,6 +115,8 @@
                   data-site="<%= event.SiteName %>"
                   onclick="pickEvent(this)"
                 />
+                <input type="hidden" id="startDate" name="actualStartDate" value="<%= event.StartDate %>"/>
+                <input type="hidden" id="endDate" name="actualEndDate" value="<%= event.EndDate %>"/>
                 <%= event.EventName %>
               </td>
               <td><%= event.SiteName %></td>
@@ -138,6 +141,8 @@
     function goToEventDetail() {
       const siteInput = document.getElementById('site-name');
       const event = document.querySelector('.event-line input:checked');
+      const startDate = document.getElementById('startDate');
+      const endDate = document.getElementById('endDate');
       if (siteInput.value && event)
         document.getElementById('event-picker').submit();
     }

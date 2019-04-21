@@ -18,7 +18,7 @@ const getEvents = args => {
   GROUP BY E.EventName, E.StartDate, E.SiteName`;
 
   const query2 = `CREATE VIEW ALL_VISIT_VIEW AS
-  SELECT E.EventName, E.SiteName, E.EventPrice, E.Capacity,
+  SELECT E.EventName, E.SiteName, E.StartDate, E.EndDate, E.EventPrice, E.Capacity,
   (E.Capacity - COUNT(VE.VisitorUsername) ) AS TicketsRemaining, COUNT(VE.StartDate) AS TotalVisits, MyVisits,
   E.Description
   FROM Event AS E INNER JOIN VisitEvent AS VE ON E.EventName = VE.EventName
@@ -29,7 +29,7 @@ const getEvents = args => {
 
   let query3 = 'Select * From ALL_VISIT_VIEW';
 
-  console.log(args);
+  // console.log(args);
   const { filter } = args;
   if (filter == 'true') {
     const {
@@ -46,7 +46,56 @@ const getEvents = args => {
       includeVisited
     } = args;
 
-    
+    // conditions for an exact match
+    let conditions = '';
+    let filter = '';
+    if (name) {
+      filter = `EventName = '${name}'`;
+      conditions +=
+        conditions.length > 0 ? ` AND ${filter}` : ` WHERE ${filter}`;
+    }
+    if (keyword) {
+      filter = `Description LIKE '%${keyword}%'`;
+      conditions +=
+        conditions.length > 0 ? ` AND ${filter}` : ` WHERE ${filter}`;
+    }
+    if (siteName) {
+      filter = `SiteName = '${siteName}'`;
+      conditions +=
+        conditions.length > 0 ? ` AND ${filter}` : ` WHERE ${filter}`;
+    }
+    if (startDate && endDate) {
+      filter = ` StartDate >= '${startDate}' AND EndDate <= '${endDate}'`;
+      conditions +=
+        conditions.length > 0 ? ` AND ${filter}` : ` WHERE ${filter}`;
+    }
+    if (lowerVisitTotal && upperVisitTotal) {
+      filter = ` TotalVisits >= ${lowerVisitTotal} AND TotalVisits <= ${upperVisitTotal}`;
+      conditions +=
+        conditions.length > 0 ? ` AND ${filter}` : ` WHERE ${filter}`;
+    }
+    if (lowerTicketPrice && upperTicketPrice) {
+      filter = ` EventPrice >= ${lowerTicketPrice} AND EventPrice <= ${upperTicketPrice}`;
+      conditions +=
+        conditions.length > 0 ? ` AND ${filter}` : ` WHERE ${filter}`;
+    }
+
+    // special checkboxes
+    if (!includeSoldOut) {
+      filter = ` TicketsRemaining > 0`;
+      conditions +=
+        conditions.length > 0 ? ` AND ${filter}` : ` WHERE ${filter}`;
+    }
+    if (!includeVisited) {
+      filter = ` MyVisits = 0`;
+      conditions +=
+        conditions.length > 0 ? ` AND ${filter}` : ` WHERE ${filter}`;
+    }
+
+    query3 += conditions;
+  } else {
+    let required = ' WHERE TicketsRemaining > 0 AND MyVisits = 0';
+    query3 += required;
   }
 
   return db

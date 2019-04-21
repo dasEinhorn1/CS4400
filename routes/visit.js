@@ -214,7 +214,7 @@ router.get('/events', (req, res, next) => {
   // TODO: get current username   
   db.admin.getAllSites().then(sites => {
     db.visitor.getEvents(req.query).then(events => {
-      // console.log(events, sites );
+      console.log(events);
   
       res.render('visit/events', { events, sites });
     })
@@ -225,7 +225,8 @@ router.get('/events', (req, res, next) => {
 router.get('/events/event', (req, res, next) => {
   const eventName = req.query.event;
   const siteName = req.query.site;
-
+  console.log(req.query);
+  
   if (!eventName || !siteName) res.redirect('back')
 
   const event = {
