@@ -281,8 +281,8 @@ const transitQueryBuilder = filters => {
   let query4 = `
     -- Create a View with with Logs
     CREATE VIEW Transit_View AS 
-    SELECT TSV.TransitType, TSV.TransitRoute, TSV.TransitPrice, TSV.ConnectedSites, Count(*) AS TransitLogs FROM Transit_Site_View as TSV
-    INNER JOIN TakeTransit AS TT ON TSV.TransitRoute = TT.TransitRoute AND TSV.TransitType = TT.TransitType
+    SELECT TSV.TransitType, TSV.TransitRoute, TSV.TransitPrice, TSV.ConnectedSites, Count(TT.TransitRoute) AS TransitLogs FROM Transit_Site_View as TSV
+    LEFT JOIN TakeTransit AS TT ON TSV.TransitRoute = TT.TransitRoute AND TSV.TransitType = TT.TransitType
     GROUP BY TSV.TransitType, TSV.TransitRoute;
   `;
 
@@ -370,6 +370,77 @@ const filterTransits = filters => {
   // console.log(query);
 };
 
+const getConnect = args => {
+  let query = `SELECT T.TransitType, T.TransitRoute, T.TransitPrice, SiteName 
+  FROM Transit AS T INNER JOIN Connect as C ON T.TransitType = C.TransitType 
+  AND T.TransitRoute = C.TransitRoute`;
+
+  if (args) {
+    const { route, type } = args;
+    const conditions = qs.generateWhere([
+      qs.createFilter('T.TransitRoute', route),
+      qs.createFilter('T.TransitType', type)
+    ]);
+
+    query += conditions;
+  }
+  return db.query(query);
+};
+
+const updateTransitAndConnect = args => {
+  let { type, route, price, sites, initialRoute } = args;
+
+  if (typeof sites == 'string') {
+    sites = [sites];
+  }
+  let siteNames = "'" + sites.join("','") + "'";
+
+  // update Transit
+  let query = `UPDATE Transit SET TransitRoute = '${route}', TransitPrice = ${price} 
+  WHERE TransitType = '${type}' AND TransitRoute = '${initialRoute}'`;
+  return db.query(query).then(() => {
+    // remove connect
+    query = `DELETE FROM Connect WHERE TransitType = '${type}' AND TransitRoute = '${route}' AND SiteName NOT IN (${siteNames})`;
+    return db.query(query).then(() => {
+      // insert connect
+      let values = sites.map(site => `('${site}', '${type}', '${route}')`);
+      values = values.join(',');
+      query = `INSERT IGNORE INTO Connect VALUES ${values}`;
+
+      return db.query(query);
+    });
+  });
+};
+
+const createTransit = args => {
+  let { type, route, price, sites, initialRoute } = args;
+  // parsing
+  price = parseFloat(price);
+  if (typeof sites == 'string') {
+    sites = [sites];
+  }
+  
+  let siteNames = "'" + sites.join("','") + "'";
+  let query = `INSERT INTO Transit VALUES ('${type}', '${route}', ${price})`;
+  // Create Transit
+  return db.query(query).then(() => {
+    // Create Connect
+    let values = sites.map(site => `('${site}', '${type}', '${route}')`);
+    values = values.join(',');
+    query = `INSERT INTO CONNECT VALUES ${values}`;
+
+    return db.query(query);
+  })
+}
+
+const deleteTransit = args => {
+  const { route, type } = args;
+
+  let query = `DELETE FROM Transit WHERE TransitRoute = '${route}' AND TransitType = '${type}'`;
+  return db.query(query);
+}
+
+
 export default {
   getAllUsers,
   filterUsers,
@@ -382,5 +453,9 @@ export default {
   fetchManagers,
   fetchUnassignedManagers,
   getAllTransits,
-  filterTransits
+  filterTransits,
+  createTransit,
+  deleteTransit,
+  getConnect,
+  updateTransitAndConnect
 };

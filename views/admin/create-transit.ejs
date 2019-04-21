@@ -10,10 +10,10 @@
       <div class="input-row">
         <div class="labelled-input">
           <label for="transportType">Transport Type</label>
-          <select class="dropdown" name="transportType">
-            <option value="marta" selected>MARTA</option>
-            <option value="bus">BUS</option>
-            <option value="bike">BIKE</option>
+          <select class="dropdown" name="type">
+            <option value="MARTA" selected>MARTA</option>
+            <option value="Bus">BUS</option>
+            <option value="Bike">BIKE</option>
           </select>
         </div>
         <div class="labelled-input">
@@ -27,10 +27,10 @@
       </div>
       <div class="input-row">
         <div class="labelled-input">
-          <label for="connectedSites">Connected Sites</label>
-          <select name="connectedSites" multiple>
+          <label for="sites">Connected Sites</label>
+          <select name="sites" multiple>
             <% sites.forEach(site => { %>
-            <option value="<%= site %>"><%= site %> </option>
+            <option value="<%= site.SiteName %>"><%= site.SiteName %> </option>
             <% }) %>
           </select>
         </div>
