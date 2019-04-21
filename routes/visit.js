@@ -3,6 +3,7 @@ import Auth from '../middleware/Auth';
 import visitsFixture from '../fixtures/visits';
 import sitesFixture from '../fixtures/sites';
 import eventsFixture from '../fixtures/events';
+import db from '../database/db';
 
 // TODO: Add validations
 
@@ -15,15 +16,7 @@ router.get('/history', (req, res, next) => {
   const siteName = req.query.site || '';
   const startDate = req.query.startDate || '';
   const endDate = req.query.endDate || '';
-  // query with the above parameters
-  // get queried visits from both sites or events
-  /* visit = {
-    *   date: '2019-01-01',
-    *   event: event.name
-    *   site: site.name
-    *   price: event.price
-    * }
-    */
+
   const sites = sitesFixture;
   const visits = visitsFixture;
   const filteredVisits = visits.filter((v) => {
@@ -218,61 +211,13 @@ router.get('/events', (req, res, next) => {
   const upperTicketPrice = req.query.upperTicketPrice;
   const includeVisited = req.query.includeVisited;
   const includeSoldOut = req.query.includeSoldOut;
-
-  // get all site names
-  const events = eventsFixture;
-  // const sites = sitesFixture;
-  const sites = [
-    {
-      name: "Inman Park",
-      address: "Inman Park",
-      city: "Atlanta",
-      state: "GA",
-      zipcode: "30307",
-      eventCount: 4,
-      openEveryday: true,
-      totalVisits: 200,
-      myVisits: 1
-    },
-    {
-      name: "Gorden-White Park",
-      address: "Gorden-White Park",
-      city: "Atlanta",
-      state: "GA",
-      zipcode: "30307",
-      openEveryday: true,
-      eventCount: 2,
-      totalVisits: 80,
-      myVisits: 0
-    },
-    {
-      name: "Rose Circle Park",
-      address: "Rose Circle Park",
-      city: "Atlanta",
-      state: "GA",
-      zipcode: "30307",
-      openEveryday: false,
-      eventCount: 2,
-      totalVisits: 55,
-      myVisits: 0
-    }
-  ];
-  res.render('visit/events', {
-    events,
-    sites,
-    formValues: {
-      name,
-      keyword,
-      site,
-      startDate,
-      endDate,
-      lowerVisitTotal,
-      upperVisitTotal,
-      lowerTicketPrice,
-      upperTicketPrice,
-      includeVisited,
-      includeSoldOut
-    }
+  // TODO: get current username   
+  db.admin.getAllSites().then(sites => {
+    db.visitor.getEvents(req.query).then(events => {
+      // console.log(events, sites );
+  
+      res.render('visit/events', { events, sites });
+    })
   })
 })
 

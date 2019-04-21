@@ -10,77 +10,84 @@
       <div class="input-row">
         <div class="labelled-input">
           <label for="name">Name</label>
-          <input type="text" name="name"
-            value="<%= formValues.name %>"/>
+          <input type="text" name="name" value="" />
         </div>
         <div class="labelled-input">
           <label for="keyword">Description Keyword</label>
-          <input type="text" name="keyword"
-            value="<%= formValues.keyword %>"/>
+          <input type="text" name="keyword" value="" />
         </div>
       </div>
       <div class="input-row">
-        <%- include('../../partials/site-selector', {
-          sites: sites.map(s => s.name),
-          selected: formValues.site
-        })%>
+          <label for="">Site Name</label>
+          <select class="dropdown" name="siteName">
+              <% sites.forEach(site => { %>
+                <option value="<%= site.SiteName %>"><%= site.SiteName %></option>
+              <% }) %>
+            </select>
       </div>
       <div class="input-row">
         <div class="labelled-input">
           <label for="startDate">Start Date</label>
-          <input type="text" name="startDate"
-            value="<%= formValues.startDate %>"/>
+          <input type="text" name="startDate" value="" />
         </div>
         <div class="labelled-input">
           <label for="endDate">End Date</label>
-          <input type="text" name="endDate"
-            value="<%= formValues.startDate %>"/>
+          <input type="text" name="endDate" value="" />
         </div>
       </div>
       <div class="input-row">
         <div class="labelled-input">
           <label for="visitRange">Total Visits Range</label>
           <div class="range-inputs">
-            <input class="--little"
-              type="text" name="lowerVisitTotal"
-              value="<%= formValues.lowerVisitTotal %>"/>
+            <input
+              class="--little"
+              type="text"
+              name="lowerVisitTotal"
+              value=""
+            />
             &nbsp;&mdash;&nbsp;
-            <input class="--little"
-              type="text" name="upperVisitTotal"
-              value="<%= formValues.upperVisitTotal %>"/>
+            <input
+              class="--little"
+              type="text"
+              name="upperVisitTotal"
+              value=""
+            />
           </div>
         </div>
         <div class="labelled-input">
           <label for="priceRange">Ticket Price Range</label>
           <div class="range-inputs">
-            <input class="--little"
-              type="text" name="lowerTicketPrice"
-              value="<%= formValues.lowerTicketPrice %>"/>
+            <input
+              class="--little"
+              type="text"
+              name="lowerTicketPrice"
+              value=""
+            />
             &nbsp;&mdash;&nbsp;
-            <input class="--little"
-              type="text" name="upperTicketPrice"
-              value="<%= formValues.upperTicketPrice %>"/>
+            <input
+              class="--little"
+              type="text"
+              name="upperTicketPrice"
+              value=""
+            />
           </div>
         </div>
       </div>
       <div class="input-row --centered">
         <div class="labelled-input">
-          <input type="checkbox"
-            name="includeVisited"
-            <%= (formValues.includeVisited) ? 'checked' : '' %>/>
+          <input type="checkbox" name="includeVisited" />
           <label for="includeVisited">Include Visited</label>
         </div>
         <div class="labelled-input">
-          <input type="checkbox"
-            name="includeSoldOut"
-            <%= (formValues.includeSoldOut) ? 'checked' : ''%>/>
+          <input type="checkbox" name="includeSoldOut" />
           <label for="includeSoldOut">Include Sold Out Events</label>
         </div>
       </div>
       <div class="button-row">
-        <button class="btn" type="submit" name="filter">Filter</button>
-        <button class="btn" type="button"
-          onclick="goToEventDetail()">Event Detail</button>
+        <button class="btn" type="submit" value='true' name="filter">Filter</button>
+        <button class="btn" type="button" onclick="goToEventDetail()">
+          Event Detail
+        </button>
       </div>
     </form>
     <div class="resultsTable">
@@ -97,26 +104,28 @@
             </tr>
           </thead>
           <tbody>
-            <% events.forEach((evt) => { %>
-              <tr class="event-line">
-                <td>
-                  <input type='radio'
-                    value="<%= evt.name %>"
-                    name="event"
-                    data-site="<%= evt.siteName %>"
-                    onclick="pickEvent(this)"/>
-                  <%= evt.name %>
-                </td>
-                <td><%= evt.siteName %></td>
-                <td><%= evt.price %></td>
-                <td><%= evt.ticketsRemaining %></td>
-                <td><%= evt.totalVisits %></td>
-                <td><%= evt.personalVisits %></td>
-              </tr>
+            <% events.forEach((event) => { %>
+            <tr class="event-line">
+              <td>
+                <input
+                  type="radio"
+                  value="<%= event.EventName %>"
+                  name="event"
+                  data-site="<%= event.SiteName %>"
+                  onclick="pickEvent(this)"
+                />
+                <%= event.EventName %>
+              </td>
+              <td><%= event.SiteName %></td>
+              <td><%= event.EventPrice %></td>
+              <td><%= event.TicketsRemaining %></td>
+              <td><%= event.TotalVisits %></td>
+              <td><%= event.MyVisits %></td>
+            </tr>
             <% })%>
           </tbody>
         </table>
-        <input id="site-name" type="hidden" name="site" value="">
+        <input id="site-name" type="hidden" name="site" value="" />
       </form>
     </div>
     <div class="button-row">
@@ -126,15 +135,14 @@
     </div>
   </body>
   <script type="text/javascript">
-    function goToEventDetail () {
+    function goToEventDetail() {
       const siteInput = document.getElementById('site-name');
-      const evt = document.querySelector('.event-line input:checked')
-      if (siteInput.value && evt)
+      const event = document.querySelector('.event-line input:checked');
+      if (siteInput.value && event)
         document.getElementById('event-picker').submit();
     }
-    function pickEvent (el) {
-      document.getElementById('site-name')
-        .value = el.dataset.site;
+    function pickEvent(el) {
+      document.getElementById('site-name').value = el.dataset.site;
     }
   </script>
 </html>

@@ -81,7 +81,7 @@ router.get('/sites/create', (req, res) => {
   });
 });
 router.post('/sites/create', (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   db.admin.createSite(req.body);
   res.redirect('/admin/sites');
 });
@@ -106,7 +106,7 @@ router.get('/sites/edit', (req, res) => {
     });
 });
 router.post('/sites/edit', (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   const {
     siteName,
     zipcode,
@@ -134,7 +134,7 @@ router.post('/sites/edit', (req, res) => {
 // Screen 22
 router.get('/transits', (req, res) => {
   // res.send('Screen 22', { title: 'Transits' });
-  console.log(req.query);
+  // console.log(req.query);
   const { filter } = req.query;
   if (filter == 'true') {
     db.admin.getAllSites().then(sites => {
@@ -150,7 +150,7 @@ router.get('/transits', (req, res) => {
   } else {
     db.admin.getAllSites().then(sites => {
       db.admin.getAllTransits().then(transits => {
-        console.log(transits);
+        // console.log(transits);
         res.render('admin/transits', {
           title: 'Transits',
           transits: transits,
