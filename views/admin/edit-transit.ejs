@@ -6,32 +6,32 @@
   <body>
     <%# Screen 23 %>
     <h1 class="title --centered">Edit Transit</h1>
-    <form class="" action="/admin/transits/create" method="post">
+    <form class="" action="/admin/transits/edit" method="post">
       <div class="input-row">
         <div class="labelled-input">
           <label for="username">Transport Type</label>
-            <input value="bus" disabled></input>
+            <input type="text" name="type" value="<%= connects[0].TransitType %>" readonly></input>
         </div>
         <div class="labelled-input">
           <label for="route">Route</label>
-          <input type="text" name="route" value="" />
+          <input type="text" name="route" value="<%= connects[0].TransitRoute %>" />
+          <input type="hidden" name="initialRoute" value="<%= connects[0].TransitRoute %>" />
         </div>
         <div class="labelled-input">
-          <label for="route">Price ($)</label>
-          <input type="text" name="route" value="" />
+          <label for="price">Price ($)</label>
+          <input type="text" name="price" value="<%= connects[0].TransitPrice %>" />
         </div>
       </div>
       <div class="input-row">
         <div class="labelled-input">
-          <label for="connectedSites">Connected Sites</label>
-          <select name="" id="connectedSites" multiple>
-            <option value="">Atlanta Beltline Center</option>
-            <option value="">Atlanta Beltline Center</option>
-            <option value="">Atlanta Beltline Center</option>
-            <option value="">Atlanta Beltline Center</option>
-            <option value="">Atlanta Beltline Center</option>
-            <option value="">Atlanta Beltline Center</option>
-            <option value="">Atlanta Beltline Center</option>
+          <label for="sites">Connected Sites</label>
+          <select name="sites" id="sites" multiple>
+            <% allSites.forEach(site => {
+              if ( connectedSites.includes(site.SiteName)) { %>
+                <option value="<%= site.SiteName %>" selected><%= site.SiteName %></option>
+              <% } else { %>
+                <option value="<%= site.SiteName %>" ><%= site.SiteName %></option>
+              <% }}) %>
           </select>
         </div>
       </div>
@@ -39,7 +39,7 @@
         <a href="/admin/transits">
           <button class="btn" type="button" name="back">Back</button>
         </a>
-        <button class="btn" type="submit" name="submit">Update</button>
+        <button class="btn" type="submit" >Update</button>
       </div>
     </form>
   </body>

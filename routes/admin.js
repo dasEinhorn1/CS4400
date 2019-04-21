@@ -1,10 +1,11 @@
 import express from 'express';
 import Auth from '../middleware/Auth';
-import users from '../fixtures/users';
-import manages from '../fixtures/manages';
-import transits from '../fixtures/transits';
+// import users from '../fixtures/users';
+// import manages from '../fixtures/manages';
+// import transits from '../fixtures/transits';
 import sites from '../fixtures/sites';
 import db from '../database/db';
+import qs from '../database/qs';
 
 const router = express.Router();
 
@@ -72,13 +73,14 @@ router.post('/sites', (req, res) => {
 // Screen 21
 router.get('/sites/create', (req, res) => {
   // res.send('Screen 21');
-  // TODO: send only the managers
   db.admin.fetchUnassignedManagers().then(managers => {
-    res.render('admin/create-sites', { title: 'Create Sites', managers: managers });
-  })
+    res.render('admin/create-sites', {
+      title: 'Create Sites',
+      managers: managers
+    });
+  });
 });
 router.post('/sites/create', (req, res) => {
-  // TODO: create an instance with data
   console.log(req.body);
   db.admin.createSite(req.body);
   res.redirect('/admin/sites');
@@ -105,10 +107,26 @@ router.get('/sites/edit', (req, res) => {
 });
 router.post('/sites/edit', (req, res) => {
   console.log(req.body);
-  const { siteName, zipcode, address, manager, openEveryday, originalSiteName } = req.body;
-  db.admin.updateSite({ siteName, zipcode, address, manager, openEveryday, originalSiteName }).then(() => {
-    res.redirect('/admin/sites');
-  })
+  const {
+    siteName,
+    zipcode,
+    address,
+    manager,
+    openEveryday,
+    originalSiteName
+  } = req.body;
+  db.admin
+    .updateSite({
+      siteName,
+      zipcode,
+      address,
+      manager,
+      openEveryday,
+      originalSiteName
+    })
+    .then(() => {
+      res.redirect('/admin/sites');
+    });
 });
 
 // ========================== TRANSITS ================================
@@ -117,54 +135,88 @@ router.post('/sites/edit', (req, res) => {
 router.get('/transits', (req, res) => {
   // res.send('Screen 22', { title: 'Transits' });
   console.log(req.query);
-  // TODO: Fetch filtered data and update 'transit'
-
-  res.render('admin/transits', { title: 'Transits', transits: transits });
+  const { filter } = req.query;
+  if (filter == 'true') {
+    db.admin.getAllSites().then(sites => {
+      db.admin.filterTransits(req.query).then(transits => {
+        // console.log(transits);
+        res.render('admin/transits', {
+          title: 'Transits',
+          transits: transits,
+          sites: sites
+        });
+      });
+    });
+  } else {
+    db.admin.getAllSites().then(sites => {
+      db.admin.getAllTransits().then(transits => {
+        console.log(transits);
+        res.render('admin/transits', {
+          title: 'Transits',
+          transits: transits,
+          sites: sites
+        });
+      });
+    });
+  }
 });
 
 router.post('/transits', (req, res) => {
   const buttonType = req.body.buttonType;
-  console.log(req.body);
+  // console.log(req.body);
 
   const { route, type } = req.body;
 
   if (buttonType == 'edit') {
     // if 'Edit', retrieve its info and send it to 'edit'
-    // TODO: inject site's info
-
     res.redirect(`/admin/transits/edit?route=${route}&type=${type}`);
   } else if (buttonType == 'delete') {
     // elif 'Delete', just delete it and return back
-
-    // TODO: perform delete and redirect
-    res.redirect('/admin/transits');
+    db.admin.deleteTransit({ route, type }).then(() => {
+      // TODO: perform delete and redirect
+      res.redirect('/admin/transits');
+    })
   }
 });
 
 // Screen 24
 router.get('/transits/create', (req, res) => {
   // res.send('Screen 24', {title: 'Create Transit'});
-
   // TODO: fetch 'Sites' info, and inject
-  res.render('admin/create-transit', { title: 'Create Transit', sites: sites });
+  db.admin.getAllSites().then(sites => {
+    console.log(sites);
+    res.render('admin/create-transit', { title: 'Create Transit', sites: sites });
+  })
 });
 router.post('/transits/create', (req, res) => {
   console.log(req.body);
-  const { transportType, route, price, connectedSites } = req.body;
-
-  // TODO: create an instance, fetch updated ones, and insert
-  res.redirect('/admin/transits');
+  db.admin.createTransit(req.body).then(() => {
+    res.redirect('/admin/transits');
+  })
 });
 
 // Screen 23
 router.get('/transits/edit', (req, res) => {
   // res.send('Screen 23', { title: 'Edit Transit' });
   // console.log(req.query);
-  const { route, type } = req.query;
-  res.render('admin/edit-transit', { title: 'Edit Transit' });
+  db.admin.getAllSites().then(allSites => {
+    db.admin.getConnect(req.query).then(connects => {
+      console.log(connects)
+      const connectedSites = connects.map(connect => connect.SiteName);
+      res.render('admin/edit-transit', {
+        title: 'Edit Transit',
+        connects,
+        allSites,
+        connectedSites
+      });
+    });
+  });
 });
 router.post('/transits/edit', (req, res) => {
-  res.redirect('/admin/transits');
+  // console.log(req.body);
+  db.admin.updateTransitAndConnect(req.body).then(() => {
+    res.redirect('/admin/transits');
+  })
 });
 
 export default router;

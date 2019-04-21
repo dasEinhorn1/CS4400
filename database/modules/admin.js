@@ -245,6 +245,202 @@ const createSite = args => {
   return db.query(query);
 };
 
+const transitQueryBuilder = filters => {
+  let drop1 = `DROP VIEW IF EXISTS Filter_Transit_View;`;
+  let drop2 = `DROP VIEW IF EXISTS Filter_Connect_View;`;
+  let drop3 = 'DROP VIEW IF EXISTS Transit_Site_View;';
+  let drop4 = 'DROP VIEW IF EXISTS Transit_View';
+
+  if (filters) {
+    var { siteName } = filters;
+  }
+
+  let q1_1 = `
+    -- filter by any SiteName
+    CREATE VIEW Filter_Connect_View AS SELECT TransitType, TransitRoute FROM Connect`;
+  let q1_2 = `GROUP BY TransitType, TransitRoute;`;
+  // apply 'siteName' filter
+  let query1 = filters
+    ? `${q1_1} WHERE SiteName = '${siteName}' ${q1_2}`
+    : `${q1_1} ${q1_2}`;
+
+  let query2 = `
+    -- Filter Transit By Filtered Type + Price
+    CREATE VIEW Filter_Transit_View AS
+    SELECT T.TransitType, T.TransitRoute, T.TransitPrice
+    FROM Transit AS T INNER JOIN Filter_Connect_View AS FCV
+    ON T.TransitType = FCV.TransitType AND T.TransitRoute = FCV.TransitRoute;`;
+
+  let query3 = `
+    -- Create a view tih filtered Sites
+    CREATE VIEW Transit_Site_View AS
+    select T.TransitType, T.TransitRoute, T.TransitPrice, COUNT(*) AS ConnectedSites FROM Filter_Transit_View AS T
+    inner join Connect AS C ON T.TransitType = C.TransitType AND T.TransitRoute = C.TransitRoute
+    GROUP BY T.TransitType, T.TransitRoute;`;
+
+  let query4 = `
+    -- Create a View with with Logs
+    CREATE VIEW Transit_View AS 
+    SELECT TSV.TransitType, TSV.TransitRoute, TSV.TransitPrice, TSV.ConnectedSites, Count(TT.TransitRoute) AS TransitLogs FROM Transit_Site_View as TSV
+    LEFT JOIN TakeTransit AS TT ON TSV.TransitRoute = TT.TransitRoute AND TSV.TransitType = TT.TransitType
+    GROUP BY TSV.TransitType, TSV.TransitRoute;
+  `;
+
+  let query5 = 'SELECT * FROM Transit_View';
+  if (filters) {
+    var { transportType, route, priceMin, priceMax } = filters;
+    let filterQuery = '';
+
+    if (transportType.length > 0) {
+      filterQuery +=
+        filterQuery.length > 0
+          ? ` AND TransitType = '${transportType}'`
+          : ` WHERE TransitType= '${transportType}'`;
+    }
+    if (route.length > 0) {
+      filterQuery +=
+        filterQuery.length > 0
+          ? ` AND TransitRoute = '${route}'`
+          : ` WHERE TransitRoute = '${route}'`;
+    }
+
+    if (priceMin.length > 0 && priceMax.length > 0) {
+      filterQuery +=
+        filterQuery.length > 0
+          ? ` AND TransitPrice BETWEEN ${priceMin} AND ${priceMax}`
+          : ` WHERE TransitPrice BETWEEN ${priceMin} AND ${priceMax}`;
+    }
+    if (filterQuery.length > 0) {
+      query5 += filterQuery;
+    }
+    // console.log(query5);
+  }
+
+  return { drop1, drop2, drop3, drop4, query1, query2, query3, query4, query5 };
+};
+
+const getAllTransits = () => {
+  let {
+    drop1,
+    drop2,
+    drop3,
+    drop4,
+    query1,
+    query2,
+    query3,
+    query4,
+    query5
+  } = transitQueryBuilder();
+
+  return db
+    .query(drop1)
+    .then(() => db.query(drop2))
+    .then(() => db.query(drop3))
+    .then(() => db.query(drop4))
+    .then(() => db.query(query1))
+    .then(() => db.query(query2))
+    .then(() => db.query(query3))
+    .then(() => db.query(query4))
+    .then(() => db.query(query5));
+};
+
+const filterTransits = filters => {
+  let {
+    drop1,
+    drop2,
+    drop3,
+    drop4,
+    query1,
+    query2,
+    query3,
+    query4,
+    query5
+  } = transitQueryBuilder(filters);
+
+  return db
+    .query(drop1)
+    .then(() => db.query(drop2))
+    .then(() => db.query(drop3))
+    .then(() => db.query(drop4))
+    .then(() => db.query(query1))
+    .then(() => db.query(query2))
+    .then(() => db.query(query3))
+    .then(() => db.query(query4))
+    .then(() => db.query(query5));
+  // console.log(query);
+};
+
+const getConnect = args => {
+  let query = `SELECT T.TransitType, T.TransitRoute, T.TransitPrice, SiteName 
+  FROM Transit AS T INNER JOIN Connect as C ON T.TransitType = C.TransitType 
+  AND T.TransitRoute = C.TransitRoute`;
+
+  if (args) {
+    const { route, type } = args;
+    const conditions = qs.generateWhere([
+      qs.createFilter('T.TransitRoute', route),
+      qs.createFilter('T.TransitType', type)
+    ]);
+
+    query += conditions;
+  }
+  return db.query(query);
+};
+
+const updateTransitAndConnect = args => {
+  let { type, route, price, sites, initialRoute } = args;
+
+  if (typeof sites == 'string') {
+    sites = [sites];
+  }
+  let siteNames = "'" + sites.join("','") + "'";
+
+  // update Transit
+  let query = `UPDATE Transit SET TransitRoute = '${route}', TransitPrice = ${price} 
+  WHERE TransitType = '${type}' AND TransitRoute = '${initialRoute}'`;
+  return db.query(query).then(() => {
+    // remove connect
+    query = `DELETE FROM Connect WHERE TransitType = '${type}' AND TransitRoute = '${route}' AND SiteName NOT IN (${siteNames})`;
+    return db.query(query).then(() => {
+      // insert connect
+      let values = sites.map(site => `('${site}', '${type}', '${route}')`);
+      values = values.join(',');
+      query = `INSERT IGNORE INTO Connect VALUES ${values}`;
+
+      return db.query(query);
+    });
+  });
+};
+
+const createTransit = args => {
+  let { type, route, price, sites, initialRoute } = args;
+  // parsing
+  price = parseFloat(price);
+  if (typeof sites == 'string') {
+    sites = [sites];
+  }
+  
+  let siteNames = "'" + sites.join("','") + "'";
+  let query = `INSERT INTO Transit VALUES ('${type}', '${route}', ${price})`;
+  // Create Transit
+  return db.query(query).then(() => {
+    // Create Connect
+    let values = sites.map(site => `('${site}', '${type}', '${route}')`);
+    values = values.join(',');
+    query = `INSERT INTO CONNECT VALUES ${values}`;
+
+    return db.query(query);
+  })
+}
+
+const deleteTransit = args => {
+  const { route, type } = args;
+
+  let query = `DELETE FROM Transit WHERE TransitRoute = '${route}' AND TransitType = '${type}'`;
+  return db.query(query);
+}
+
+
 export default {
   getAllUsers,
   filterUsers,
@@ -255,5 +451,11 @@ export default {
   createSite,
   updateSite,
   fetchManagers,
-  fetchUnassignedManagers
+  fetchUnassignedManagers,
+  getAllTransits,
+  filterTransits,
+  createTransit,
+  deleteTransit,
+  getConnect,
+  updateTransitAndConnect
 };

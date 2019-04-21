@@ -11,11 +11,10 @@
         <div class="labelled-input">
           <label for="transportType">Transport Type</label>
           <select class="dropdown" name="transportType">
-            <option value="all" selected>--All--</option>
+            <option value="" selected>--All--</option>
             <option value="MARTA">MARTA</option>
             <option value="Bus">Bus</option>
             <option value="Bike">Bike</option>
-            <!-- TODO: insert  -->
           </select>
         </div>
         <div class="labelled-input">
@@ -26,9 +25,10 @@
       <div class="input-row">
         <div class="labelled-input">
           <label for="">Contain Site</label>
-          <select class="dropdown" name="containSite">
-            <!-- TODO: insert data -->
-            <option value="Inman Park" selected>Inman Park</option>
+          <select class="dropdown" name="siteName">
+            <% sites.forEach(site => { %>
+              <option value="<%= site.SiteName %>"><%= site.SiteName %></option>
+            <% }) %>
           </select>
         </div>
         <div class="labelled-input">
@@ -39,7 +39,7 @@
         </div>
       </div>
       <div class="button-row">
-        <button class="btn" type="submit">Filter</button>
+        <button class="btn" name='filter' value='true' type="submit">Filter</button>
       </div>
     </form>
     <form class="" action="/admin/transits" method="post">
@@ -60,17 +60,17 @@
                   type="radio"
                   name="route"
                   onclick="chooseTransit(this)"
-                  data-type="<%= transit.type %>"
-                  value="<%= transit.route %>"
+                  data-type="<%= transit.TransitType %>"
+                  value="<%= transit.TransitRoute %>"
                 />
-                <%= transit.route %>
+                <%= transit.TransitRoute %>
               </td>
               <td>
-                <%= transit.type %>
+                <%= transit.TransitType %>
               </td>
-              <td><%= transit.price %></td>
-              <td><%= transit.numSites %></td>
-              <td><%= transit.numLogs %></td>
+              <td><%= transit.TransitPrice %></td>
+              <td><%= transit.ConnectedSites %></td>
+              <td><%= transit.TransitLogs %></td>
             </tr>
             <% }); %>
           </tbody>
