@@ -18,10 +18,6 @@ const posNum = (d) => (d || -1) >= 0;
 
 const filterTransits = (filters) => {
   const { transportType, siteName, lowerPrice, upperPrice } = filters;
-
-  const connectTransWhere = qs.generateWhere([
-    qs.createFilter('Connect.TransitType', transportType, notNullOrAll)
-  ])
   const optionalWhere = qs.generateWhere([
     qs.createFilter('Connect.SiteName', siteName, notNullOrAll),
     qs.createFilter('Transit.TransitType', transportType, notNullOrAll),
@@ -30,13 +26,18 @@ const filterTransits = (filters) => {
   ])
 
   const qStr =
-    ` SELECT Transit.TransitRoute as route, Transit.TransitType as type,
-        Transit.TransitPrice as price,
-           (SELECT COUNT(Connect.SiteName)
-            FROM Connect ${connectTransWhere}) AS siteCount
+    ` SELECT Transit.TransitRoute as route,
+             Transit.TransitType as type,
+             Transit.TransitPrice as price,
+             (SELECT COUNT(Connect.SiteName)
+           FROM Connect
+           WHERE Connect.TransitRoute=Transit.TransitRoute
+              AND Connect.TransitType=Transit.TransitType) AS siteCount
       FROM Transit INNER JOIN Connect
       ON Transit.TransitType = Connect.TransitType
-        AND Transit.TransitRoute = Connect.TransitRoute ${optionalWhere}`;
+        AND Transit.TransitRoute = Connect.TransitRoute
+      ${optionalWhere}
+      group by Transit.TransitRoute, Transit.TransitType, Transit.TransitPrice`;
   return db.query(qStr);
 }
 
