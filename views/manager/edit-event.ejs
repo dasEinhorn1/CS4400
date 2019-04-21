@@ -10,32 +10,32 @@
       <div class="labelled-input">
         <label for="name">Name</label>
         <input type="text" name="name"
-          value="<%= event.name %>"/>
+          value="<%= event.name %>" disabled/>
       </div>
       <div class="labelled-input">
         <label for="price">Price</label>
         <input class="--little" type="text" name="price"
-          value="<%= event.price %>"/>
+          value="<%= event.price %>" disabled/>
       </div>
       <div class="labelled-input">
         <label for="capacity">Capacity</label>
         <input class="--little" type="text" name="capacity"
-          value="<%= event.capacity %>"/>
+          value="<%= event.capacity %>" disabled/>
       </div>
       <div class="labelled-input">
         <label for="minStaff">Minimum Staff Requirement</label>
         <input class="--little" type="text" name="minStaff"
-          value="<%= event.minStaff %>"/>
+          value="<%= event.minStaff %>" disabled/>
       </div>
       <div class="labelled-input">
         <label for="startDate">Start Date</label>
         <input type="text" name="startDate"
-          value="<%= event.startDate %>"/>
+          value="<%= event.startDate %>" disabled/>
       </div>
       <div class="labelled-input">
         <label for="endDate">End Date</label>
         <input type="text" name="endDate"
-          value="<%= event.endDate %>"/>
+          value="<%= event.endDate %>" disabled/>
       </div>
       <div class="labelled-input">
         <label for="description">Description</label>
@@ -52,6 +52,9 @@
             </option>
           <% })%>
         </select>
+        <input type='hidden' name='minStaff' value='<%= event.minStaff %>'/>
+        <input type='hidden' name='startDate' value='<%= event.startDate %>'/>
+        <input type='hidden' name='name' value='<%= event.name %>'/>
       </div>
       <div class="button-row">
         <button class="btn" type="submit">Update</button>

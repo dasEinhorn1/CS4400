@@ -1,6 +1,8 @@
 import express from 'express';
 import db from '../database/db';
 import Auth from '../middleware/Auth';
+import Validator from '../middleware/Validator';
+import { query, body } from 'express-validator/check';
 
 const router = express.Router();
 router.use(Auth.manager);
@@ -73,10 +75,10 @@ router.post('/events', (req, res, next) => {
 // Screen 26
 router.get('/events/edit', (req, res, next) => {
   // get the site from the currently logged in manager
-  const site = "Piedmont Park";
 
   // get the event name from the query
   const eventName = req.query.event;
+  const startDate = db.helpers.dateify(req.query.date);
 
   const lowerDailyVisits = req.query.lowerDailyVisits;
   const upperDailyVisits = req.query.upperDailyVisits;
@@ -84,92 +86,77 @@ router.get('/events/edit', (req, res, next) => {
   const upperRevenue = req.query.upperRevenue;
 
   // get the event from the db
-  const event = {
-    name: 'Arboretum Walking Tour',
-    price: 0,
-    capacity: 20,
-    minStaff: 1,
-    startDate: "2019-02-01",
-    endDate: "2019-02-02",
-    description: 'Lorem ipsum dolor sit amet, '
-      + 'consectetur adipisicing elit, sed do eiusmod tempor '
-      + 'incididunt ut labore et dolore magna aliqua. Ut enim'
-      + ' ad minim veniam, quis nostrud exercitation ullamco l'
-      + 'aboris nisi ut aliquip ex ea commodo consequat. Duis '
-      + 'aute irure dolor in reprehenderit in voluptate velit '
-      + 'esse cillum dolore eu fugiat nulla pariatur. Excepteu'
-      + 'r sint occaecat cupidatat non proident, sunt in culpa '
-      + 'qui officia deserunt mollit anim id est laborum.',
-    staffAssigned: [
-      'ahayward3'
-    ]
-  }
-  const staff = [
-    {
-      firstName: "Adam",
-      lastName: "Hayward",
-      username: "ahayward3"
-    },
-    {
-      firstName: "MJ",
-      lastName: "Park",
-      username: "mjpark"
-    }
-  ].map(stf => ({
-      ...stf,
-      assigned: event.staffAssigned
-        .find(asgn => stf.username == asgn)
-  }));
-
-  const dailies = [
-    {
-      date: '2019-01-01',
-      visits: 34,
-      revenue: 34 * 0
-    },
-    {
-      date: '2019-01-02',
-      visits: 3,
-      revenue: 0
-    },
-    {
-      date: '2019-01-03',
-      visits: 40,
-      revenue: 0
-    },
-    {
-      date: '2019-01-04',
-      visits: 45,
-      revenue: 0
-    },
-  ]
-  res.render('manager/edit-event', {
-    event,
-    dailies,
-    staff,
-    formValues: {
-      lowerDailyVisits,
-      upperDailyVisits,
-      lowerRevenue,
-      upperRevenue
-    }
+  db.manager.getEvent(req.session.user.username, {
+    name: eventName,
+    startDate
+  }).then(event => {
+    return db.manager.getStaffForEvent(event).then((staff) => {
+      const dailies = [
+        {
+          date: '2019-01-01',
+          visits: 34,
+          revenue: 34 * 0
+        },
+        {
+          date: '2019-01-02',
+          visits: 3,
+          revenue: 0
+        },
+        {
+          date: '2019-01-03',
+          visits: 40,
+          revenue: 0
+        },
+        {
+          date: '2019-01-04',
+          visits: 45,
+          revenue: 0
+        },
+      ]
+      return res.render('manager/edit-event', {
+        event,
+        dailies,
+        staff,
+        formValues: {
+          lowerDailyVisits,
+          upperDailyVisits,
+          lowerRevenue,
+          upperRevenue
+        }
+      })
+    })
+  }).catch(err => {
+    console.log(err)
+    res.redirect('back')
   })
 })
 
-router.post('/events/edit', (req, res, next) => {
+router.post('/events/edit', [
+  body('name').not().isEmpty(),
+  body('startDate').not().isEmpty().isISO8601(),
+  body('description').not().isEmpty(),
+  body('assignStaff').custom((v,{req}) => {
+    return v.length >= Number.parseInt(req.body.minStaff)
+  }),
+], Validator.validate, (req, res, next) => {
   // get the site from the current manager
-  const site = "Piedmont Park";
-
   const name = req.body.name;
-  const price = req.body.price;
-  const capacity = req.body.capacity;
-  const minStaff = req.body.minStaff;
   const startDate = req.body.startDate;
-  const endDate = req.body.endDate;
   const description = req.body.description;
-  const assignedStaff = req.body.assignedStaff;
+  const assignedStaff = req.body.assignStaff;
 
-  res.redirect('/manager/events')
+  db.manager.updateEvent(req.session.user.username, {
+    name,
+    startDate,
+    description,
+    assignedStaff
+  }).then(() => {
+    return res.redirect('back')
+  }).catch((err) => {
+    console.log(err);
+    return res.redirect('back')
+  })
+
 })
 
 
@@ -178,26 +165,30 @@ router.get('/events/create', (req, res, next) => {
   // get the site from the database
 
   // get all staff from the database
-  const staff = [
-    {
-      firstName: "Adam",
-      lastName: "Hayward",
-      username: "ahayward3"
-    },
-    {
-      firstName: "MJ",
-      lastName: "Park",
-      username: "mjpark"
-    }
-  ];
-  res.render('manager/create-event', {
-    staff
-  })
+  db.manager.getStaff()
+    .then(staff => {
+      res.render('manager/create-event', {
+        staff
+      })
+    })
+
 })
 
-router.post('/events/create', (req, res, next) => {
+router.post('/events/create', [
+  body('name').not().isEmpty(),
+  body('price').not().isEmpty().isFloat(),
+  body('capacity').not().isEmpty().isInt(),
+  body('minStaff').not().isEmpty().isInt(),
+  body('startDate').not().isEmpty().isISO8601(),
+  body('endDate').not().isEmpty().isISO8601().custom((v, {req}) => {
+    return new Date(req.body.startDate) <= new Date(v);
+  }),
+  body('description').not().isEmpty(),
+  body('assignedStaff').custom((v,{req}) => {
+    return v.length >= Number.parseInt(req.body.minStaff)
+  }),
+],Validator.validate, (req, res, next) => {
   // get site from manager currently authenticated
-  const site = "Piedmont Park";
 
   const name = req.body.name;
   const price = req.body.price;
@@ -206,11 +197,22 @@ router.post('/events/create', (req, res, next) => {
   const startDate = req.body.startDate;
   const endDate = req.body.endDate;
   const description = req.body.description;
-  const assignedStaff = req.body.assignedStaff;
-
-  // create the new entry
-
-  res.redirect('/manager/events')
+  const assignedStaff = (Array.isArray(req.body.assignedStaff)) ?
+    req.body.assignedStaff : [req.body.assignedStaff];
+  console.log(assignedStaff);
+  if (!Array.isArray(assignedStaff)) {
+    assignedStaff
+  }
+  return db.manager.createEvent(req.session.user.username, {
+      name, price,
+      capacity, minStaff, startDate,
+      endDate, description, assignedStaff,
+    }).then(() => {
+      res.redirect('/manager/events')
+    }).catch((err) => {
+      console.log(err)
+      res.redirect('/manager/events')
+    })
 })
 
 // Screen 28

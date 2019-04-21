@@ -38,7 +38,7 @@
       </div>
       <div class="labelled-input">
         <label for="assignStaff">Assign Staff</label>
-        <select name="assignStaff" multiple>
+        <select name="assignedStaff" multiple>
           <% staff.forEach ((s) => { %>
             <option value="<%= s.username %>">
               <%= s.firstName %> <%= s.lastName %>
