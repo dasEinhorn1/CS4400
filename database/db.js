@@ -15,10 +15,10 @@ const db =  {
   employee,
   manager,
   staff,
+  visitor,
   helpers: {
     dateify: (d) => (new Date(d)).toISOString().slice(0, 10).replace('T', ' ')
-  }
-  visitor
+  },
 }
 
 export default db;
