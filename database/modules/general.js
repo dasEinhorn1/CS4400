@@ -68,7 +68,8 @@ const getTransitsTaken = (filters) => {
     ON TakeTransit.TransitType = Transit.TransitType AND TakeTransit.TransitRoute = Transit.TransitRoute
     INNER JOIN Connect
     ON TakeTransit.TransitType = Connect.TransitType AND TakeTransit.TransitRoute = Connect.TransitRoute
-    ${optionalWhere}`
+    ${optionalWhere}
+    GROUP BY TakeTransit.TransitDate,TakeTransit.TransitRoute,TakeTransit.TransitType`
   return db.query(qStr);
 }
 
