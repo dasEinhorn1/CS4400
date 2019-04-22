@@ -225,9 +225,14 @@ router.get('/events', (req, res, next) => {
 router.get('/events/event', (req, res, next) => {
   const eventName = req.query.event;
   const siteName = req.query.site;
+  const startDate = req.query.startDate;
+  const endDate = req.query.endDate;
+  
   console.log(req.query);
   
-  if (!eventName || !siteName) res.redirect('back')
+  if (!eventName || !siteName) res.redirect('back');
+
+  
 
   const event = {
     name: 'Bus Tour',

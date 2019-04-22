@@ -111,6 +111,12 @@ const getEvents = args => {
     );
 };
 
+const oneEvent = args => {
+  const { event, site, startDate, endDate } = args;
+
+}
+
 export default {
-  getEvents
+  getEvents,
+  oneEvent
 };
