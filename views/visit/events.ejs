@@ -113,10 +113,10 @@
                   value="<%= event.EventName %>"
                   name="event"
                   data-site="<%= event.SiteName %>"
+                  data-startdate="<%= event.StartDate %>"
+                  data-enddate="<%= event.EndDate %>"
                   onclick="pickEvent(this)"
                 />
-                <input type="hidden" id="startDate" name="actualStartDate" value="<%= event.StartDate %>"/>
-                <input type="hidden" id="endDate" name="actualEndDate" value="<%= event.EndDate %>"/>
                 <%= event.EventName %>
               </td>
               <td><%= event.SiteName %></td>
@@ -129,6 +129,8 @@
           </tbody>
         </table>
         <input id="site-name" type="hidden" name="site" value="" />
+        <input id="startDate" type="hidden" name="startDate" value="" />
+        <input id="endDate" type="hidden" name="endDate" value="" />
       </form>
     </div>
     <div class="button-row">
@@ -141,13 +143,13 @@
     function goToEventDetail() {
       const siteInput = document.getElementById('site-name');
       const event = document.querySelector('.event-line input:checked');
-      const startDate = document.getElementById('startDate');
-      const endDate = document.getElementById('endDate');
       if (siteInput.value && event)
         document.getElementById('event-picker').submit();
     }
     function pickEvent(el) {
       document.getElementById('site-name').value = el.dataset.site;
+      document.getElementById('startDate').value = el.dataset.startdate;
+      document.getElementById('endDate').value = el.dataset.enddate;
     }
   </script>
 </html>
