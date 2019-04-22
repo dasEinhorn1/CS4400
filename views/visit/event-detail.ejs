@@ -9,46 +9,72 @@
     <div class="input-row">
       <div class="labelled-input">
         <label for="event">Event</label>
-        <input type="text"
-          name="event" value="<%= event.name %>" disabled>
+        <input type="text" name="event" value="<%= event.EventName %>" />
       </div>
       <div class="labelled-input">
         <label for="site">Site</label>
-        <input type="text"
-          name="site" value="<%= event.siteName %>" disabled>
+        <input type="text" name="site" value="<%= event.SiteName %>" disabled />
       </div>
     </div>
     <div class="input-row">
       <div class="labelled-input">
         <label for="startDate">Start Date</label>
-        <input type="text"
-          name="startDate" value="<%= event.startDate %>" disabled>
+        <input
+          type="text"
+          name="startDate"
+          value="<%= event.startDate %>"
+          disabled
+        />
       </div>
       <div class="labelled-input">
         <label for="endDate">End Date</label>
-        <input type="text"
-          name="endDate" value="<%= event.endDate %>" disabled>
+        <input
+          type="text"
+          name="endDate"
+          value="<%= event.endDate %>"
+          disabled
+        />
+      </div>
+    </div>
+    <div class="input-row">
+      <div class="labelled-input">
+        <label for="price">Ticket Price($)</label>
+        <input
+          type="text"
+          name="price"
+          value="<%= event.EventPrice %>"
+          disabled
+        />
+      </div>
+      <div class="labelled-input">
+        <label for="">Tickets Remining</label>
+        <input
+          type="text"
+          name="remainingTickets"
+          value="<%= event.TicketsRemaining %>"
+          disabled
+        />
       </div>
     </div>
     <div class="input-row">
       <div class="labelled-input">
         <label for="description">Description</label>
-        <textarea name="description"
-          value="" disabled><%= event.description %></textarea>
+        <textarea name="description" value="" disabled>
+              <%= event.Description %></textarea
+        >
       </div>
     </div>
-    <form class="" action="" method="post">
+    <form class="" action="/visit/events/event" method="post">
       <div class="input-row">
         <div class="labelled-input">
           <label for="visitDate">Visit Date</label>
-          <input type="text" name="visitDate" value="">
+          <input type="text" name="visitDate" value="" />
         </div>
         <button class="btn" type="submit">Log Visit</button>
       </div>
-      <input type="hidden" name="event"
-        value="<%= event.name %>"/>
-      <input type="hidden" name="site"
-        value="<%= event.siteName %>"/>
+      <input type="hidden" name="event" value="<%= event.EventName %>" />
+      <input type="hidden" name="site" value="<%= event.SiteName %>" />
+      <input type="hidden" name="startDate" value="<%= event.startDate %>" />
     </form>
     <div class="button-row">
       <a class="btn-link" href="/visit/events">
