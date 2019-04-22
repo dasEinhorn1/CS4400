@@ -51,7 +51,7 @@ const userRegister = [
       return true;
     throw new Error('Password confirmation does not match password');
   }),
-  emails
+  emails()
 ]
 
 const employeeRegister = [
