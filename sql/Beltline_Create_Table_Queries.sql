@@ -158,8 +158,8 @@ CREATE TABLE TakeTransit (
 CREATE TABLE VisitSite (
   VisitorUsername varchar(160) NOT NULL,
   SiteName varchar(160) NOT NULL,
-  VisitDate date NOT NULL,
-  PRIMARY KEY (VisitorUsername, Sitename, VisitDate),
+  VisitSiteDate date NOT NULL,
+  PRIMARY KEY (VisitorUsername, Sitename, VisitSiteDate),
   CONSTRAINT Fk_SiteVisitUser FOREIGN KEY (VisitorUsername) REFERENCES User (Username)
     ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT Fk_SiteVisitName FOREIGN KEY (SiteName) REFERENCES Site (SiteName)
